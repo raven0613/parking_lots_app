@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.fdd3a75e.css","mappings":"AAAA,EACE,YCDF,KAGE,yBADA,aADA,UAEA","sources":["assets/styles/home.scss","assets/styles/map.scss"],"sourcesContent":["p {\r\n  color: coral;\r\n}",".map {\r\n  width: 100%;\r\n  height: 50rem;\r\n  background-color: rgb(214, 209, 200);\r\n}"],"names":[],"sourceRoot":""}
