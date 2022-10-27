@@ -3,3 +3,23 @@
   height: 50rem;
   background-color: rgb(214, 209, 200);
 }
+
+.marker {
+  width: 2rem;
+  height: 2rem;
+  background-color: black;
+}
+
+.combobox-input {
+  width: 20rem;
+  height: 3rem;
+  font-size: 1.5rem
+}
+.combobox-list {
+  background-color: chocolate;
+}
+.combobox-option {
+  &:hover {
+    background-color: burlywood;
+  }
+}

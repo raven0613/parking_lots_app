@@ -4,7 +4,7 @@ function App() {
   return (
     <div className="App">
       <p>1111</p>
-      <Map id="map" className="map"></Map>
+      <Map className="map"></Map>
     </div>
   );
 }
