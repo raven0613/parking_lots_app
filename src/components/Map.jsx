@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useRef, useState } from 'react'
-import { useJsApiLoader, GoogleMap, Marker } from '@react-google-maps/api';
+import { useJsApiLoader, GoogleMap, MarkerF } from '@react-google-maps/api';
 import SelfMark from './SelfMark';
 import Place from './Place';
 // import { coordinatesConvert } from '../utils/helpers'
@@ -33,8 +33,6 @@ export default function Map () {
   //不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => (mapRef.current === map), [])
 
-    console.log('mapRef', mapRef)
-    console.log('target', target)
   if (!isLoaded) return <p>Loading...</p>
   return (
     <>
@@ -54,9 +52,9 @@ export default function Map () {
         options={options}
         onLoad={onLoad}
         >
-          <Marker className="marker" position={center}/>
+          {/* <MarkerF className="marker" position={center}/> */}
           <SelfMark />
-          {target && <Marker position={target} ison="https://image.similarpng.com/very-thumbnail/2021/01/Location-icon-design-on-transparent-background-PNG.png"/>}
+          {target && <MarkerF position={target}/>}
         </GoogleMap>
       </div>
     </>
