@@ -32,7 +32,7 @@ export default function Place ({ setTarget }) {
         <ComboboxList className='combobox-list'>
           {status === "OK" &&
             data.map(({ place_id, description }) => (
-              <ComboboxOption key={place_id} value={ description } className='combobox-option'/>
+              <ComboboxOption key={ place_id } value={ description } className='combobox-option'/>
             ))
           }
         </ComboboxList>
