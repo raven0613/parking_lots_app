@@ -1,5 +1,6 @@
 import proj4 from 'proj4'
 
+
 //TWD97的座標轉換成經緯度
 export function coordinatesConvert (tw97x, tw97y) {
   //設定
@@ -20,3 +21,15 @@ export function coordinatesConvert (tw97x, tw97y) {
   const [lng, lat] = proj4(EPSG3826, EPSG4326, [Number(tw97x), Number(tw97y)]);
   return {lng, lat}
 }
+
+//求兩個地點間最短直線距離
+export function getStraightDistance ( a, b ) {
+    const aX = a.lng
+    const aY = a.lat
+    const bX = b.lng
+    const bY = b.lat
+    const sum = (aX - bX) * (aX - bX) + (aY - bY) * (aY - bY)
+    const distance = Math.sqrt(sum)
+    return distance
+}
+

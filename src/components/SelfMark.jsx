@@ -1,30 +1,31 @@
 import { MarkerF } from '@react-google-maps/api';
-import { useEffect } from 'react';
-import { useState } from 'react'
+// import { useEffect } from 'react';
+// import { useState } from 'react'
 
-const getUserPos = (setSelfPos) => {
-  if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setSelfPos({lat: position.coords.latitude, lng: position.coords.longitude})
-          return
-        },
-        (error) => {
-          console.log(error)
-        }
-      );
+// const getUserPos = (setSelfPos) => {
+//   if(navigator.geolocation) {
+//       navigator.geolocation.getCurrentPosition(
+//         (position) => {
+//           setSelfPos({lat: position.coords.latitude, lng: position.coords.longitude})
+//           return
+//         },
+//         (error) => {
+//           console.log(error)
+//         }
+//       );
 
-  } else {
-    alert('你的裝置不支援地理位置功能。')
-  }
-}
+//   } else {
+//     alert('你的裝置不支援地理位置功能。')
+//   }
+// }
 
 
-export default function SelfMark () {
-  const [selfPos, setSelfPos] = useState()
-  useEffect(() => {
-    getUserPos(setSelfPos)
-  }, [])
+export default function SelfMark ({selfPos}) {
+  // const [selfPos, setSelfPos] = useState()
+  // useEffect(() => {
+  //   //google建議 getCurrentPosition 不要在 page load後，要在 user 的主動行為時
+  //   getUserPos(setSelfPos)
+  // }, [])
   return (
     <>
       <MarkerF position={selfPos}/>
