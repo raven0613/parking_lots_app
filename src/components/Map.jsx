@@ -1,45 +1,49 @@
 import { useMemo, useCallback, useRef, useState, useEffect } from 'react'
-import { useJsApiLoader, GoogleMap, MarkerF } from '@react-google-maps/api';
-import ParkingMark from './ParkingMark';
+import { useLoadScript, GoogleMap, MarkerF } from '@react-google-maps/api';
 import Place from './Place';
+import ParkingMark from './ParkingMark';
+
+const libraries = ['places']
+//取得使用者的 currentPosition
+const getUserPos = (setSelfPos) => {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        if(setSelfPos) {
+          setSelfPos(() => {
+            console.log('setSelfPos')
+            return {lat: position.coords.latitude, lng: position.coords.longitude}
+          })
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  } else {
+    alert('你的裝置不支援地理位置功能。')
+  }
+}
 
 
 export default function Map () {
   //使用者的 currentPosition
   const [selfPos, setSelfPos] = useState()
-  const getUserPos = (setSelfPos) => {
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          if(setSelfPos) {
-            setSelfPos(() => {
-              console.log('22445')
-              return {lat: position.coords.latitude, lng: position.coords.longitude}
-            })
-          }
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    } else {
-      alert('你的裝置不支援地理位置功能。')
-    }
-  }
+
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
-    console.log('useEffect')
+    console.log('on page loaded')
     getUserPos(setSelfPos)
   },[])
 
   
-
-  const { isLoaded } = useJsApiLoader({
+  
+  const { isLoaded } = useLoadScript({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
-    libraries: ['places']
+    libraries
   })
-  // const [parkingLots, setParkingLots] = useState()
+  //設定搜尋目標點
   const [target, setTarget] = useState()
   const mapRef = useRef()
   //設定初始點
@@ -50,11 +54,12 @@ export default function Map () {
       //地圖上的UI不顯示
       disableDefaultUI: true,
       //地圖上的標記不能點
-      clickableIcons: true
+      clickableIcons: false
     }
   ), [])
-  //不要每次重新渲染時都再次渲染
-  const onLoad = useCallback((map) => (mapRef.current === map), [])
+
+  //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
+  const onLoad = useCallback((map) => (mapRef.current = map), [])
 
   if (!isLoaded) return <p>Loading...</p>
   return (
@@ -62,7 +67,7 @@ export default function Map () {
       <div className='controller'>
         <Place setTarget={(position) => {
           setTarget(position)
-          //移動地圖至該處
+          //移動地圖中心至 target
           mapRef.current?.panTo(position)
         }}></Place>
       </div>
@@ -75,9 +80,11 @@ export default function Map () {
         options={options}
         onLoad={onLoad}
         >
+          
           {selfPos && <MarkerF position={selfPos} className="self-point marker"/> }
-          <ParkingMark />
+
           {target && <MarkerF position={target}/>}
+          <ParkingMark target={target} selfPos={selfPos} />
         </GoogleMap>
       </div>
     </>
