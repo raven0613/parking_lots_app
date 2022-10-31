@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 
 //得到所有停車場資料
-const parkingLotsData = async(setParkingLots) => {
+const parkingLotsData = async() => {
   try {
     const response = await getParkingLots()
     const parks = response.data.data.park.map(park => {
@@ -38,19 +38,20 @@ const getPointsInDistance = (datas, targetPoint, distance) => {
 
 export default function ParkingMark (props) {
   const [parkingLots, setParkingLots] = useState()
-
   //selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
   useEffect(() => {
+    if (props.mode !== 'self') return
     async function fetchParkData () {
       const parks = await parkingLotsData()
       const filteredParkingLots = getPointsInDistance(parks, props.selfPos, 0.0075)
       setParkingLots(filteredParkingLots)
     } 
     fetchParkData()
-  }, [props.selfPos])
+  }, [props.selfPos, props.mode])
 
   //有 target 的資料傳進來時 fetch 資料
   useEffect(() => {
+    if (props.mode !== 'target') return
     async function fetchParkData () {
       const parks = await parkingLotsData()
       //分成以 target 為中心 或是以 selfPos 為中心
@@ -58,17 +59,35 @@ export default function ParkingMark (props) {
       setParkingLots(filteredParkingLots)
     } 
     fetchParkData()
-  }, [props.target])
+  }, [props.target, props.mode])
 
+  // mapCenter 的資料改變時 fetch 資料
+  useEffect(() => {
+    if (props.mode !== 'screen-center') return
+    async function fetchParkData () {
+      const parks = await parkingLotsData()
+      
+      //分成以 mapCenter 為中心 或是以 selfPos 為中心
+      const filteredParkingLots = getPointsInDistance(parks, props.mapCenter, 0.0075)
+      setParkingLots(filteredParkingLots)
+    } 
+    fetchParkData()
+  }, [props.mapCenter, props.mode])
   //因為 state 的值更新後此 component 會重新 render，所以先判斷 state 到底存不存在
   return (
     <>
       {parkingLots && parkingLots.map(place => {
         const positon = {lng: place.lng, lat: place.lat}
         return (
-          <MarkerF position={positon} key={place.id} />
+          <MarkerF 
+            position={positon} 
+            key={place.id} 
+            onClick={() => {
+              props.handleFetchDirections(props.selfPos, positon, props.directions, props.setDirections)
+            }} />
         )
       })}
     </>
   )
 }
+
