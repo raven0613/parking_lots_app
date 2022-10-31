@@ -1,9 +1,13 @@
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
+// import { useState } from 'react'
+
 
 export default function Place ({ setTarget }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
+
+  // const [isOnComposition, setIsOnComposition] = useState(false);
   
   const handleSelect = async (val) => {
     //傳入的 val 為地址
