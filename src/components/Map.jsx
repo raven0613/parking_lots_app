@@ -1,8 +1,10 @@
+import vector from '../assets/images/cancel-orange.svg'
+// import vector from '../assets/images/map-center.svg'
 import { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import {
   useLoadScript,
   GoogleMap,
-  MarkerF,
+  Marker,
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import Place from "./Place";
@@ -218,16 +220,22 @@ export default function Map() {
             />
           )}
           {selfPos && mode === "self" && (
-            <MarkerF position={selfPos} className="self-point marker" />
+            <Marker position={selfPos} className="self-point marker" />
           )}
           {mapCenter && mode === "screen-center" && (
-            <MarkerF
+            <Marker
+              className="marker"
               onLoad={onLoad}
               position={mapCenter}
+              icon={{
+                url: vector,
+                fillColor: 'blue',
+                scale: 0.2,
+              }}
             />
           )}
-          {target && <MarkerF position={target} />}
-          <ParkingMark
+          {target && <Marker position={target} />}
+          <ParkingMark 
             mode={mode}
             mapCenter={mapCenter}
             target={target}
