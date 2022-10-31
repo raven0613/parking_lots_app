@@ -54,7 +54,6 @@ export default function ParkingMark (props) {
     if (props.mode !== 'target') return
     async function fetchParkData () {
       const parks = await parkingLotsData()
-      console.log(parks)
       //分成以 target 為中心 或是以 selfPos 為中心
       const filteredParkingLots = getPointsInDistance(parks, props.target, 0.0075)
       setParkingLots(filteredParkingLots)
@@ -62,12 +61,12 @@ export default function ParkingMark (props) {
     fetchParkData()
   }, [props.target, props.mode])
 
-  //有 target 的資料傳進來時 fetch 資料
+  // mapCenter 的資料改變時 fetch 資料
   useEffect(() => {
     if (props.mode !== 'screen-center') return
     async function fetchParkData () {
       const parks = await parkingLotsData()
-      console.log(parks)
+      
       //分成以 mapCenter 為中心 或是以 selfPos 為中心
       const filteredParkingLots = getPointsInDistance(parks, props.mapCenter, 0.0075)
       setParkingLots(filteredParkingLots)

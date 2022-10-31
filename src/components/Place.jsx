@@ -1,7 +1,7 @@
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
-// import { useState } from 'react'
+import { useState } from 'react'
 
 
 export default function Place ({ setTarget }) {
@@ -24,11 +24,40 @@ export default function Place ({ setTarget }) {
     setTarget({ lat, lng })
   }
 
+  const [isInputing, setIsInputing] = useState(false)
+  const handleCompsition = (event) => {
+    const { type } = event
+    console.log(type)
+
+    if (type === 'compositionstart') {
+      setIsInputing(true)
+    }
+    else if (type === 'compositionupdate') {
+    }
+    else if (type === 'compositionend') {
+      setIsInputing(false)
+    }
+    else if (type === 'change') {
+      if (!isInputing) {
+        setValue(event.target.value)
+      }
+    }
+  }
+  const handleChange = event => {
+    console.log("handleChange");
+    handleCompsition(event);
+  }
+  
+
   return (
     <Combobox onSelect={ handleSelect }>
       <ComboboxInput 
       value={value} 
-      onChange={e => setValue(e.target.value)} 
+      onCompositionStart={handleCompsition}
+      onCompositionUpdate={handleCompsition}
+      onCompositionEnd={handleCompsition}
+      // onChange={e => setValue(e.target.value)} 
+      onChange={handleChange} 
       disabled={!ready}
       className="combobox-input" 
       placeholder='請輸入地點'/>
