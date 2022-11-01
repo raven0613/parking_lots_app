@@ -1,4 +1,5 @@
-import vector from '../assets/images/cancel-orange.svg'
+import parkMarker from '../assets/images/marker-parking.svg'
+import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 import { Marker } from '@react-google-maps/api';
 import { coordinatesConvert, getStraightDistance } from '../utils/helpers'
@@ -106,6 +107,7 @@ export default function ParkingMark (props) {
   //內部變數
   const FETCH_PER_SEC = 20000
 
+
   useEffect(() => {
     console.log('on ParkingMark load')
     //先把資料抓下來
@@ -152,7 +154,7 @@ export default function ParkingMark (props) {
     let filteredParkingLots = getPointsInDistance(initParkingLots, selfPos, 0.0075)
     filteredParkingLots = parkingsWithRemainings(filteredParkingLots, remainings)
     setParkingLots(parkingsTransFilter(filteredParkingLots, transOption))
-  }, [selfPos, mode, transOption])
+  }, [selfPos, mode, transOption, remainings])
 
   //有 target 的資料傳進來時 fetch 資料
   useEffect(() => {
@@ -161,7 +163,7 @@ export default function ParkingMark (props) {
     //加入剩餘車位資料
     filteredParkingLots = parkingsWithRemainings(filteredParkingLots, remainings)
     setParkingLots(parkingsTransFilter(filteredParkingLots, transOption))
-  }, [target, mode, transOption])
+  }, [target, mode, transOption, remainings])
 
   // mapCenter 的資料改變時 fetch 資料
   useEffect(() => {
@@ -170,23 +172,35 @@ export default function ParkingMark (props) {
     //加入剩餘車位資料
     filteredParkingLots = parkingsWithRemainings(filteredParkingLots, remainings)
     setParkingLots(parkingsTransFilter(filteredParkingLots, transOption))
-  }, [mapCenter, mode, transOption])
+  }, [mapCenter, mode, transOption, remainings])
 
+  //icon 的設定
+  const icon = (transOption, place) => {
+    if (availableCounts(transOption, place) < 10) {
+      return {
+        url: parkMarkerSmall,
+        scaledSize: { width: 44, height: 44 },
+      }
+    }
+    return {
+      url: parkMarker,
+      scaledSize: { width: 52, height: 52 },
+    }
+  }
   //因為 state 的值更新後此 component 會重新 render，所以先判斷 state 到底存不存在
   return (
     <>
       {parkingLots && parkingLots.map(place => {
         const positon = {lng: place.lng, lat: place.lat}
+        if (availableCounts(transOption, place) < 1) return <p key={place.id}></p>
         return (
           <Marker 
-            icon={{
-              url: '',
-              scaledSize: { width: 28, height: 28 },
-              className: 'marker'
-            }}
+            icon={icon(transOption, place)}
             label={{
               text: availableCounts(transOption, place),
-              className: 'marker'
+              className: 'marker',
+              color: 'white',
+              fontSize: '16px'
             }}
             zIndex={1}
             className="marker"

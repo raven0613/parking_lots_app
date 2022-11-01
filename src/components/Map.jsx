@@ -1,5 +1,7 @@
 // import vector from '../assets/images/cancel-orange.svg'
-import vector from '../assets/images/map-center.svg'
+import centerMarker from '../assets/images/map-center.svg'
+import selfMarker from '../assets/images/marker-self.svg'
+import targetMarker from '../assets/images/marker-target2.svg'
 import car from '../assets/images/car-.svg'
 import motor from '../assets/images/motorbike.svg'
 import { useMemo, useCallback, useRef, useState, useEffect } from "react";
@@ -222,7 +224,15 @@ export default function Map() {
             />
           )}
           {selfPos && mode === "self" && (
-            <Marker position={selfPos} className="self-point marker" />
+            <Marker 
+              position={selfPos} 
+              className="self-point marker" 
+              icon={{
+                url: selfMarker,
+                scaledSize: { width: 32, height: 32 },
+                className: 'marker'
+              }}
+              />
           )}
           {mapCenter && mode === "screen-center" && (
             <Marker
@@ -230,14 +240,22 @@ export default function Map() {
               onLoad={onLoad}
               position={mapCenter}
               icon={{
-                url: vector,
+                url: centerMarker,
                 scaledSize: { width: 28, height: 28 },
                 className: 'marker'
               }}
               zIndex={999}
             />
           )}
-          {target && <Marker position={target} />}
+          {target && <Marker 
+            position={target} 
+            zIndex={999}
+            icon={{
+              url: targetMarker,
+              scaledSize: { width: 48, height: 48 },
+              className: 'marker'
+            }}
+            />}
           <ParkingMark 
             mode={mode}
             transOption={transOption}
