@@ -1,5 +1,7 @@
-import vector from '../assets/images/cancel-orange.svg'
-// import vector from '../assets/images/map-center.svg'
+// import vector from '../assets/images/cancel-orange.svg'
+import vector from '../assets/images/map-center.svg'
+import car from '../assets/images/car-.svg'
+import motor from '../assets/images/motorbike.svg'
 import { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import {
   useLoadScript,
@@ -74,11 +76,13 @@ export default function Map() {
   const [mode, setMode] = useState("self"); //self, target, screen-center
   //使用者的 currentPosition
   const [selfPos, setSelfPos] = useState();
+  const [transOption, setTransOption] = useState('car');
 
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
     console.log("on page loaded");
     getUserPos(setSelfPos, setMapCenter);
+    setTransOption(localStorage.getItem('transOption'))
   }, []);
 
   const { isLoaded } = useLoadScript({
@@ -116,8 +120,6 @@ export default function Map() {
   //如果移動地圖就改變 center 位置
   function handleCenterChanged() {
     if (mode !== "screen-center") return console.log(mode);
-    // console.log(mapRef.current?.getCenter().toJSON())
-    // setMapCenter(mapRef.current?.getCenter().toJSON())
     
     console.log('mapInstance', mapInstance)
     
@@ -144,15 +146,12 @@ export default function Map() {
       console.log('current mode: ', mode)
       console.log('mapRef.current: ', mapRef.current)
       setMapCenter(mapRef.current.position.toJSON());
-      // if (mapInstance.map) {
-      //   setMapCenter(mapInstance.map.center.toJSON());
-      // } else {
-      //   setMapCenter(mapInstance.getCenter().toJSON());
-      // }
       setTarget(null)
       return
     }
   }, [mode])
+
+
 
   if (!isLoaded) return <p>Loading...</p>;
   return (
@@ -173,30 +172,33 @@ export default function Map() {
       <button
         onClick={() => {
           setMode("self");
-        }}
-      >
+        }}>
         自己位置
       </button>
 
       <button
         onClick={() => {
           setMode("screen-center");
-
-          // console.log('mapInstance', mapInstance.center.toJSON())
-          // setMapCenter(mapInstance.map.center.toJSON())
-          
-          // if (mapInstance.map) {
-          //   setMapCenter(mapInstance.map.center.toJSON());
-          // } else {
-          //   setMapCenter(mapInstance.center.toJSON());
-          // }
-
-          // console.log('mapRef', mapRef.current.getMap())
-          // console.log('current', mapRef.current)
-        }}
-      >
+        }}>
         即時搜尋
       </button>
+
+      <div className='trans-type'>
+        <button
+          className='trans-type__btn trans-type__car'
+          onClick={() => {
+            setTransOption('car')
+            localStorage.setItem('transOption', 'car')
+          }}><img src={car} alt="car" />
+        </button>
+        <button
+          className='trans-type__btn trans-type__motor'
+          onClick={() => {
+            setTransOption('motor')
+            localStorage.setItem('transOption', 'motor')
+          }}><img src={motor} alt="motor" />
+        </button>
+      </div>
 
       <div className="map">
         <GoogleMap
@@ -229,19 +231,19 @@ export default function Map() {
               position={mapCenter}
               icon={{
                 url: vector,
-                fillColor: 'blue',
-                scale: 0.2,
+                scaledSize: { width: 28, height: 28 },
+                className: 'marker'
               }}
+              zIndex={999}
             />
           )}
           {target && <Marker position={target} />}
           <ParkingMark 
             mode={mode}
+            transOption={transOption}
             mapCenter={mapCenter}
             target={target}
             selfPos={selfPos}
-            setMapInstance={setMapInstance}
-            mapInstance={mapInstance}
             handleFetchDirections={handleFetchDirections}
             directions={directions}
             setDirections={setDirections}

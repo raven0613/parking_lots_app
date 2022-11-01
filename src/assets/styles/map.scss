@@ -5,9 +5,17 @@
 }
 
 .marker {
-  width: 5rem;
-  height: 5rem;
-  background-color: black;
+  width: 2rem;
+  height: 2rem;
+  color: blue;
+  stroke: red;
+  fill: green;
+  // background-color: darkblue;
+  svg {
+    fill: green;
+    color: blue;
+    stroke: red;
+  }
 }
 
 .combobox-input {
