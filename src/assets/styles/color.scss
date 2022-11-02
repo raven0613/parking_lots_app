@@ -1,0 +1,44 @@
+* {
+  color: var(--main-text-color);
+}
+
+:root {
+  --white: #FFFFFF;
+  --main-color: #33CC99; //(品牌色)
+  --main-text-color: #3B4446; //(dark-100)
+  --second-color: #6C7570; //(Secondary)   user panel 跟隨中+跟隨者+帳號+icon
+  
+  --shadow-color: #b8bcbe;
+  --shadow-darker: #8d9092;
+  --card-shadow-color: #f0f4f7;
+  --card-border-color: #dbe1e6;
+
+
+
+  
+  --link-color: #0062FF; // (primary) 註冊+登入
+  --main-button-color: #44444F; //(dark-90)   個人資料+設定+登出
+
+  --top-user-second-color: #92929D; //(dark-70)   推薦跟隨的 user id
+  --top-user-background-color: #FAFAFB; //(dark-20)   推薦跟隨的背景
+  --top-user-hover-color: #F1F1F5; //(dark-40)   推薦跟隨的hover
+
+  --title-second-color: #6C7570; //(Secondary)   多少推文
+
+  --tab-text-color: #657786; //推文+回覆+喜歡的內容+追隨者+正在追隨
+  --tab-hover-focus: #50B5FF; //  表格hover, focus
+  --tab-error: #FC5A5A; // 表格輸入有誤
+  --text-label-color: #696974; // 表格label的文字顏色
+  --text-placeholder-color: #B5B5BE; //(dark-60)   settings placeholder
+  --text-area-color: #F5F8FA; //settings placeholder+user edit placeholder
+  --border-color: #E6ECF0;
+
+
+
+  --modal-web-text: #9197A3; //網頁版留言、回覆的placeholder
+  --modal-mobile-text: #6C757D;
+  --admin-card: #F6F7F8;
+
+  --alert-succeed: #82C43C;
+  --alert-error: #FC5A5A;
+}

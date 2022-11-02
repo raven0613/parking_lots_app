@@ -2,8 +2,7 @@
 import centerMarker from '../assets/images/map-center.svg'
 import selfMarker from '../assets/images/marker-self.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
-import car from '../assets/images/car-.svg'
-import motor from '../assets/images/motorbike.svg'
+
 import { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import {
   useLoadScript,
@@ -14,6 +13,9 @@ import {
 import Place from "./Place";
 import ParkingMark from "./ParkingMark";
 import CardPanel from './card-panel/CardPanel'
+import ModeController from './ModeController'
+import TransTypeController from './TransTypeController'
+import Speech from './Speech'
 const libraries = ["places"];
 
 //取得使用者的 currentPosition
@@ -242,39 +244,11 @@ export default function Map(props) {
               setMapCenter(position);
             }}
           ></Place>
+          <Speech speechRef={speechRef}></Speech>
         </div>
 
-        <div className='trans-type'>
-          <button
-            className='trans-type__btn trans-type__car'
-            onClick={() => {
-              setTransOption('car')
-              localStorage.setItem('transOption', 'car')
-            }}><img src={car} alt="car" />
-          </button>
-          <button
-            className='trans-type__btn trans-type__motor'
-            onClick={() => {
-              setTransOption('motor')
-              localStorage.setItem('transOption', 'motor')
-            }}><img src={motor} alt="motor" />
-          </button>
-        </div>
-
-        <div className='mode__controller'>
-          <button
-            onClick={() => {
-              setMode("self");
-            }}>
-            自己位置
-          </button>
-          <button
-            onClick={() => {
-              setMode("screen-center");
-            }}>
-            即時搜尋
-          </button>
-        </div>
+        <TransTypeController setTransOption={setTransOption}/>
+        <ModeController setMode={setMode}/>
         <CardPanel />
       </div>
     </>

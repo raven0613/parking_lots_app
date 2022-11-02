@@ -1,5 +1,5 @@
 import Map from './components/Map'
-import Speech from './components/Speech'
+
 
 import { createContext, useEffect, useRef } from 'react';
 
@@ -16,10 +16,7 @@ function App() {
   
   return (
     <div className="App">
-        
-
-        <Map className="map__container" speechRef={speechRef}></Map>
-        {/* <Speech speechRef={speechRef}></Speech> */}
+      <Map className="map__container" speechRef={speechRef}></Map>
     </div>
   );
 }

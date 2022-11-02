@@ -7,7 +7,6 @@
     height: 100%;
     border: none;
     cursor: pointer;
-    color: red;
     img {
       width: 3rem;
     }
@@ -15,11 +14,29 @@
 
   &__car {
     border-radius: 2rem 0 0 2rem;
-    background-color: #33CC99;
+    background-color: var(--main-color);
   }
 
   &__motor {
     border-radius: 0 2rem 2rem 0;
-    background-color: #33CC99;
+    background-color: var(--main-color);
+  }
+}
+
+.mode__controller {
+  pointer-events: auto;
+  width: 20rem;
+  height: 3rem;
+  
+  &--button {
+    width:50%;
+    height: 100%;
+    background-color: var(--main-color);
+  }
+  &--self {
+    border-radius: 2.5rem 0 0 2.5rem;
+  }
+  &--quick {
+    border-radius: 0 2.5rem 2.5rem 0;
   }
 }
