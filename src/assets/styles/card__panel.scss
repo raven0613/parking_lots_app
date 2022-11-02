@@ -6,7 +6,55 @@
   top: 0;
   bottom: 0;
   right: 0;
+  padding: 1.2rem 0 1.2rem 0.5rem;
+
+  &--container {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 0.5rem;
+  }
+
+  &--icon {
+    display: none;
+  }
 }
+.card {
+  width: 100%;
+  height: 10rem;
+  background-color: white;
+  border-radius: 0.3rem;
+  border: 1px rgb(216, 216, 216) solid;
+  transition: box-shadow 0.15s ease-in-out;
+  color: #3B4446;
+  margin-bottom: 0.8rem;
+
+  &:hover {
+    box-shadow: 2px 2px 3px 0 rgb(240, 240, 240);
+  }
+  &__title {
+    padding: 0.5rem 0;
+    text-align: center;
+  }
+  &__info {
+    width: 100%;
+    height: 1.5rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    img {
+      width: auto;
+      height: 1.2rem;
+      padding: 0 0.5rem;
+    }
+    span {
+      line-height: 1.5rem;
+    }
+    
+  }
+}
+
+
 
 @media screen and (min-width: 600px) {
   .card__panel {
@@ -16,7 +64,6 @@
     bottom: 0;
     right: -20rem;
     box-shadow: 0 0 10px 1px rgb(145, 145, 145);
-    
     transition: box-shadow 0.2s ease-in-out;
     &:hover {
       cursor: pointer;
@@ -25,18 +72,15 @@
         box-shadow: 0 0 12px 1px rgb(119, 119, 119);
       }
     }
-    transition: 0.5s ease-in-out;
-    &.active {
-      right: 0;
-    }
     &::before {
       content: '';
-      width: 1rem;
-      height: 8rem;
+      width: 1.5rem;
+      height: 10rem;
       background-color: white;
       top: 50%;
-      left: -1rem;
-      border-radius: 10px 0 0 10px;
+      left: -1.5rem;
+
+      border-radius: 12px 0 0 12px;
       transform: translateY(-50%);
       position: absolute;
       box-shadow: 0 0 8px 1px rgb(156, 156, 156);
@@ -45,13 +89,34 @@
     }
     &::after {
       content: '';
-      width: 2rem;
-      height: 200%;
+      width: 0.75rem;
       background-color: white;
       left: 0rem;
       transform: translateY(-50%);
       position: absolute;
-      z-index: 0;
+      top: 0;
+      bottom: -100%;
+    }
+    &--icon {
+      display: block;
+      width: 0.8rem;
+      height: 0.8rem;
+      position: absolute;
+      z-index: 5;
+      top: 50%;
+      transform: translateY(-50%);
+      left: -1.2rem;
+    }
+
+    //滑鼠點擊後
+    transition: 0.5s ease-in-out;
+
+    &.active {
+      right: 0;
+
+      .card__panel--icon {
+        transform: translateY(-50%) scaleX(-1);
+      }
     }
   }
 }

@@ -19,7 +19,7 @@ function App() {
         
 
         <Map className="map__container" speechRef={speechRef}></Map>
-        <Speech speechRef={speechRef}></Speech>
+        {/* <Speech speechRef={speechRef}></Speech> */}
     </div>
   );
 }

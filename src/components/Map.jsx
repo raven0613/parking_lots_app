@@ -13,7 +13,7 @@ import {
 } from "@react-google-maps/api";
 import Place from "./Place";
 import ParkingMark from "./ParkingMark";
-import CardPanel from './CardPanel'
+import CardPanel from './card-panel/CardPanel'
 const libraries = ["places"];
 
 //取得使用者的 currentPosition

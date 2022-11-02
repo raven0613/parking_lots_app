@@ -23,3 +23,28 @@ body {
   height: 100%;
 }
 
+
+
+
+
+.scroll-bar {
+  padding-left: 6px;
+}
+
+.scroll-bar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-bar::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+// ::-webkit-scrollbar {
+//   /* make scrollbar transparent */
+//   width: 0px;
+//   background: transparent;
+// }
