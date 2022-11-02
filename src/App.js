@@ -1,22 +1,23 @@
 import Map from './components/Map'
 
 
-import { createContext, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
-
+export const allContext = React.createContext('')
 
 function App() {
-  // const [speechResult, setSpeechResult] = useState()
-  const speechRef = useRef()
-  const AppContext = createContext(null)
-  //Provider包覆元件
+  const [parkingLots, setParkingLots] = useState()
   const contextValue = {
-    speechRef
+    parkingLots, setParkingLots
   }
+
   
   return (
     <div className="App">
-      <Map className="map__container" speechRef={speechRef}></Map>
+      <allContext.Provider value={contextValue}>
+          <Map className="map__container"/>
+      </allContext.Provider>
+      
     </div>
   );
 }

@@ -1,26 +1,26 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { allContext } from '../../App'
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
+import { useEffect } from "react";
 
 export default function CardPanel () {
   const [isActive, setIsActive] = useState(false)
+  const { parkingLots, setParkingLots } = useContext(allContext)
+
+
   return (
     <div 
     onClick={() => {setIsActive(!isActive)}}
     className={isActive? 'card__panel active': 'card__panel'}>
       <div className="card__panel--container scroll-bar">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {parkingLots && parkingLots.map(park => {
+          return (
+            <Card key={ park.id } park={ park }/>
+          )
+        })}
       </div>
-      
-      {/* 放附近停車場卡片 */}
-
-      <img className="card__panel--icon" src={Arrow} alt="" />
+      <img className="card__panel--icon" src={ Arrow } alt="" />
     </div>
   )
 }

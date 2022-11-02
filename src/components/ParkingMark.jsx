@@ -3,10 +3,10 @@ import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 import { Marker } from '@react-google-maps/api';
 import { coordinatesConvert, getStraightDistance } from '../utils/helpers'
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { allContext } from '../App'
 
-
+//我現在要開始改了喔QQ
 //得到所有停車場資料
 const parkingLotsData = async() => {
   try {
@@ -94,18 +94,27 @@ const availableCounts = (transOption, place) => {
   if (transOption === 'motor') return place.availablemotor.toString()
 }
 
+
+
+
+
+
+
+
+
 export default function ParkingMark (props) {
   //props
   const { mode, transOption, mapCenter, target, selfPos, handleFetchDirections, directions, setDirections} = props
+  const { parkingLots, setParkingLots } = useContext(allContext)
   //資料
   const [initParkingLots, setInitParkingLots] = useState()
-  const [parkingLots, setParkingLots] = useState()
+  // const [parkingLots, setParkingLots] = useState()
   const [remainings, setRemainings] = useState()
   //fetching狀態
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
   const [isFetchingParks, setIsFetchingParks] = useState(false)
   //內部變數
-  const FETCH_PER_SEC = 2000000
+  const FETCH_PER_SEC = 20000
 
 
   useEffect(() => {
@@ -129,6 +138,7 @@ export default function ParkingMark (props) {
         if (isFetchingRemaining) return
         setIsFetchingRemaining(true)
         const remainings = await remainingData()
+        if(!remainings) return
         setRemainings(remainings) 
         setIsFetchingRemaining(false)       
       } 
@@ -171,8 +181,12 @@ export default function ParkingMark (props) {
     let filteredParkingLots = getPointsInDistance(initParkingLots, mapCenter, 0.0075)
     //加入剩餘車位資料
     filteredParkingLots = parkingsWithRemainings(filteredParkingLots, remainings)
-    setParkingLots(parkingsTransFilter(filteredParkingLots, transOption))
+    // setParkingLots(parkingsTransFilter(filteredParkingLots, transOption))
+
+    const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
+    setParkingLots(availablePark)
   }, [mapCenter, mode, transOption, remainings])
+
 
   //icon 的設定
   const icon = (transOption, place) => {

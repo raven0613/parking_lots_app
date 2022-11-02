@@ -3,7 +3,7 @@ import centerMarker from '../assets/images/map-center.svg'
 import selfMarker from '../assets/images/marker-self.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
 
-import { useMemo, useCallback, useRef, useState, useEffect } from "react";
+import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import {
   useLoadScript,
   GoogleMap,
@@ -15,6 +15,7 @@ import ParkingMark from "./ParkingMark";
 import CardPanel from './card-panel/CardPanel'
 import ModeController from './ModeController'
 import TransTypeController from './TransTypeController'
+import DetailPanel from './DetailPanel'
 import Speech from './Speech'
 const libraries = ["places"];
 
@@ -76,6 +77,8 @@ const handleFetchDirections = (origin, destination, state, setter) => {
     }
   )
 }
+
+export const parkingContext = React.createContext('')
 
 export default function Map(props) {
   const [mode, setMode] = useState("self"); //self, target, screen-center
@@ -158,7 +161,8 @@ export default function Map(props) {
     }
   }, [mode])
 
-
+  
+  const parkingRef = useRef()
 
   if (!isLoaded) return <p>Loading...</p>;
   return (
@@ -226,6 +230,7 @@ export default function Map(props) {
             handleFetchDirections={handleFetchDirections}
             directions={directions}
             setDirections={setDirections}
+            parkingRef={parkingRef}
           />
         </GoogleMap>
       </div>
@@ -246,10 +251,14 @@ export default function Map(props) {
           ></Place>
           <Speech speechRef={speechRef}></Speech>
         </div>
+        <parkingContext.Provider value={parkingRef.current}>
+            <CardPanel />
+        </parkingContext.Provider>
 
+        <DetailPanel />
         <TransTypeController setTransOption={setTransOption}/>
         <ModeController setMode={setMode}/>
-        <CardPanel />
+        
       </div>
     </>
   );
