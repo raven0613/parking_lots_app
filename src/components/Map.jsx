@@ -74,11 +74,12 @@ const handleFetchDirections = (origin, destination, state, setter) => {
   )
 }
 
-export default function Map() {
+export default function Map(props) {
   const [mode, setMode] = useState("self"); //self, target, screen-center
   //使用者的 currentPosition
   const [selfPos, setSelfPos] = useState();
   const [transOption, setTransOption] = useState('car');
+  const { speechRef } = props
 
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
@@ -115,6 +116,7 @@ export default function Map() {
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
+    console.log('load map')
     mapRef.current = map
     setMapInstance(map)
   }, []);
@@ -160,6 +162,7 @@ export default function Map() {
     <>
       <div className="controller">
         <Place
+          speechRef={speechRef}
           setTarget={(position) => {
             //輸入 target 後，模式切換成 target
             setMode("target");

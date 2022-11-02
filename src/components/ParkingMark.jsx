@@ -105,7 +105,7 @@ export default function ParkingMark (props) {
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
   const [isFetchingParks, setIsFetchingParks] = useState(false)
   //內部變數
-  const FETCH_PER_SEC = 20000
+  const FETCH_PER_SEC = 2000000
 
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export default function ParkingMark (props) {
     setParkingLots(parkingsTransFilter(filteredParkingLots, transOption))
   }, [selfPos, mode, transOption, remainings])
 
-  //有 target 的資料傳進來時 fetch 資料
+  // target的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'target') return
     let filteredParkingLots = getPointsInDistance(initParkingLots, target, 0.0075)
@@ -165,7 +165,7 @@ export default function ParkingMark (props) {
     setParkingLots(parkingsTransFilter(filteredParkingLots, transOption))
   }, [target, mode, transOption, remainings])
 
-  // mapCenter 的資料改變時 fetch 資料
+  // mapCenter的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'screen-center') return
     let filteredParkingLots = getPointsInDistance(initParkingLots, mapCenter, 0.0075)
@@ -208,6 +208,7 @@ export default function ParkingMark (props) {
             key={place.id} 
             onClick={() => {
               handleFetchDirections(selfPos, positon, directions, setDirections)
+              console.log(place)
             }} />
         )
       })}
