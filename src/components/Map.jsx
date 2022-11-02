@@ -13,6 +13,7 @@ import {
 } from "@react-google-maps/api";
 import Place from "./Place";
 import ParkingMark from "./ParkingMark";
+import CardPanel from './CardPanel'
 const libraries = ["places"];
 
 //取得使用者的 currentPosition
@@ -160,51 +161,6 @@ export default function Map(props) {
   if (!isLoaded) return <p>Loading...</p>;
   return (
     <>
-      <div className="controller">
-        <Place
-          speechRef={speechRef}
-          setTarget={(position) => {
-            //輸入 target 後，模式切換成 target
-            setMode("target");
-            setTarget(position);
-            //移動地圖中心至 target
-            // mapRef.current?.panTo(position)
-            setMapCenter(position);
-          }}
-        ></Place>
-      </div>
-
-      <button
-        onClick={() => {
-          setMode("self");
-        }}>
-        自己位置
-      </button>
-
-      <button
-        onClick={() => {
-          setMode("screen-center");
-        }}>
-        即時搜尋
-      </button>
-
-      <div className='trans-type'>
-        <button
-          className='trans-type__btn trans-type__car'
-          onClick={() => {
-            setTransOption('car')
-            localStorage.setItem('transOption', 'car')
-          }}><img src={car} alt="car" />
-        </button>
-        <button
-          className='trans-type__btn trans-type__motor'
-          onClick={() => {
-            setTransOption('motor')
-            localStorage.setItem('transOption', 'motor')
-          }}><img src={motor} alt="motor" />
-        </button>
-      </div>
-
       <div className="map">
         <GoogleMap
           zoom={15}
@@ -270,6 +226,56 @@ export default function Map(props) {
             setDirections={setDirections}
           />
         </GoogleMap>
+      </div>
+
+      <div className="map__ui">
+        
+        <div className="controller">
+          <Place
+            speechRef={speechRef}
+            setTarget={(position) => {
+              //輸入 target 後，模式切換成 target
+              setMode("target");
+              setTarget(position);
+              //移動地圖中心至 target
+              // mapRef.current?.panTo(position)
+              setMapCenter(position);
+            }}
+          ></Place>
+        </div>
+
+        <div className='trans-type'>
+          <button
+            className='trans-type__btn trans-type__car'
+            onClick={() => {
+              setTransOption('car')
+              localStorage.setItem('transOption', 'car')
+            }}><img src={car} alt="car" />
+          </button>
+          <button
+            className='trans-type__btn trans-type__motor'
+            onClick={() => {
+              setTransOption('motor')
+              localStorage.setItem('transOption', 'motor')
+            }}><img src={motor} alt="motor" />
+          </button>
+        </div>
+
+        <div className='mode__controller'>
+          <button
+            onClick={() => {
+              setMode("self");
+            }}>
+            自己位置
+          </button>
+          <button
+            onClick={() => {
+              setMode("screen-center");
+            }}>
+            即時搜尋
+          </button>
+        </div>
+        <CardPanel />
       </div>
     </>
   );

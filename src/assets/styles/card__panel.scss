@@ -1,0 +1,57 @@
+.card__panel {
+  pointer-events: auto;
+  width: 100%;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@media screen and (min-width: 600px) {
+  .card__panel {
+    z-index: 1;
+    width: 20rem;
+    top: 0;
+    bottom: 0;
+    right: -20rem;
+    box-shadow: 0 0 10px 1px rgb(145, 145, 145);
+    
+    transition: box-shadow 0.2s ease-in-out;
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0 0 12px 1px rgb(138, 138, 138);
+      &::before {
+        box-shadow: 0 0 12px 1px rgb(119, 119, 119);
+      }
+    }
+    transition: 0.5s ease-in-out;
+    &.active {
+      right: 0;
+    }
+    &::before {
+      content: '';
+      width: 1rem;
+      height: 8rem;
+      background-color: white;
+      top: 50%;
+      left: -1rem;
+      border-radius: 10px 0 0 10px;
+      transform: translateY(-50%);
+      position: absolute;
+      box-shadow: 0 0 8px 1px rgb(156, 156, 156);
+      transition: box-shadow 0.2s ease-in-out;
+      z-index: 0;
+    }
+    &::after {
+      content: '';
+      width: 2rem;
+      height: 200%;
+      background-color: white;
+      left: 0rem;
+      transform: translateY(-50%);
+      position: absolute;
+      z-index: 0;
+    }
+  }
+}

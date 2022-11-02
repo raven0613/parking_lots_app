@@ -1,5 +1,6 @@
 import Map from './components/Map'
 import Speech from './components/Speech'
+
 import { createContext, useEffect, useRef } from 'react';
 
 
@@ -12,19 +13,21 @@ function App() {
   const contextValue = {
     speechRef
   }
-  useEffect(() => {
-    console.log(speechRef.current)
-  }, [speechRef])
   
   return (
     <div className="App">
-      <AppContext.Provider value={contextValue} >
+        
+
+        <Map className="map__container" speechRef={speechRef}></Map>
         <Speech speechRef={speechRef}></Speech>
-        <Map className="map" speechRef={speechRef}></Map>
-      </AppContext.Provider>
-      
     </div>
   );
 }
 
 export default App;
+
+//nav
+//MAP(map__container)
+//  map(map)
+//  mapUI(map__ui)
+//footer
