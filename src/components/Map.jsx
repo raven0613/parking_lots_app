@@ -85,9 +85,11 @@ export const parkingContext = React.createContext('')
 
 
 export default function Map(props) {
+  //搜尋模式
   const [mode, setMode] = useState("self"); //self, target, screen-center
   //使用者的 currentPosition
   const [selfPos, setSelfPos] = useState();
+  //要顯示哪種交通工具的停車場
   const [transOption, setTransOption] = useState('car');
   const { speechRef } = props
 
@@ -105,6 +107,9 @@ export default function Map(props) {
   });
   //設定搜尋目標點
   const [target, setTarget] = useState();
+  //設定目前點的停車場
+  const [currentPark, setCurrentPark] = useState();
+  //導航路線
   const [directions, setDirections] = useState();
   const mapRef = useRef();
   //設定初始點
@@ -143,9 +148,8 @@ export default function Map(props) {
       setMapCenter(mapInstance.center.toJSON());
     }
   }
-
+  //當搜尋 mode 改變時
   useEffect(() => {
-    setDirections(null)
     if (mode === 'self') {
       console.log('current mode: ', mode)
       getUserPos(setSelfPos, setMapCenter)
@@ -157,6 +161,7 @@ export default function Map(props) {
       return
     }
     if (mode === 'screen-center') {
+      setDirections(null)
       console.log('current mode: ', mode)
       console.log('mapRef.current: ', mapRef.current)
       setMapCenter(mapRef.current.position.toJSON());
@@ -165,8 +170,7 @@ export default function Map(props) {
     }
   }, [mode])
 
-  
-  const parkingRef = useRef()
+
 
   if (!isLoaded) return <p>Loading...</p>;
   return (
@@ -234,7 +238,8 @@ export default function Map(props) {
             handleFetchDirections={handleFetchDirections}
             directions={directions}
             setDirections={setDirections}
-            parkingRef={parkingRef}
+            currentPark={currentPark}
+            setCurrentPark={setCurrentPark}
           />
         </GoogleMap>
       </div>
@@ -255,11 +260,14 @@ export default function Map(props) {
           ></Place>
           <Speech speechRef={speechRef}></Speech>
         </div>
-        <parkingContext.Provider value={parkingRef.current}>
-            <CardPanel />
-        </parkingContext.Provider>
-
-        <DetailPanel />
+        <CardPanel 
+          currentPark={currentPark} 
+          selfPos={selfPos}
+          handleFetchDirections={handleFetchDirections}
+          directions={directions}
+          setDirections={setDirections}
+          setCurrentPark={setCurrentPark}/>
+        <DetailPanel currentPark={currentPark}/>
         <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
         <ModeController setMode={setMode}/>
         

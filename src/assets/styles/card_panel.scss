@@ -33,6 +33,15 @@
   transition: box-shadow 0.15s ease-in-out;
   margin-bottom: 0.8rem;
 
+  &.current {
+    background-image: url(../images/card-pin.svg);
+    background-repeat: no-repeat;
+    background-position: 98% 2%;
+    margin-bottom: 1.2rem;
+    box-shadow: 2px 2px 5px 1px var(--card-shadow-color);
+    cursor: auto;
+  }
+
   &:hover {
     box-shadow: 2px 2px 3px 0 var(--card-shadow-color);
   }
@@ -54,7 +63,6 @@
     span {
       line-height: 1.5rem;
     }
-    
   }
 }
 

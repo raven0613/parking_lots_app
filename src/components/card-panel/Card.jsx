@@ -1,16 +1,26 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import centerMarker from '../../assets/images/cancel-orange.svg'
 
 
 export default function Card (props) {
   const { name, address, tel, serviceTime, payex, availablecar, availablemotor } = props.park
+  const { isCurr } = props
 
+  const positon = {lng: props.park.lng, lat: props.park.lat}
+  
   return (
     <div 
     onClick={(e) => {
       e.stopPropagation()
-      console.log('選')}}
-    className="card">
+      if (isCurr) return
+      if(!props.onClickSettings) return
+
+      //點擊卡片後呼叫 Map 的建議路線功能+設定為目前點選的停車場
+      const { handleFetchDirections, selfPos, directions, setDirections, setCurrentPark } = props.onClickSettings
+      handleFetchDirections(selfPos, positon , directions, setDirections)
+      setCurrentPark(props.park)}}
+
+    className={isCurr? 'card current' : 'card'}>
       <h3 className="card__title">{ name }</h3>
       <div className="card__info">
         <img src={centerMarker} alt="icon"></img>

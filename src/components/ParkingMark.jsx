@@ -105,7 +105,7 @@ const availableCounts = (transOption, place) => {
 
 export default function ParkingMark (props) {
   //props
-  const { mode, transOption, mapCenter, target, selfPos, handleFetchDirections, directions, setDirections} = props
+  const { mode, transOption, mapCenter, target, selfPos, handleFetchDirections, directions, setDirections, currentPark, setCurrentPark } = props
   const { parkingLots, setParkingLots } = useContext(allContext)
   //資料
   const [initParkingLots, setInitParkingLots] = useState()
@@ -115,7 +115,7 @@ export default function ParkingMark (props) {
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
   const [isFetchingParks, setIsFetchingParks] = useState(false)
   //內部變數
-  const FETCH_PER_SEC = 20000
+  const FETCH_PER_SEC = 20000000
 
 
   useEffect(() => {
@@ -126,8 +126,10 @@ export default function ParkingMark (props) {
         if (isFetchingParks) return
         setIsFetchingParks(true)
         const parks = await parkingLotsData()
+
         let a = parks.filter(park => park.FareInfo?.Holiday)
         console.log(a)
+
         setInitParkingLots(parks) 
         setIsFetchingParks(false)       
       } 
@@ -207,14 +209,14 @@ export default function ParkingMark (props) {
   //因為 state 的值更新後此 component 會重新 render，所以先判斷 state 到底存不存在
   return (
     <>
-      {parkingLots && parkingLots.map(place => {
-        const positon = {lng: place.lng, lat: place.lat}
-        if (availableCounts(transOption, place) < 1) return <p key={place.id}></p>
+      {parkingLots && parkingLots.map(park => {
+        const positon = {lng: park.lng, lat: park.lat}
+        if (availableCounts(transOption, park) < 1) return <p key={park.id}></p>
         return (
           <Marker 
-            icon={icon(transOption, place)}
+            icon={icon(transOption, park)}
             label={{
-              text: availableCounts(transOption, place),
+              text: availableCounts(transOption, park),
               className: 'marker',
               color: 'white',
               fontSize: '16px'
@@ -222,10 +224,11 @@ export default function ParkingMark (props) {
             zIndex={1}
             className="marker"
             position={positon} 
-            key={place.id} 
+            key={park.id} 
             onClick={() => {
               handleFetchDirections(selfPos, positon, directions, setDirections)
-              console.log(place)
+              setCurrentPark(park)
+              console.log(park)
             }} />
         )
       })}
