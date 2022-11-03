@@ -80,6 +80,10 @@ const handleFetchDirections = (origin, destination, state, setter) => {
 
 export const parkingContext = React.createContext('')
 
+
+
+
+
 export default function Map(props) {
   const [mode, setMode] = useState("self"); //self, target, screen-center
   //使用者的 currentPosition
@@ -256,7 +260,7 @@ export default function Map(props) {
         </parkingContext.Provider>
 
         <DetailPanel />
-        <TransTypeController setTransOption={setTransOption}/>
+        <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
         <ModeController setMode={setMode}/>
         
       </div>

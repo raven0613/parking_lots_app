@@ -15,13 +15,14 @@ const parkingLotsData = async() => {
     console.log('抓到停車場資料')
     const parks = response.data.data.park.map(park => {
         const {id, area, name, summary, address, tel, payex, serviceTime, tw97x, tw97y, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo: {...FareInfo}} = park
-
+        
         //TWD97轉經緯度
         const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
         return {
           id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0
         }
     })
+    console.log(parks)
     return parks
   }
   catch(error) {
@@ -125,6 +126,8 @@ export default function ParkingMark (props) {
         if (isFetchingParks) return
         setIsFetchingParks(true)
         const parks = await parkingLotsData()
+        let a = parks.filter(park => park.FareInfo?.Holiday)
+        console.log(a)
         setInitParkingLots(parks) 
         setIsFetchingParks(false)       
       } 
