@@ -1,0 +1,18 @@
+.combobox-input {
+  pointer-events: auto;
+  width: 20rem;
+  height: 3rem;
+  font-size: 1.5rem
+}
+
+.combobox-list {
+  background-color: chocolate;
+}
+
+.combobox-option {
+  pointer-events: auto;
+  transition: 0.2s ease-out;
+  &:hover {
+    background-color: burlywood;
+  }
+}

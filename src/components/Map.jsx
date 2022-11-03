@@ -1,12 +1,22 @@
-import { useMemo, useCallback, useRef, useState, useEffect } from "react";
+// import vector from '../assets/images/cancel-orange.svg'
+import centerMarker from '../assets/images/map-center.svg'
+import selfMarker from '../assets/images/marker-self.svg'
+import targetMarker from '../assets/images/marker-target2.svg'
+
+import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import {
   useLoadScript,
   GoogleMap,
-  MarkerF,
+  Marker,
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import Place from "./Place";
 import ParkingMark from "./ParkingMark";
+import CardPanel from './card-panel/CardPanel'
+import ModeController from './ModeController'
+import TransTypeController from './TransTypeController'
+import DetailPanel from './DetailPanel'
+import Speech from './Speech'
 const libraries = ["places"];
 
 //取得使用者的 currentPosition
@@ -68,15 +78,26 @@ const handleFetchDirections = (origin, destination, state, setter) => {
   )
 }
 
-export default function Map() {
-  const [mode, setMode] = useState("self"); //self, target, screen-center
+export const parkingContext = React.createContext('')
+
+
+
+
+
+export default function Map(props) {
+  //搜尋模式
+  const [mode, setMode] = useState("self") //self, target, screen-center
   //使用者的 currentPosition
-  const [selfPos, setSelfPos] = useState();
+  const [selfPos, setSelfPos] = useState()
+  //要顯示哪種交通工具的停車場
+  const [transOption, setTransOption] = useState('car')
+  const [ speech, setSpeech ] =  useState()
 
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
     console.log("on page loaded");
     getUserPos(setSelfPos, setMapCenter);
+    setTransOption(localStorage.getItem('transOption'))
   }, []);
 
   const { isLoaded } = useLoadScript({
@@ -86,6 +107,9 @@ export default function Map() {
   });
   //設定搜尋目標點
   const [target, setTarget] = useState();
+  //設定目前點的停車場
+  const [currentPark, setCurrentPark] = useState();
+  //導航路線
   const [directions, setDirections] = useState();
   const mapRef = useRef();
   //設定初始點
@@ -107,6 +131,7 @@ export default function Map() {
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
+    console.log('load map')
     mapRef.current = map
     setMapInstance(map)
   }, []);
@@ -114,8 +139,6 @@ export default function Map() {
   //如果移動地圖就改變 center 位置
   function handleCenterChanged() {
     if (mode !== "screen-center") return console.log(mode);
-    // console.log(mapRef.current?.getCenter().toJSON())
-    // setMapCenter(mapRef.current?.getCenter().toJSON())
     
     console.log('mapInstance', mapInstance)
     
@@ -125,13 +148,13 @@ export default function Map() {
       setMapCenter(mapInstance.center.toJSON());
     }
   }
-
+  //當搜尋 mode 改變時
   useEffect(() => {
-    setDirections(null)
     if (mode === 'self') {
       console.log('current mode: ', mode)
       getUserPos(setSelfPos, setMapCenter)
       setTarget(null)
+      setSpeech('')
       return
     }
     if (mode === 'target') {
@@ -139,63 +162,21 @@ export default function Map() {
       return
     }
     if (mode === 'screen-center') {
+      setDirections(null)
       console.log('current mode: ', mode)
       console.log('mapRef.current: ', mapRef.current)
       setMapCenter(mapRef.current.position.toJSON());
-      // if (mapInstance.map) {
-      //   setMapCenter(mapInstance.map.center.toJSON());
-      // } else {
-      //   setMapCenter(mapInstance.getCenter().toJSON());
-      // }
       setTarget(null)
+      setSpeech('')
       return
     }
   }, [mode])
 
+
+
   if (!isLoaded) return <p>Loading...</p>;
   return (
     <>
-      <div className="controller">
-        <Place
-          setTarget={(position) => {
-            //輸入 target 後，模式切換成 target
-            setMode("target");
-            setTarget(position);
-            //移動地圖中心至 target
-            // mapRef.current?.panTo(position)
-            setMapCenter(position);
-          }}
-        ></Place>
-      </div>
-
-      <button
-        onClick={() => {
-          setMode("self");
-        }}
-      >
-        自己位置
-      </button>
-
-      <button
-        onClick={() => {
-          setMode("screen-center");
-
-          // console.log('mapInstance', mapInstance.center.toJSON())
-          // setMapCenter(mapInstance.map.center.toJSON())
-          
-          // if (mapInstance.map) {
-          //   setMapCenter(mapInstance.map.center.toJSON());
-          // } else {
-          //   setMapCenter(mapInstance.center.toJSON());
-          // }
-
-          // console.log('mapRef', mapRef.current.getMap())
-          // console.log('current', mapRef.current)
-        }}
-      >
-        即時搜尋
-      </button>
-
       <div className="map">
         <GoogleMap
           zoom={15}
@@ -218,27 +199,80 @@ export default function Map() {
             />
           )}
           {selfPos && mode === "self" && (
-            <MarkerF position={selfPos} className="self-point marker" />
+            <Marker 
+              position={selfPos} 
+              className="self-point marker" 
+              icon={{
+                url: selfMarker,
+                scaledSize: { width: 32, height: 32 },
+                className: 'marker'
+              }}
+              />
           )}
           {mapCenter && mode === "screen-center" && (
-            <MarkerF
+            <Marker
+              className="marker"
               onLoad={onLoad}
               position={mapCenter}
+              icon={{
+                url: centerMarker,
+                scaledSize: { width: 28, height: 28 },
+                className: 'marker'
+              }}
+              zIndex={999}
             />
           )}
-          {target && <MarkerF position={target} />}
-          <ParkingMark
+          {target && <Marker 
+            position={target} 
+            zIndex={999}
+            icon={{
+              url: targetMarker,
+              scaledSize: { width: 48, height: 48 },
+              className: 'marker'
+            }}
+            />}
+          <ParkingMark 
             mode={mode}
+            transOption={transOption}
             mapCenter={mapCenter}
             target={target}
             selfPos={selfPos}
-            setMapInstance={setMapInstance}
-            mapInstance={mapInstance}
             handleFetchDirections={handleFetchDirections}
             directions={directions}
             setDirections={setDirections}
+            currentPark={currentPark}
+            setCurrentPark={setCurrentPark}
           />
         </GoogleMap>
+      </div>
+
+      <div className="map__ui">
+        
+        <div className="controller">
+          <Place
+            speech={speech}
+            setTarget={(position) => {
+              //輸入 target 後，模式切換成 target
+              setMode("target");
+              setTarget(position);
+              //移動地圖中心至 target
+              // mapRef.current?.panTo(position)
+              setMapCenter(position);
+            }}
+          ></Place>
+          <Speech setSpeech={setSpeech}></Speech>
+        </div>
+        <CardPanel 
+          currentPark={currentPark} 
+          selfPos={selfPos}
+          handleFetchDirections={handleFetchDirections}
+          directions={directions}
+          setDirections={setDirections}
+          setCurrentPark={setCurrentPark}/>
+        <DetailPanel currentPark={currentPark}/>
+        <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
+        <ModeController setMode={setMode}/>
+        
       </div>
     </>
   );

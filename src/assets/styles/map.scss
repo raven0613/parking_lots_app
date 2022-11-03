@@ -1,32 +1,33 @@
 .map {
   width: 100%;
-  height: 50rem;
+  height: 100vh;
   background-color: rgb(214, 209, 200);
 }
+
 
 .marker {
   width: 2rem;
   height: 2rem;
-  background-color: black;
-}
-
-.combobox-input {
-  width: 20rem;
-  height: 3rem;
-  font-size: 1.5rem
-}
-.combobox-list {
-  background-color: chocolate;
-}
-.combobox-option {
-  &:hover {
-    background-color: burlywood;
+  color: blue;
+  stroke: red;
+  fill: green;
+  line-height: 1.6rem;
+  
+  // background-color: darkblue;
+  svg {
+    fill: green;
+    color: blue;
+    stroke: red;
   }
 }
-.self-point {
-  background-color: aqua;
-  width: 2rem;
-  height: 2rem;
-  object-fit: cover;
-  background-size: cover;
+
+
+.map__ui {
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
 }

@@ -1,0 +1,40 @@
+.detail__panel {
+  pointer-events: auto;
+  position:absolute;
+  width: 90%;
+  height: 18rem;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -35%;
+  background-color: var(--white);
+  box-shadow: 0 0 10px 1px var(--shadow-color);
+  border-radius: 5px;
+  
+
+  transition: 0.2s ease-out;
+  &.active {
+    bottom: 5rem;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .detail__panel {
+    width: 28rem;
+    height: 20rem;
+    top: auto;
+    transform: translateX(0);
+    left: 6rem;
+    bottom: -40%;
+    box-shadow: 0 0 10px 1px var(--shadow-color);
+
+    &.active {
+      bottom: 2rem;
+    }
+    &:hover {
+      opacity: 0.6;
+      p {
+        opacity: 1;
+      }
+    }
+  }
+}

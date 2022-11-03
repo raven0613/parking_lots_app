@@ -2,10 +2,18 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
 import { useState } from 'react'
+import { useEffect } from 'react'
 
 
-export default function Place ({ setTarget }) {
+export default function Place ({ setTarget, speech }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
+
+  useEffect(() => {
+    const text = speech? speech : ''
+    setValue(text)
+    //目前可以接到資料但是不會自動重新渲染框框
+  }, [speech])
+
 
   // const [isOnComposition, setIsOnComposition] = useState(false);
   
@@ -36,6 +44,7 @@ export default function Place ({ setTarget }) {
     }
     else if (type === 'compositionend') {
       setIsInputing(false)
+      setValue(event.target.value)
     }
     else if (type === 'change') {
       if (!isInputing) {

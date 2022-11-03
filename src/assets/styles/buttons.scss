@@ -1,0 +1,80 @@
+.trans-type {
+  pointer-events: auto;
+  height: 4rem;
+  position: relative;
+
+  &__btn {
+    width: 4rem;
+    height: 100%;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    img {
+      z-index: 1;
+      width: 2.2rem;
+      margin: auto;
+      position: absolute;
+      top: 50%;
+      right: 50%;
+      transform: translate(50%, -50%);
+    }
+
+  }
+
+  &__car {
+    border-radius: 2rem 0 0 2rem;
+    background-color: var(--main-color);
+  }
+
+
+  &__motor {
+    border-radius: 0 2rem 2rem 0;
+    background-color: var(--main-color);
+
+    &::before {
+      transition: 0.25s ease-in;
+      content: '';
+      width: 3rem;
+      height: 3rem;
+      border-radius: 2rem;
+      background-color: var(--white);
+      position: absolute;
+      top: 50%;
+      left: -3.5rem;
+      z-index: 0;
+      transform: translateY(-50%);
+      box-shadow: 0 0 10px 1px rgb(49, 165, 146);
+    }
+    &.active {
+      &::before {
+        left: 0.5rem;
+      }
+    }
+  }
+}
+
+.mode__controller {
+  pointer-events: auto;
+  width: 20rem;
+  height: 3rem;
+  
+  &--button {
+    width:50%;
+    height: 100%;
+    background-color: var(--main-color);
+  }
+  &--self {
+    border-radius: 2.5rem 0 0 2.5rem;
+  }
+  &--quick {
+    border-radius: 0 2.5rem 2.5rem 0;
+  }
+}
+
+.speech {
+  pointer-events: auto;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 5rem;
+  background-color: var(--main-color);
+}
