@@ -1,13 +1,23 @@
 {
   "files": {
-    "main.css": "/parking_lots_app/static/css/main.829f925f.css",
-    "main.js": "/parking_lots_app/static/js/main.e9bd1a77.js",
+    "main.css": "/parking_lots_app/static/css/main.decd06ac.css",
+    "main.js": "/parking_lots_app/static/js/main.4fdcd63b.js",
+    "static/media/car-.svg": "/parking_lots_app/static/media/car-.9a9c4a61e4eb70edbfcc94b6c9b85a08.svg",
+    "static/media/motorbike.svg": "/parking_lots_app/static/media/motorbike.569cc69c34165e9840328a52393d5cd5.svg",
+    "static/media/card-pin.svg": "/parking_lots_app/static/media/card-pin.2121bd6d2cad6e862704.svg",
     "index.html": "/parking_lots_app/index.html",
-    "main.829f925f.css.map": "/parking_lots_app/static/css/main.829f925f.css.map",
-    "main.e9bd1a77.js.map": "/parking_lots_app/static/js/main.e9bd1a77.js.map"
+    "static/media/cancel-orange.svg": "/parking_lots_app/static/media/cancel-orange.2c1e0768bf889608e900baca5e2b6426.svg",
+    "static/media/marker-target2.svg": "/parking_lots_app/static/media/marker-target2.28a2c974471a9dadce8b4fd07555adab.svg",
+    "static/media/marker-self.svg": "/parking_lots_app/static/media/marker-self.2c4b9faac2c1ad745b0f2cc8e49c9fef.svg",
+    "static/media/card-panel-arrow.svg": "/parking_lots_app/static/media/card-panel-arrow.bb0366415986e76e39615053e6f83429.svg",
+    "static/media/marker-parking-small.svg": "/parking_lots_app/static/media/marker-parking-small.77b680dc0e7f919dc20e832508d4d6a7.svg",
+    "static/media/marker-parking.svg": "/parking_lots_app/static/media/marker-parking.845fbfcf283de787086ed7763e195d11.svg",
+    "static/media/map-center.svg": "/parking_lots_app/static/media/map-center.0e304bcbde652857803b5f978713fda0.svg",
+    "main.decd06ac.css.map": "/parking_lots_app/static/css/main.decd06ac.css.map",
+    "main.4fdcd63b.js.map": "/parking_lots_app/static/js/main.4fdcd63b.js.map"
   },
   "entrypoints": [
-    "static/css/main.829f925f.css",
-    "static/js/main.e9bd1a77.js"
+    "static/css/main.decd06ac.css",
+    "static/js/main.4fdcd63b.js"
   ]
 }
