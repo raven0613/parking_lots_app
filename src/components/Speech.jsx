@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export default function Speech (props) {
   const [isProcessing, setIsProcessing] = useState(false)
-  const { speechRef } = props
+  const { setSpeech } = props
 
   //先判斷瀏覽器是否有語音辨識物件
   if (!('webkitSpeechRecognition' in window)) {
@@ -21,7 +21,7 @@ export default function Speech (props) {
   recognition.onresult = (event) => {
     const result = event.results[0][0].transcript
 
-    speechRef.current = result
+    setSpeech(result)
     setIsProcessing(false)
   }
   //如果出錯
@@ -39,7 +39,9 @@ export default function Speech (props) {
     <button disabled>辨識</button>
   )
   return (
-    <button onClick={() => {
+    <button 
+      className="speech"
+      onClick={() => {
       if (isProcessing) return
       setIsProcessing(true)
       recognition.start()

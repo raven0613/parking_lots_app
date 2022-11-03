@@ -5,14 +5,14 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 
-export default function Place ({ setTarget, speechRef }) {
+export default function Place ({ setTarget, speech }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
 
-  // useEffect(() => {
-  //   const text = speechRef.current? speechRef.current : ''
-  //   setValue(text)
-  //   //目前可以接到資料但是不會自動重新渲染框框
-  // }, [speechRef.current])
+  useEffect(() => {
+    const text = speech? speech : ''
+    setValue(text)
+    //目前可以接到資料但是不會自動重新渲染框框
+  }, [speech])
 
 
   // const [isOnComposition, setIsOnComposition] = useState(false);

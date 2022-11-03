@@ -86,12 +86,12 @@ export const parkingContext = React.createContext('')
 
 export default function Map(props) {
   //搜尋模式
-  const [mode, setMode] = useState("self"); //self, target, screen-center
+  const [mode, setMode] = useState("self") //self, target, screen-center
   //使用者的 currentPosition
-  const [selfPos, setSelfPos] = useState();
+  const [selfPos, setSelfPos] = useState()
   //要顯示哪種交通工具的停車場
-  const [transOption, setTransOption] = useState('car');
-  const { speechRef } = props
+  const [transOption, setTransOption] = useState('car')
+  const [ speech, setSpeech ] =  useState()
 
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
@@ -154,6 +154,7 @@ export default function Map(props) {
       console.log('current mode: ', mode)
       getUserPos(setSelfPos, setMapCenter)
       setTarget(null)
+      setSpeech('')
       return
     }
     if (mode === 'target') {
@@ -166,6 +167,7 @@ export default function Map(props) {
       console.log('mapRef.current: ', mapRef.current)
       setMapCenter(mapRef.current.position.toJSON());
       setTarget(null)
+      setSpeech('')
       return
     }
   }, [mode])
@@ -248,7 +250,7 @@ export default function Map(props) {
         
         <div className="controller">
           <Place
-            speechRef={speechRef}
+            speech={speech}
             setTarget={(position) => {
               //輸入 target 後，模式切換成 target
               setMode("target");
@@ -258,7 +260,7 @@ export default function Map(props) {
               setMapCenter(position);
             }}
           ></Place>
-          <Speech speechRef={speechRef}></Speech>
+          <Speech setSpeech={setSpeech}></Speech>
         </div>
         <CardPanel 
           currentPark={currentPark} 
