@@ -10,6 +10,7 @@ import {
   Marker,
   DirectionsRenderer,
 } from "@react-google-maps/api";
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import Place from "./Place";
 import ParkingMark from "./ParkingMark";
 import CardPanel from './card-panel/CardPanel'
@@ -53,8 +54,12 @@ const getUserPos = (setSelfPos, setMapCenter) => {
 
 //獲得路線資訊
 const handleFetchDirections = (origin, destination, state, setter) => {
-  console.log(origin, destination)
+  //如果已經有路線，就把他清除
+  if (state) {
+    setter(null);
+  }
   if (!origin || !destination) return console.log("沒有目標");
+  
   const google = window.google;
 
   //創建距離api的實例
@@ -68,10 +73,6 @@ const handleFetchDirections = (origin, destination, state, setter) => {
     },
     (result, status) => {
       if (status === "OK" && result) {
-        //如果已經有路線，就把他清除
-        if (state) {
-          setter(null);
-        }
         setter(result);
       }
     }
@@ -91,7 +92,18 @@ export default function Map(props) {
   const [selfPos, setSelfPos] = useState()
   //要顯示哪種交通工具的停車場
   const [transOption, setTransOption] = useState('car')
+  //搜尋相關
   const [ speech, setSpeech ] =  useState()
+  let targetAddress = null
+  const getPlaceResult = (placeValue) => {
+    targetAddress = placeValue
+    if (!targetAddress) return
+    navigate(`/map?target=${targetAddress}`)
+  }
+  //路由相關
+  const navigate = useNavigate()
+  const location = useLocation()
+
 
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
@@ -125,16 +137,18 @@ export default function Map(props) {
       disableDefaultUI: true,
       //地圖上的標記不能點
       clickableIcons: false,
+      //任何操作都可以滑動螢幕
+      gestureHandling: 'greedy'
     }),
     []
-  );
+  )
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
     console.log('load map')
     mapRef.current = map
     setMapInstance(map)
-  }, []);
+  }, [])
 
   //如果移動地圖就改變 center 位置
   function handleCenterChanged() {
@@ -250,11 +264,13 @@ export default function Map(props) {
         
         <div className="controller">
           <Place
+            getPlaceResult={getPlaceResult}
             speech={speech}
             setTarget={(position) => {
               //輸入 target 後，模式切換成 target
               setMode("target");
               setTarget(position);
+              console.log(position)
               //移動地圖中心至 target
               // mapRef.current?.panTo(position)
               setMapCenter(position);

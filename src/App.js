@@ -1,7 +1,10 @@
-import Map from './components/Map'
 
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 import React, { useState } from 'react';
+import Home from './pages/Home';
+import Parks from './pages/Parks';
+import ParkDetail from './pages/ParkDetail';
 
 export const allContext = React.createContext('')
 
@@ -11,14 +14,41 @@ function App() {
     parkingLots, setParkingLots
   }
 
-  
+  //寫下所有路由設定
   return (
     <div className="App">
-      <allContext.Provider value={contextValue}>
-          <Map className="map__container"/>
-      </allContext.Provider>
-      
+      <Router>
+        <allContext.Provider value={contextValue}>
+            
+          <Routes>
+            <Route path="/" 
+            element={<Navigate replace to="map"/>}
+            />
+            <Route path="/map/*" 
+            element={<Home />}>
+              {/* 點選了停車場：/map/:parkId */}
+              <Route path=":parkId" element={<Home />}>
+                {/* 右側欄：/map?nearby=true */}
+                {/* /map/:parkId?nearby=true */}
+                <Route path="?nearby=true" element={<Home />}></Route>
+              </Route>
+            </Route>
+
+            <Route path="/parks/*" 
+            element={<Parks />}>
+              {/* 停車場詳細頁面：/parks/:parkId */}
+              <Route path=":parkId" element={<ParkDetail />}>
+                
+              </Route>
+              
+            </Route>
+          </Routes>
+
+        </allContext.Provider>
+      </Router>
     </div>
+    
+
   );
 }
 

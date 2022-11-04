@@ -5,6 +5,7 @@ import { Marker } from '@react-google-maps/api';
 import { coordinatesConvert, getStraightDistance } from '../utils/helpers'
 import { useState, useEffect, useContext } from 'react';
 import { allContext } from '../App'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 
 //我現在要開始改了喔QQ
 //得到所有停車場資料
@@ -22,7 +23,6 @@ const parkingLotsData = async() => {
           id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0
         }
     })
-    console.log(parks)
     return parks
   }
   catch(error) {
@@ -97,12 +97,6 @@ const availableCounts = (transOption, place) => {
 
 
 
-
-
-
-
-
-
 export default function ParkingMark (props) {
   //props
   const { mode, transOption, mapCenter, target, selfPos, handleFetchDirections, directions, setDirections, currentPark, setCurrentPark } = props
@@ -116,6 +110,28 @@ export default function ParkingMark (props) {
   const [isFetchingParks, setIsFetchingParks] = useState(false)
   //內部變數
   const FETCH_PER_SEC = 20000000
+  //路由相關
+  const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
+  //parkId存在的話(已經在追蹤某停車場)就放入網址
+  const parkId = params.parkId
+
+  //有所有停車場資料(initParkingLots)後 & 網址改變時
+  useEffect(() => {
+    //偵測網址上有沒有parkId要導航
+    if (!initParkingLots) return
+    if (!parkId) {
+      setDirections(null)
+      setCurrentPark(null)
+      return
+    } 
+    const paramsPark = initParkingLots.find(park => park.id === parkId)
+    if (!paramsPark) return console.log('轉到找不到此id頁面')
+    const positon = {lng: paramsPark.lng, lat: paramsPark.lat}
+    handleFetchDirections(selfPos, positon, directions, setDirections)
+    setCurrentPark(paramsPark)
+  }, [initParkingLots, location])
 
 
   useEffect(() => {
@@ -127,8 +143,7 @@ export default function ParkingMark (props) {
         setIsFetchingParks(true)
         const parks = await parkingLotsData()
 
-        let a = parks.filter(park => park.FareInfo?.Holiday)
-        console.log(a)
+        // let a = parks.filter(park => park.FareInfo?.Holiday)
 
         setInitParkingLots(parks) 
         setIsFetchingParks(false)       
@@ -160,6 +175,7 @@ export default function ParkingMark (props) {
       fetchRemainingData()
     }, FETCH_PER_SEC)
     return () => clearInterval(interval)
+
   }, [])
 
 
@@ -191,6 +207,7 @@ export default function ParkingMark (props) {
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
     setParkingLots(availablePark)
   }, [mapCenter, mode, transOption, remainings])
+
 
 
   //icon 的設定
@@ -226,9 +243,12 @@ export default function ParkingMark (props) {
             position={positon} 
             key={park.id} 
             onClick={() => {
+              //改變網址
+              navigate(`/map/${park.id}`, {push: true})
+              
+              //觸發推薦路線
               handleFetchDirections(selfPos, positon, directions, setDirections)
               setCurrentPark(park)
-              console.log(park)
             }} />
         )
       })}

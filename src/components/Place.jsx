@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 
-export default function Place ({ setTarget, speech }) {
+export default function Place ({ setTarget, speech, getPlaceResult }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
 
   useEffect(() => {
@@ -23,13 +23,17 @@ export default function Place ({ setTarget, speech }) {
     setValue(val, false)   
     //關掉建議窗
     clearSuggestions()  
-    
+
+
     //把地址傳進 getGeocode 
     const results = await getGeocode({ address: val })
     //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
     const { lat, lng } = await getLatLng(results[0])
     //把點選結果的座標存進 target
     setTarget({ lat, lng })
+    
+    //把值傳回去給map
+    getPlaceResult(val)
   }
 
   const [isInputing, setIsInputing] = useState(false)
