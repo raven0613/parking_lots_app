@@ -117,6 +117,7 @@ export default function ParkingMark (props) {
   //parkId存在的話(已經在追蹤某停車場)就放入網址
   const parkId = params.parkId
 
+
   //有所有停車場資料(initParkingLots)後 & 網址改變時
   useEffect(() => {
     //偵測網址上有沒有parkId要導航
@@ -129,7 +130,7 @@ export default function ParkingMark (props) {
     const paramsPark = initParkingLots.find(park => park.id === parkId)
     if (!paramsPark) return console.log('轉到找不到此id頁面')
     const positon = {lng: paramsPark.lng, lat: paramsPark.lat}
-    handleFetchDirections(selfPos, positon, directions, setDirections)
+    // handleFetchDirections(selfPos, positon, directions, setDirections)
     setCurrentPark(paramsPark)
   }, [initParkingLots, location])
 
@@ -247,7 +248,7 @@ export default function ParkingMark (props) {
               navigate(`/map/${park.id}`, {push: true})
               
               //觸發推薦路線
-              handleFetchDirections(selfPos, positon, directions, setDirections)
+              // handleFetchDirections(selfPos, positon, directions, setDirections)
               setCurrentPark(park)
             }} />
         )
