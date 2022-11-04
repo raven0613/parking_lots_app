@@ -1,5 +1,4 @@
 .card__panel {
-  pointer-events: auto;
   width: 100%;
   background-color: var(--white);
   position: absolute;
@@ -9,7 +8,10 @@
   padding: 1.2rem 0 1.2rem 0.5rem;
   display: none;
 
+  //card是裝在container裡面
+  //手機模式點選時 onClick 生效 -> 會點到container = 不會直接關掉panel
   &--container {
+    pointer-events: auto;
     width: 100%;
     height: 100%;
     overflow-y: scroll;
@@ -70,6 +72,7 @@
 
 @media screen and (min-width: 600px) {
   .card__panel {
+    pointer-events: auto;
     display: block;
     z-index: 1;
     width: 24rem;
@@ -78,7 +81,11 @@
     right: -24rem;
     box-shadow: 0 0 10px 1px var(--shadow-color);
     transition: box-shadow 0.2s ease-in-out;
-    
+
+    //電腦模式點選時 onClick 不要生效 -> 會點到底部 = 會關掉panel
+    &--container {
+      pointer-events: none;
+    }
     &:hover {
       cursor: pointer;
       box-shadow: 0 0 10px 1px var(--shadow-darker);
@@ -133,5 +140,8 @@
         transform: translateY(-50%) scaleX(-1);
       }
     }
+  }
+  .card {
+    pointer-events: auto;
   }
 }
