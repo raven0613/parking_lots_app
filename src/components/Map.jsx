@@ -3,17 +3,17 @@ import centerMarker from '../assets/images/map-center.svg'
 import selfMarker from '../assets/images/marker-self.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
 
-import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
-import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
+import React, { useMemo, useCallback, useRef, useState, useEffect } from "react"
+import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
 
-import ParkingMark from "./ParkingMark";
+import ParkingMark from "./ParkingMark"
 
 
 
 //取得使用者的 currentPosition
 const getUserPos = (setSelfPos, setMapCenter) => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
+    navigator.geolocation.watchPosition(
       (position) => {
         if (setSelfPos) {
           setSelfPos(() => {
@@ -40,13 +40,12 @@ const getUserPos = (setSelfPos, setMapCenter) => {
     //目前如果沒有允許就跑不出地圖
     alert("你的裝置不支援地理位置功能。");
   }
-};
-
+}
 //獲得路線資訊
 const handleFetchDirections = (origin, destination, state, setter) => {
   //如果已經有路線，就把他清除
   if (state) {
-    setter(null);
+    setter(null)
   }
   if (!origin || !destination) return console.log("沒有目標");
   
@@ -63,21 +62,21 @@ const handleFetchDirections = (origin, destination, state, setter) => {
     },
     (result, status) => {
       if (status === "OK" && result) {
-        setter(result);
+        setter(result)
       }
     }
   )
 }
 
 
-export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark}) {
+export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark, afterLastFetch, setAfterLastFetch}) {
 
 
 
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
-    console.log("on Map loaded");
-    getUserPos(setSelfPos, setMapCenter);
+    console.log("on Map loaded")
+    getUserPos(setSelfPos, setMapCenter)
   }, []);
 
   //如果移動地圖就改變 center 位置
@@ -87,9 +86,9 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     console.log('mapInstance', mapInstance)
     
     if (mapInstance.map) {
-      setMapCenter(mapInstance.map.center.toJSON());
+      setMapCenter(mapInstance.map.center.toJSON())
     } else {
-      setMapCenter(mapInstance.center.toJSON());
+      setMapCenter(mapInstance.center.toJSON())
     }
   }
 
@@ -117,7 +116,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
       setDirections(null)
       console.log('current mode: ', mode)
       console.log('mapRef.current: ', mapRef.current)
-      setMapCenter(mapRef.current.position.toJSON());
+      setMapCenter(mapRef.current.position.toJSON())
       setTarget(null)
       setSpeech('')
       return
@@ -212,6 +211,8 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
           setDirections={setDirections}
           currentPark={currentPark}
           setCurrentPark={setCurrentPark}
+          afterLastFetch={afterLastFetch}
+          setAfterLastFetch={setAfterLastFetch}
         />
       </GoogleMap>
     </div>

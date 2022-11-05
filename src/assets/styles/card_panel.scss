@@ -84,7 +84,8 @@
 
     //電腦模式點選時 onClick 不要生效 -> 會點到底部 = 會關掉panel
     &--container {
-      pointer-events: none;
+      pointer-events: unset;
+      cursor: auto;
     }
     &:hover {
       cursor: pointer;
@@ -135,7 +136,6 @@
 
     &.active {
       right: 0;
-      transition: 0.5s ease-in-out;
       .card__panel--icon {
         transform: translateY(-50%) scaleX(-1);
       }
@@ -143,5 +143,6 @@
   }
   .card {
     pointer-events: auto;
+    cursor: pointer;
   }
 }

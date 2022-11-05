@@ -8,15 +8,18 @@ import { useEffect } from 'react'
 export default function Place ({ setTarget, speech, getPlaceResult }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
 
+  
+
   useEffect(() => {
     const text = speech? speech : ''
+    setInputingVal(text)
     setValue(text)
-    //目前可以接到資料但是不會自動重新渲染框框
   }, [speech])
 
 
   // const [isOnComposition, setIsOnComposition] = useState(false);
-  
+
+  //點選選項時
   const handleSelect = async (val) => {
     //傳入的 val 為地址
     //這邊要傳入 false，不然建議框不會消失
@@ -35,40 +38,42 @@ export default function Place ({ setTarget, speech, getPlaceResult }) {
     //把值傳回去給map
     getPlaceResult(val)
   }
-
+  const [inputingVal, setInputingVal] = useState('')
   const [isInputing, setIsInputing] = useState(false)
-  const handleCompsition = (event) => {
-    const { type } = event
-    console.log(type)
 
-    if (type === 'compositionstart') {
-      setIsInputing(true)
-    }
-    else if (type === 'compositionupdate') {
-    }
-    else if (type === 'compositionend') {
-      setIsInputing(false)
-      setValue(event.target.value)
-    }
-    else if (type === 'change') {
-      if (!isInputing) {
-        setValue(event.target.value)
-      }
-    }
-  }
+  // const handleCompsition = (event) => {
+  //   const { type } = event
+  //   console.log(type)
+
+  //   if (type === 'compositionstart') {
+  //     setIsInputing(true)
+  //   }
+  //   else if (type === 'compositionupdate') {
+  //   }
+  //   else if (type === 'compositionend') {
+  //     setIsInputing(false)
+  //     setInputingVal(event.target.value)
+  //   }
+  //   else if (type === 'change') {
+  //     if (!isInputing) {
+  //       setInputingVal(event.target.value)
+  //     }
+  //   }
+  // }
   const handleChange = event => {
     console.log("handleChange");
-    handleCompsition(event);
+    setInputingVal(event.target.value)
+    // handleCompsition(event);
   }
   
 
   return (
     <Combobox onSelect={ handleSelect }>
       <ComboboxInput 
-      value={value} 
-      onCompositionStart={handleCompsition}
-      onCompositionUpdate={handleCompsition}
-      onCompositionEnd={handleCompsition}
+      value={inputingVal} 
+      // onCompositionStart={handleCompsition}
+      // onCompositionUpdate={handleCompsition}
+      onCompositionEnd={() => setValue(inputingVal)}
       // onChange={e => setValue(e.target.value)} 
       onChange={handleChange} 
       disabled={!ready}

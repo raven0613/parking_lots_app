@@ -31,3 +31,12 @@
   bottom: 0;
   overflow: hidden;
 }
+.counter {
+  background-color: var(--white);
+  width: 15rem;
+  height: 2.5rem;
+  border-radius: 5px;
+  border: 1px solid var(--second-color);
+  text-align: center;
+  line-height: 2.5rem;
+}

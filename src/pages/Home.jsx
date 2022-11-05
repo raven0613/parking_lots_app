@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
-import { useLoadScript } from "@react-google-maps/api";
+import { useJsApiLoader } from "@react-google-maps/api";
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import Map from "../components/Map";
 import Place from "../components/Place";
@@ -8,12 +8,9 @@ import ModeController from '../components/ModeController'
 import TransTypeController from '../components/TransTypeController'
 import DetailPanel from '../components/DetailPanel'
 import Speech from '../components/Speech'
+import SecondsCounter from '../components/SecondsCounter'
+import Footer from '../components/Footer'
 const libraries = ["places"];
-
-
-
-export const parkingContext = React.createContext('')
-
 
 
 export default function Home() {
@@ -35,7 +32,7 @@ export default function Home() {
   const location = useLocation()
 
 
-  const { isLoaded } = useLoadScript({
+  const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
     libraries,
@@ -56,7 +53,7 @@ export default function Home() {
 
   const [mapInstance, setMapInstance] = useState();
   // const center = useMemo(() => (selfPos), [selfPos])
-
+  const [afterLastFetch, setAfterLastFetch] = useState(0)
 
 
   //一載入就去抓使用者的上次交通工具設定
@@ -89,6 +86,8 @@ export default function Home() {
         selfPos={selfPos}
         currentPark={currentPark}
         setCurrentPark={setCurrentPark}
+        afterLastFetch={afterLastFetch}
+        setAfterLastFetch={setAfterLastFetch}
       />
 
       <div className="map__ui">
@@ -118,8 +117,9 @@ export default function Home() {
         <DetailPanel currentPark={currentPark}/>
         <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
         <ModeController setMode={setMode}/>
-        
+        <SecondsCounter afterLastFetch={afterLastFetch}/>
       </div>
+      <Footer />
     </div>
   );
 }

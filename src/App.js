@@ -9,9 +9,10 @@ import ParkDetail from './pages/ParkDetail';
 export const allContext = React.createContext('')
 
 function App() {
-  const [parkingLots, setParkingLots] = useState()
+  const [allParks, setAllParks] = useState()
+  const [nearParks, setNearParks] = useState()
   const contextValue = {
-    parkingLots, setParkingLots
+    nearParks, setNearParks, allParks, setAllParks
   }
 
   //寫下所有路由設定

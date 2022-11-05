@@ -6,10 +6,10 @@ import Arrow from '../../assets/images/card-panel-arrow.svg'
 
 export default function CardPanel (props) {
   const [isActive, setIsActive] = useState(false)
-  const { parkingLots } = useContext(allContext)
-  const { currentPark } = props
+  const { nearParks } = useContext(allContext)
+  const { setCurrentPark, currentPark } = props
   //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
-  const parksWithoutCurrentPark = parkingLots?.filter(park => park.id !== currentPark?.id)
+  const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
 
   //路由相關
   const navigate = useNavigate()
@@ -46,7 +46,10 @@ export default function CardPanel (props) {
 
         {parksWithoutCurrentPark && parksWithoutCurrentPark.map(park => {
           return (
-            <Card key={ park.id } park={ park } onClickSettings={props} />
+            <Card 
+            key={ park.id } 
+            park={ park } 
+            setCurrentPark={setCurrentPark} />
           )
         })}
 
