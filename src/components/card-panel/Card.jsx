@@ -5,7 +5,7 @@ import centerMarker from '../../assets/images/cancel-orange.svg'
 
 export default function Card (props) {
   const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id } = props.park
-  const { isCurr, setCurrentPark } = props
+  const { isCurr, setCurrentPark, setCanFetchDirection } = props
 
   const positon = {lng: props.park.lng, lat: props.park.lat}
   //路由相關
@@ -21,7 +21,10 @@ export default function Card (props) {
       navigate(`/map/${id}`, {push: true})
 
       //點擊卡片後呼叫 Map 的建議路線功能+設定為目前點選的停車場
-      setCurrentPark(props.park)}}
+      setCurrentPark(props.park)
+      setCanFetchDirection(true)
+    }}
+      
 
     className={isCurr? 'card current' : 'card'}>
       <h3 className="card__title">{ name }</h3>

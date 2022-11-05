@@ -7,7 +7,7 @@ import Arrow from '../../assets/images/card-panel-arrow.svg'
 export default function CardPanel (props) {
   const [isActive, setIsActive] = useState(false)
   const { nearParks } = useContext(allContext)
-  const { setCurrentPark, currentPark } = props
+  const { setCurrentPark, currentPark, setCanFetchDirection } = props
   //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
   const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
 
@@ -42,14 +42,19 @@ export default function CardPanel (props) {
       {/* 裝card的class 點擊後禁止點到後面的 card__panel => 手機版防止點擊 cardPanel 關閉 */}
       <div className="card__panel--container scroll-bar" onClick={(e) => e.stopPropagation()}>
 
-        {currentPark? <Card key={ currentPark.id } park={ currentPark } isCurr={true} /> : <></>}
+        {currentPark? <Card 
+        key={ currentPark.id } 
+        park={ currentPark } 
+        isCurr={true} 
+        /> : <></>}
 
         {parksWithoutCurrentPark && parksWithoutCurrentPark.map(park => {
           return (
             <Card 
             key={ park.id } 
             park={ park } 
-            setCurrentPark={setCurrentPark} />
+            setCurrentPark={setCurrentPark}
+            setCanFetchDirection={setCanFetchDirection} />
           )
         })}
 

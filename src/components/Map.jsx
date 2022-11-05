@@ -43,6 +43,7 @@ const getUserPos = (setSelfPos, setMapCenter) => {
 }
 //獲得路線資訊
 const handleFetchDirections = (origin, destination, state, setter) => {
+  console.log('推薦路線')
   //如果已經有路線，就把他清除
   if (state) {
     setter(null)
@@ -69,13 +70,11 @@ const handleFetchDirections = (origin, destination, state, setter) => {
 }
 
 
-export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark, afterLastFetch, setAfterLastFetch}) {
-
+export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings}) {
 
 
   //一載入就去抓使用者的 currentPosition
   useEffect(() => {
-    console.log("on Map loaded")
     getUserPos(setSelfPos, setMapCenter)
   }, []);
 
@@ -94,7 +93,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
-    console.log('load map')
+    console.log('地圖載入')
     mapRef.current = map
     setMapInstance(map)
   }, [])
@@ -123,12 +122,30 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     }
   }, [mode])
 
-  //有park被點選就自動推薦路線
+
+
+
+
+
   useEffect(() => {
+    if (!currentPark) return console.log('沒有點選停車場')
+
+
+  }, [currentPark])
+
+
+  //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
+  useEffect(() => {
+    if (!canFetchDirection) return console.log('canfetchDirection是 false')
     if (!currentPark) return console.log('沒有點選停車場')
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
     handleFetchDirections(selfPos, positon , directions, setDirections)
-  }, [currentPark])
+    //推薦完路線就改回false
+    setCanFetchDirection(false)
+  }, [canFetchDirection])
+
+
+  
 
   //map設定
   const options = useMemo(
@@ -211,8 +228,9 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
           setDirections={setDirections}
           currentPark={currentPark}
           setCurrentPark={setCurrentPark}
-          afterLastFetch={afterLastFetch}
-          setAfterLastFetch={setAfterLastFetch}
+          setCanFetchDirection={setCanFetchDirection}
+          remainings={remainings}
+          setRemainings={setRemainings}
         />
       </GoogleMap>
     </div>

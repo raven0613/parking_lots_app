@@ -14,6 +14,7 @@ const libraries = ["places"];
 
 
 export default function Home() {
+  console.log('Home又重新渲染')
   //搜尋模式
   const [mode, setMode] = useState("self") //self, target, screen-center
   //搜尋相關
@@ -44,7 +45,9 @@ export default function Home() {
   //設定搜尋目標點
   const [target, setTarget] = useState();
   //設定目前點的停車場
-  const [currentPark, setCurrentPark] = useState();
+  const [currentPark, setCurrentPark] = useState()
+  //剩餘車位
+  const [remainings, setRemainings] = useState()
   //導航路線
   const [directions, setDirections] = useState();
   const mapRef = useRef();
@@ -53,8 +56,10 @@ export default function Home() {
 
   const [mapInstance, setMapInstance] = useState();
   // const center = useMemo(() => (selfPos), [selfPos])
-  const [afterLastFetch, setAfterLastFetch] = useState(0)
 
+
+  //設定是否要搜尋路線 的開關
+  const [canFetchDirection, setCanFetchDirection] = useState(false)
 
   //一載入就去抓使用者的上次交通工具設定
   useEffect(() => {
@@ -86,8 +91,10 @@ export default function Home() {
         selfPos={selfPos}
         currentPark={currentPark}
         setCurrentPark={setCurrentPark}
-        afterLastFetch={afterLastFetch}
-        setAfterLastFetch={setAfterLastFetch}
+        canFetchDirection={canFetchDirection}
+        setCanFetchDirection={setCanFetchDirection}
+        remainings={remainings}
+        setRemainings={setRemainings}
       />
 
       <div className="map__ui">
@@ -113,11 +120,12 @@ export default function Home() {
           selfPos={selfPos}
           directions={directions}
           setDirections={setDirections}
-          setCurrentPark={setCurrentPark}/>
+          setCurrentPark={setCurrentPark}
+          setCanFetchDirection={setCanFetchDirection}/>
         <DetailPanel currentPark={currentPark}/>
         <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
         <ModeController setMode={setMode}/>
-        <SecondsCounter afterLastFetch={afterLastFetch}/>
+        <SecondsCounter remainings={remainings}/>
       </div>
       <Footer />
     </div>
