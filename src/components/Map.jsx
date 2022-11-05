@@ -127,7 +127,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     if (!canFetchDirection) return console.log('canfetchDirection是 false')
     if (!currentPark) return console.log('沒有點選停車場')
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
-    handleFetchDirections(selfPos, positon , directions, setDirections)
+    // handleFetchDirections(selfPos, positon , directions, setDirections)
     //推薦完路線就改回false
     setCanFetchDirection(false)
   }, [canFetchDirection])

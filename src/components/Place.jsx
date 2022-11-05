@@ -68,7 +68,7 @@ export default function Place ({ setTarget, speech, getPlaceResult }) {
   
 
   return (
-    <Combobox onSelect={ handleSelect }>
+    <Combobox className='combobox' onSelect={ handleSelect }>
       <ComboboxInput 
       value={inputingVal} 
       // onCompositionStart={handleCompsition}
@@ -79,8 +79,8 @@ export default function Place ({ setTarget, speech, getPlaceResult }) {
       disabled={!ready}
       className="combobox-input" 
       placeholder='請輸入地點'/>
-      <ComboboxPopover>
-        <ComboboxList className='combobox-list'>
+      <ComboboxPopover className='combobox-pop'>
+        <ComboboxList className=''>
           {status === "OK" &&
             data.map(({ place_id, description }) => (
               <ComboboxOption key={ place_id } value={ description } className='combobox-option'/>

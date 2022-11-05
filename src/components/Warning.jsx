@@ -8,12 +8,12 @@ export default function Warning ({ currentPark, transOption }) {
   let buttonContent = '重新尋找'
 
   if (transOption === 'car') {
-    if (currentPark.totalcar < 1) {
+    if (currentPark && currentPark.totalcar < 1) {
       content = '您的目標停車場無汽車停車格'
     }
   } 
   else if (transOption === 'motor') {
-    if (currentPark.totalmotor < 1) {
+    if (currentPark && currentPark.totalmotor < 1) {
       content = '您的目標停車場無機車停車格'
     }
   }
@@ -32,9 +32,9 @@ export default function Warning ({ currentPark, transOption }) {
       }
       return setIsMotorEnough(true)
     }
-  }, [currentPark])
+  }, [currentPark, transOption])
 
-  
+
   if(!isCarEnough || !isMotorEnough) {
     return (
       <div className="warning">

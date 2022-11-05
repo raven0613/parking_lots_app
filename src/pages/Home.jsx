@@ -9,6 +9,7 @@ import TransTypeController from '../components/TransTypeController'
 import DetailPanel from '../components/DetailPanel'
 import Speech from '../components/Speech'
 import SecondsCounter from '../components/SecondsCounter'
+import Locate from '../components/Locate'
 import Footer from '../components/Footer'
 import Warning from '../components/Warning'
 const libraries = ["places"];
@@ -20,6 +21,8 @@ export default function Home() {
   const [mode, setMode] = useState("self") //self, target, screen-center
   //搜尋相關
   const [ speech, setSpeech ] =  useState()
+
+  //處理目標的地址
   let targetAddress = null
   const getPlaceResult = (placeValue) => {
     targetAddress = placeValue
@@ -100,7 +103,7 @@ export default function Home() {
 
       <div className="map__ui">
         
-        <div className="controller">
+        <div className="search__controller">
           <Place
             getPlaceResult={getPlaceResult}
             speech={speech}
@@ -115,6 +118,7 @@ export default function Home() {
             }}
           ></Place>
           <Speech setSpeech={setSpeech}></Speech>
+          <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
         </div>
         <CardPanel 
           currentPark={currentPark} 
@@ -123,13 +127,18 @@ export default function Home() {
           setDirections={setDirections}
           setCurrentPark={setCurrentPark}
           setCanFetchDirection={setCanFetchDirection}/>
-        <DetailPanel currentPark={currentPark}/>
-        <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
+        <div className="detail__window">
+          <DetailPanel currentPark={currentPark}/>
+          <SecondsCounter remainings={remainings}/>
+        </div>
         <ModeController setMode={setMode}/>
-        <SecondsCounter remainings={remainings}/>
+        <Locate />
       </div>
       <Footer />
-      <Warning currentPark={currentPark} transOption={transOption}/>
+      <Warning 
+        currentPark={currentPark} 
+        transOption={transOption}
+        target={target}/>
     </div>
   );
 }
