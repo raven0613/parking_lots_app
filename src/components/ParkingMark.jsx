@@ -6,6 +6,7 @@ import { coordinatesConvert, getStraightDistance } from '../utils/helpers'
 import { useState, useEffect, useContext } from 'react';
 import { allContext } from '../App'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useRef } from 'react';
 
 
 //得到所有停車場資料
@@ -114,7 +115,8 @@ export default function ParkingMark (props) {
   const params = useParams()
   //parkId存在的話(已經在追蹤某停車場)就放入網址
   const parkId = params.parkId
-
+  //記住網址原本的id值
+  const parkIdRef = useRef()
 
   //有所有停車場資料(initParkingLots)後 & 網址改變時
   useEffect(() => {
@@ -128,8 +130,13 @@ export default function ParkingMark (props) {
     const paramsPark = allParks.find(park => park.id === parkId)
     if (!paramsPark) return console.log('轉到找不到此id頁面')
     setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])
+    
+    //網址改變只要不是改到id 就不要推薦路線
+    if(parkIdRef.current === parkId) return
     setCanFetchDirection(true)
+    parkIdRef.current = paramsPark.id
   }, [allParks, location])
+
 
 
   //一載入就抓所有資料
@@ -244,7 +251,7 @@ export default function ParkingMark (props) {
           color: 'white',
           fontSize: '16px'
         }}
-        zIndex={1}
+        zIndex={2}
         className="marker"
         key={currentPark.id} 
       />}

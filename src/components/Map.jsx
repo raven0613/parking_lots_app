@@ -122,18 +122,6 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     }
   }, [mode])
 
-
-
-
-
-
-  useEffect(() => {
-    if (!currentPark) return console.log('沒有點選停車場')
-
-
-  }, [currentPark])
-
-
   //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
   useEffect(() => {
     if (!canFetchDirection) return console.log('canfetchDirection是 false')

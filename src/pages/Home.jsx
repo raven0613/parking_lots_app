@@ -10,6 +10,7 @@ import DetailPanel from '../components/DetailPanel'
 import Speech from '../components/Speech'
 import SecondsCounter from '../components/SecondsCounter'
 import Footer from '../components/Footer'
+import Warning from '../components/Warning'
 const libraries = ["places"];
 
 
@@ -128,6 +129,7 @@ export default function Home() {
         <SecondsCounter remainings={remainings}/>
       </div>
       <Footer />
+      <Warning currentPark={currentPark} transOption={transOption}/>
     </div>
   );
 }
