@@ -30,12 +30,13 @@
 }
 .card {
   width: 100%;
-  height: 10rem;
+  height: auto;
   background-color: var(--white);
   border-radius: 0.3rem;
   border: 1px var(--card-border-color) solid;
   transition: box-shadow 0.15s ease-in-out;
   margin-bottom: 0.8rem;
+  padding: 0.5rem 0.8rem;
 
   &.current {
     background-image: url(../images/card-pin.svg);
@@ -44,6 +45,7 @@
     margin-bottom: 1.2rem;
     box-shadow: 2px 2px 5px 1px var(--card-shadow-color);
     cursor: auto;
+    height: auto;
   }
 
   &:hover {
@@ -55,19 +57,45 @@
   }
   &__info {
     width: 100%;
-    height: 1.5rem;
+    height: auto;
     font-size: 1rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+
     img {
       width: auto;
       height: 1.2rem;
       padding: 0 0.5rem;
+      margin-top: 0.1rem;
     }
     span {
       line-height: 1.5rem;
+      margin-top: 0.2rem;
+    }
+    &--bottom {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      margin-top: 0.5rem;
+      align-items: flex-end;
+    }
+    &--distance {
+      line-height: 2rem;
+      color: var(--shadow-color);
+    }
+    &--avai {
+      display: flex;
+      img {
+        width: auto;
+        height: 2rem;
+        margin-left: 1rem;
+      }
+      span {
+        line-height: 2rem;
+        padding: 0 0 0 0.5rem;
+      }
     }
   }
+
 }
 
 

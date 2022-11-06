@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom'
-import centerMarker from '../../assets/images/cancel-orange.svg'
+import availableCarImg from '../../assets/images/detail-car.svg'
+import availableMotorImg from '../../assets/images/detail-motor.svg'
+import disabled from '../../assets/images/disabled.svg'
+import addressImg from '../../assets/images/address.svg'
+import payexImg from '../../assets/images/payex.svg'
+import serviceTimeImg from '../../assets/images/service-time.svg'
+import telImg from '../../assets/images/tel.svg'
 
 
 export default function Card (props) {
@@ -26,39 +32,43 @@ export default function Card (props) {
       setCurrentPark(props.park)
       setCanFetchDirection(true)
     }}
-      
-
     className={isCurr? 'card current' : 'card'}>
       <h3 className="card__title">{ name }</h3>
-      <div className="card__info">
-        <img src={centerMarker} alt="icon"></img>
+      {isCurr && <div className="card__info">
+        <img src={addressImg} alt="address"></img>
         <span>{ address? address : '-' }</span>
-      </div>
+      </div> }
 
-      <div className="card__info">
-        <img src={centerMarker} alt="icon"></img>
+      {isCurr && <div className="card__info">
+        <img src={telImg} alt="tel"></img>
         <span>{ tel }</span>
-      </div>
+      </div> }
 
-      <div className="card__info">
-        <img src={centerMarker} alt="icon"></img>
+      {isCurr && <div className="card__info">
+        <img src={serviceTimeImg} alt="serviceTime"></img>
         <span>{ serviceTime }</span>
-      </div>
+      </div> }
 
       <div className="card__info">
-        <img src={centerMarker} alt="icon"></img>
-        <span></span>
+        <img src={payexImg} alt="payex"></img>
+        <span>{ payex }</span>
       </div>
 
-      <div className="card__info">
-        <img src={centerMarker} alt="icon"></img>
-        <span>availablecar: { availablecar }</span>
-      </div>
+      <div className="card__info--bottom">
+        <p className="card__info--distance">預計 5 分鐘內可抵達</p>
 
-      <div className="card__info">
-        <img src={centerMarker} alt="icon"></img>
-        <span>availablemotor: { availablemotor }</span>
+        <div className="card__info--avai">
+          <img src={availableCarImg} alt="availableCar"></img>
+          <span>{ availablecar }</span>
+        </div>
+        <div className="card__info--avai">
+          <img src={availableMotorImg} alt="availablemotor"></img>
+          <span>{ availablemotor }</span>
+        </div>
       </div>
+      
+
+
     </div>
   )
 }
