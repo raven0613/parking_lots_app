@@ -63,8 +63,7 @@ export default function Home() {
   }, []);
 
 
-  //處理目標的地址
-  //這邊要記得同步去找parkId
+  //處理目標的地址，模式變成 target
   let targetAddressRef = useRef(null)
   const getPlaceResult = (placeValue) => {
     targetAddressRef.current = placeValue
@@ -142,7 +141,7 @@ export default function Home() {
           setCurrentPark={setCurrentPark}
           setCanFetchDirection={setCanFetchDirection}/>
         <div className="detail__window">
-          <DetailPanel currentPark={currentPark}/>
+          <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
           <SecondsCounter remainings={remainings}/>
         </div>
         <ModeController setMode={setMode}/>

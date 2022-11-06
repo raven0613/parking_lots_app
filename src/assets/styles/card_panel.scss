@@ -5,8 +5,10 @@
   top: 0;
   bottom: 0;
   right: 0;
-  padding: 1.2rem 0 1.2rem 0.5rem;
+  //下面要加上footer的高度
+  padding: 1.2rem 0 5.2rem 0.5rem;
   display: none;
+  z-index: 1;
 
   //card是裝在container裡面
   //手機模式點選時 onClick 生效 -> 會點到container = 不會直接關掉panel
@@ -81,6 +83,7 @@
     right: -24rem;
     box-shadow: 0 0 10px 1px var(--shadow-color);
     transition: box-shadow 0.2s ease-in-out;
+    padding: 1.2rem 0 1.2rem 0.5rem;
 
     //電腦模式點選時 onClick 不要生效 -> 會點到底部 = 會關掉panel
     &--container {
