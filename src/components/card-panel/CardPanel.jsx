@@ -15,12 +15,13 @@ export default function CardPanel (props) {
   const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
-  const params = useParams()
+  // const params = useParams()
   //parkId存在的話(已經在追蹤某停車場)就放入網址
-  const parkId = params.parkId ? `/${params.parkId}` : ''
+  // const parkId = params.parkId ? `/${params.parkId}` : ''
 
   //網址變化時偵測網址來改變 isActive
    useEffect(() => {
+    console.log(location.pathname)
     if (queryParams.get('nearby')) {
       setIsActive(true)
     } else {
@@ -31,11 +32,13 @@ export default function CardPanel (props) {
   return (
     <div 
     onClick={() => {
-      if (!isActive) {
-        navigate(`/map${parkId}?nearby=true`, {push: true})
-      } else {
-        navigate(`/map${parkId}`)
+      const currPath = location.pathname
+      if (!isActive) {   //打開
+        queryParams.append('nearby', 'true') //把 queryParams 增加 nearby=true
+      } else {   //關掉
+        queryParams.delete('nearby') //把 queryParams 增加 nearby=true
       }
+      navigate(`${currPath}?${queryParams}`, {push: true})
       setIsActive(!isActive)
     }}
     className={isActive? 'card__panel active': 'card__panel'}>

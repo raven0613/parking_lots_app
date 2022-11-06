@@ -33,3 +33,17 @@ export function getStraightDistance ( a, b ) {
     const distance = Math.sqrt(sum)
     return distance
 }
+
+
+//得到query string 的土法煉鋼法
+// const targetQuery = queryParams.has('target') ? `target=${queryParams.get('target')}` : ''
+// const nearbyQuery = queryParams.has('nearby') ? `nearby=${queryParams.get('nearby')}` : ''
+// let and = ''
+// let question = ''
+// if(queryParams.has('target') || queryParams.has('nearby')) {
+// question = '?'
+// }
+// if(queryParams.has('target') && queryParams.has('nearby')) {
+// and = '&'
+// }
+// const queryString = `${question}${targetQuery}${and}${nearbyQuery}`

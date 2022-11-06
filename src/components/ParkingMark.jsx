@@ -3,11 +3,9 @@ import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 import { Marker } from '@react-google-maps/api';
 import { coordinatesConvert, getStraightDistance } from '../utils/helpers'
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { allContext } from '../App'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
-import { useRef } from 'react';
-
 
 //得到所有停車場資料
 const parkingLotsData = async() => {
@@ -101,7 +99,7 @@ const availableCounts = (transOption, place) => {
 export default function ParkingMark (props) {
   //props
   const { mode, transOption, mapCenter, target, selfPos, setDirections, currentPark, setCurrentPark, setCanFetchDirection, remainings, setRemainings } = props
-  const { nearParks, setNearParks, allParks, setAllParks } = useContext(allContext)
+  const { nearParks, setNearParks, allParks, setAllParks, queryString, setQueryString } = useContext(allContext)
   //資料
   
   //fetching狀態
@@ -279,8 +277,9 @@ export default function ParkingMark (props) {
             position={positon} 
             key={park.id} 
             onClick={() => {
-              //改變網址
-              navigate(`/map/${park.id}`, {push: true})
+              //改變網址   如果有query就要包含上去   
+              const queryStr = location.search
+              navigate(`/map/${park.id}${queryStr}`, {push: true})
               setCurrentPark(park)
               setCanFetchDirection(true)
             }} />

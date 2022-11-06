@@ -71,17 +71,21 @@ export default function Home() {
     if (!targetAddressRef) return
     navigate(`/map?target=${targetAddressRef.current}`)
   }
-  
-  let urlQueryString = `?target=某某&nearby=true`
-
   //網址改變時如果有地址就去搜尋
   useEffect(() => {
     // if (!queryParams) return
-    console.log('queryParams', queryParams.get('target'))
     if (queryParams.get('target')) {
       targetAddressRef.current = queryParams.get('target')
     }
   }, [location])
+
+  
+
+
+
+
+
+
 
 
   if (!isLoaded) return <p>Loading...</p>;

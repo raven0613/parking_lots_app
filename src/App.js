@@ -1,5 +1,5 @@
 
-import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 import React, { useState } from 'react';
 import Home from './pages/Home';
@@ -11,9 +11,12 @@ export const allContext = React.createContext('')
 function App() {
   const [allParks, setAllParks] = useState()
   const [nearParks, setNearParks] = useState()
+
   const contextValue = {
-    nearParks, setNearParks, allParks, setAllParks
+    nearParks, setNearParks, allParks, setAllParks,
   }
+
+  
 
   //寫下所有路由設定
   return (
