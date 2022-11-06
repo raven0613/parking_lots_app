@@ -1,3 +1,4 @@
+import speech from '../assets/images/speech.svg'
 import { useState } from "react"
 
 export default function Speech (props) {
@@ -36,7 +37,10 @@ export default function Speech (props) {
   }
 
   if (isProcessing) return (
-    <button disabled>辨識</button>
+    <button 
+      className="speech isProcessing">
+      <img src={speech} alt="speech"></img>
+    </button>
   )
   return (
     <button 
@@ -45,6 +49,8 @@ export default function Speech (props) {
       if (isProcessing) return
       setIsProcessing(true)
       recognition.start()
-    }}>辨識</button>
+    }}>
+      <img src={speech} alt="speech"></img>
+    </button>
   )
 }

@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
@@ -5,22 +6,39 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 
-export default function Place ({ setTarget, speech, getPlaceResult }) {
+export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
+  const location = useLocation()
+  
 
   useEffect(() => {
     const text = speech? speech : ''
+    setInputingVal(text)
     setValue(text)
-    //目前可以接到資料但是不會自動重新渲染框框
   }, [speech])
 
 
+  useEffect(() => {
+    if (!targetAddressRef.current) return
+    setInputingVal(targetAddressRef.current)
+    const handleSelect = async () => {
+      setValue(targetAddressRef.current, false)
+      const results = await getGeocode({ address: targetAddressRef.current })
+      //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
+      const { lat, lng } = await getLatLng(results[0])
+      //把點選結果的座標存進 target
+      setTarget({ lat, lng })
+    }
+    handleSelect()
+  }, [targetAddressRef.current])
+
   // const [isOnComposition, setIsOnComposition] = useState(false);
-  
+
+  //點選選項時
   const handleSelect = async (val) => {
     //傳入的 val 為地址
     //這邊要傳入 false，不然建議框不會消失
-    setValue(val, false)   
+    setValue(val, false)
     //關掉建議窗
     clearSuggestions()  
 
@@ -35,47 +53,49 @@ export default function Place ({ setTarget, speech, getPlaceResult }) {
     //把值傳回去給map
     getPlaceResult(val)
   }
+  const [inputingVal, setInputingVal] = useState('')
+  // const [isInputing, setIsInputing] = useState(false)
 
-  const [isInputing, setIsInputing] = useState(false)
-  const handleCompsition = (event) => {
-    const { type } = event
-    console.log(type)
+  // const handleCompsition = (event) => {
+  //   const { type } = event
+  //   console.log(type)
 
-    if (type === 'compositionstart') {
-      setIsInputing(true)
-    }
-    else if (type === 'compositionupdate') {
-    }
-    else if (type === 'compositionend') {
-      setIsInputing(false)
-      setValue(event.target.value)
-    }
-    else if (type === 'change') {
-      if (!isInputing) {
-        setValue(event.target.value)
-      }
-    }
-  }
+  //   if (type === 'compositionstart') {
+  //     setIsInputing(true)
+  //   }
+  //   else if (type === 'compositionupdate') {
+  //   }
+  //   else if (type === 'compositionend') {
+  //     setIsInputing(false)
+  //     setInputingVal(event.target.value)
+  //   }
+  //   else if (type === 'change') {
+  //     if (!isInputing) {
+  //       setInputingVal(event.target.value)
+  //     }
+  //   }
+  // }
   const handleChange = event => {
     console.log("handleChange");
-    handleCompsition(event);
+    setInputingVal(event.target.value)
+    // handleCompsition(event);
   }
   
 
   return (
-    <Combobox onSelect={ handleSelect }>
+    <Combobox className='combobox' onSelect={ handleSelect }>
       <ComboboxInput 
-      value={value} 
-      onCompositionStart={handleCompsition}
-      onCompositionUpdate={handleCompsition}
-      onCompositionEnd={handleCompsition}
+      value={inputingVal} 
+      // onCompositionStart={handleCompsition}
+      // onCompositionUpdate={handleCompsition}
+      onCompositionEnd={() => setValue(inputingVal)}
       // onChange={e => setValue(e.target.value)} 
       onChange={handleChange} 
       disabled={!ready}
       className="combobox-input" 
       placeholder='請輸入地點'/>
-      <ComboboxPopover>
-        <ComboboxList className='combobox-list'>
+      <ComboboxPopover className='combobox-pop'>
+        <ComboboxList className=''>
           {status === "OK" &&
             data.map(({ place_id, description }) => (
               <ComboboxOption key={ place_id } value={ description } className='combobox-option'/>

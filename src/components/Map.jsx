@@ -3,17 +3,17 @@ import centerMarker from '../assets/images/map-center.svg'
 import selfMarker from '../assets/images/marker-self.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
 
-import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
-import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
+import React, { useMemo, useCallback, useRef, useState, useEffect } from "react"
+import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
 
-import ParkingMark from "./ParkingMark";
+import ParkingMark from "./ParkingMark"
 
 
 
-//取得使用者的 currentPosition
-const getUserPos = (setSelfPos, setMapCenter) => {
+//一次性取得使用者的 currentPosition並且設為地圖中央
+const getUserPos = (setSelfPos, mode, setMapCenter) => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
+    navigator.geolocation.watchPosition(
       (position) => {
         if (setSelfPos) {
           setSelfPos(() => {
@@ -21,8 +21,9 @@ const getUserPos = (setSelfPos, setMapCenter) => {
             return {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
-            };
-          });
+            }
+          })
+          if(mode !== 'self') return
           setMapCenter(() => {
             console.log("setMapCenter");
             return {
@@ -33,20 +34,46 @@ const getUserPos = (setSelfPos, setMapCenter) => {
         }
       },
       (error) => {
-        console.log(error);
+        console.log('無法取得您的位置', error)
       }
     );
   } else {
     //目前如果沒有允許就跑不出地圖
     alert("你的裝置不支援地理位置功能。");
   }
-};
+}
+
+//監控使用者的 currentPosition
+const watchUserPos = (setSelfPos) => {
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+      (position) => {
+        if (setSelfPos) {
+          setSelfPos(() => {
+            console.log("setSelfPos");
+            return {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            }
+          })
+        }
+      },
+      (error) => {
+        console.log('無法取得您的位置', error)
+      }
+    );
+  } else {
+    //目前如果沒有允許就跑不出地圖
+    alert("你的裝置不支援地理位置功能。");
+  }
+}
 
 //獲得路線資訊
 const handleFetchDirections = (origin, destination, state, setter) => {
+  console.log('推薦路線')
   //如果已經有路線，就把他清除
   if (state) {
-    setter(null);
+    setter(null)
   }
   if (!origin || !destination) return console.log("沒有目標");
   
@@ -63,21 +90,21 @@ const handleFetchDirections = (origin, destination, state, setter) => {
     },
     (result, status) => {
       if (status === "OK" && result) {
-        setter(result);
+        setter(result)
       }
     }
   )
 }
 
 
-export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark}) {
+export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings}) {
 
 
-
-  //一載入就去抓使用者的 currentPosition
+  //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
-    console.log("on Map loaded");
-    getUserPos(setSelfPos, setMapCenter);
+    console.log('Map load')
+    getUserPos(setSelfPos, mode, setMapCenter)
+    watchUserPos(setSelfPos)
   }, []);
 
   //如果移動地圖就改變 center 位置
@@ -87,15 +114,15 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     console.log('mapInstance', mapInstance)
     
     if (mapInstance.map) {
-      setMapCenter(mapInstance.map.center.toJSON());
+      setMapCenter(mapInstance.map.center.toJSON())
     } else {
-      setMapCenter(mapInstance.center.toJSON());
+      setMapCenter(mapInstance.center.toJSON())
     }
   }
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
-    console.log('load map')
+    console.log('地圖載入')
     mapRef.current = map
     setMapInstance(map)
   }, [])
@@ -104,7 +131,8 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
   useEffect(() => {
     if (mode === 'self') {
       console.log('current mode: ', mode)
-      getUserPos(setSelfPos, setMapCenter)
+      if (!selfPos) return
+      setMapCenter(selfPos)
       setTarget(null)
       setSpeech('')
       return
@@ -117,19 +145,26 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
       setDirections(null)
       console.log('current mode: ', mode)
       console.log('mapRef.current: ', mapRef.current)
-      setMapCenter(mapRef.current.position.toJSON());
+      setMapCenter(selfPos) //這樣的話是按下去之後，畫面不會移動但是準心跑回selfPos
+      // setMapCenter(mapRef.current.position.toJSON())  //原本
       setTarget(null)
       setSpeech('')
       return
     }
   }, [mode])
 
-  //有park被點選就自動推薦路線
+  //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
   useEffect(() => {
+    if (!canFetchDirection) return console.log('canfetchDirection是 false')
     if (!currentPark) return console.log('沒有點選停車場')
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
-    handleFetchDirections(selfPos, positon , directions, setDirections)
-  }, [currentPark])
+    // handleFetchDirections(selfPos, positon , directions, setDirections)
+    //推薦完路線就改回false
+    setCanFetchDirection(false)
+  }, [canFetchDirection])
+
+
+  
 
   //map設定
   const options = useMemo(
@@ -212,6 +247,9 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
           setDirections={setDirections}
           currentPark={currentPark}
           setCurrentPark={setCurrentPark}
+          setCanFetchDirection={setCanFetchDirection}
+          remainings={remainings}
+          setRemainings={setRemainings}
         />
       </GoogleMap>
     </div>

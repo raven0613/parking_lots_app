@@ -1,19 +1,23 @@
+import { useEffect, useState } from 'react'
 import car from '../assets/images/car-.svg'
 import motor from '../assets/images/motorbike.svg'
 
-export default function ModeController (props) {
+export default function TransTypeController (props) {
   const { transOption, setTransOption } = props
-  let carClass = ''
-  let motorClass = ''
-  if (transOption === 'car')  {
-    carClass = 'trans-type__btn trans-type__car active'
-    motorClass = 'trans-type__btn trans-type__motor'
-  }
-  else if (transOption === 'motor') {
-    carClass = 'trans-type__btn trans-type__car'
-    motorClass = 'trans-type__btn trans-type__motor active'
-  }
+  const [isCar, setIsCar] = useState(true)
+  let carClass = `trans-type__btn trans-type__car ${isCar? 'active' : ''}`
+  let motorClass = `trans-type__btn trans-type__motor ${isCar? '' : 'active'}`
+  
 
+  useEffect(() => {
+    if (!transOption) return
+    if (transOption === 'car')  {
+      setIsCar(true)
+    }
+    else if (transOption === 'motor') {
+      setIsCar(false)
+    }
+  }, [transOption])
 
   return (
     <div className='trans-type'>
