@@ -1,7 +1,7 @@
 import warning from '../assets/images/warning.svg'
 import { useEffect, useState } from "react"
 
-export default function Warning ({ currentPark, transOption }) {
+export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   const [isCarEnough, setIsCarEnough] = useState(true)
   const [isMotorEnough, setIsMotorEnough] = useState(true)
   let content = '您的目標停車場已無剩餘車位'
@@ -53,6 +53,8 @@ export default function Warning ({ currentPark, transOption }) {
             //是target模式的話重新就目標找一次
             //是screen模式的話就重進screen模式
             //self模式的話center回到中心
+            //關掉目前搜尋的
+            setCurrentPark(null)
           }}
           className="warning__btn">{buttonContent}</button>
       </div>

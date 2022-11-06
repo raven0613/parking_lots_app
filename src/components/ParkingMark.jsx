@@ -112,6 +112,7 @@ export default function ParkingMark (props) {
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
   const params = useParams()
   //parkId存在的話(已經在追蹤某停車場)就放入網址
   const parkId = params.parkId
@@ -127,6 +128,11 @@ export default function ParkingMark (props) {
       setCurrentPark(null)
       return
     } 
+    // if (!queryParams) return
+    if (queryParams.get('target')) {
+      console.log(queryParams)
+    }
+
     const paramsPark = allParks.find(park => park.id === parkId)
     if (!paramsPark) return console.log('轉到找不到此id頁面')
     setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])

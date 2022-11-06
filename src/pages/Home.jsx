@@ -22,20 +22,10 @@ export default function Home() {
   //搜尋相關
   const [ speech, setSpeech ] =  useState()
 
-  //處理目標的地址
-  let targetAddress = null
-  const getPlaceResult = (placeValue) => {
-    targetAddress = placeValue
-    if (!targetAddress) return
-    navigate(`/map?target=${targetAddress}`)
-  }
-
-  //使用者的 currentPosition
-  const [selfPos, setSelfPos] = useState()
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()
-
+  const queryParams = new URLSearchParams(location.search)
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -43,7 +33,8 @@ export default function Home() {
     libraries,
   })
 
-  
+  //使用者的 currentPosition
+  const [selfPos, setSelfPos] = useState()
   //要顯示哪種交通工具的停車場
   const [transOption, setTransOption] = useState('car')
   //設定搜尋目標點
@@ -72,7 +63,25 @@ export default function Home() {
   }, []);
 
 
+  //處理目標的地址
+  //這邊要記得同步去找parkId
+  let targetAddressRef = useRef(null)
+  const getPlaceResult = (placeValue) => {
+    targetAddressRef.current = placeValue
+    if (!targetAddressRef) return
+    navigate(`/map?target=${targetAddressRef.current}`)
+  }
+  
+  let urlQueryString = `?target=某某&nearby=true`
 
+  //網址改變時如果有地址就去搜尋
+  useEffect(() => {
+    // if (!queryParams) return
+    console.log('queryParams', queryParams.get('target'))
+    if (queryParams.get('target')) {
+      targetAddressRef.current = queryParams.get('target')
+    }
+  }, [location])
 
 
   if (!isLoaded) return <p>Loading...</p>;
@@ -107,6 +116,7 @@ export default function Home() {
           <Place
             getPlaceResult={getPlaceResult}
             speech={speech}
+            targetAddressRef={targetAddressRef}
             setTarget={(position) => {
               //輸入 target 後，模式切換成 target
               setMode("target");
@@ -132,13 +142,15 @@ export default function Home() {
           <SecondsCounter remainings={remainings}/>
         </div>
         <ModeController setMode={setMode}/>
-        <Locate />
+        <Locate setMapCenter={setMapCenter} selfPos={selfPos} mapInstance={mapInstance}/>
       </div>
       <Footer />
       <Warning 
         currentPark={currentPark} 
         transOption={transOption}
-        target={target}/>
+        target={target}
+        setCurrentPark={setCurrentPark}
+        mapRef={mapRef}/>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
@@ -5,9 +6,9 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 
-export default function Place ({ setTarget, speech, getPlaceResult }) {
+export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
-
+  const location = useLocation()
   
 
   useEffect(() => {
@@ -17,13 +18,27 @@ export default function Place ({ setTarget, speech, getPlaceResult }) {
   }, [speech])
 
 
+  useEffect(() => {
+    if (!targetAddressRef.current) return
+    setInputingVal(targetAddressRef.current)
+    const handleSelect = async () => {
+      setValue(targetAddressRef.current, false)
+      const results = await getGeocode({ address: targetAddressRef.current })
+      //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
+      const { lat, lng } = await getLatLng(results[0])
+      //把點選結果的座標存進 target
+      setTarget({ lat, lng })
+    }
+    handleSelect()
+  }, [targetAddressRef.current])
+
   // const [isOnComposition, setIsOnComposition] = useState(false);
 
   //點選選項時
   const handleSelect = async (val) => {
     //傳入的 val 為地址
     //這邊要傳入 false，不然建議框不會消失
-    setValue(val, false)   
+    setValue(val, false)
     //關掉建議窗
     clearSuggestions()  
 
@@ -39,7 +54,7 @@ export default function Place ({ setTarget, speech, getPlaceResult }) {
     getPlaceResult(val)
   }
   const [inputingVal, setInputingVal] = useState('')
-  const [isInputing, setIsInputing] = useState(false)
+  // const [isInputing, setIsInputing] = useState(false)
 
   // const handleCompsition = (event) => {
   //   const { type } = event
