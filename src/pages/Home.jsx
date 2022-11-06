@@ -134,6 +134,7 @@ export default function Home() {
           <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
         </div>
         <CardPanel 
+          mode={mode}
           currentPark={currentPark} 
           selfPos={selfPos}
           directions={directions}

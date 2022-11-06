@@ -9,15 +9,18 @@ import serviceTimeImg from '../../assets/images/service-time.svg'
 import telImg from '../../assets/images/tel.svg'
 
 
+
 export default function Card (props) {
-  const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id } = props.park
-  const { isCurr, setCurrentPark, setCanFetchDirection } = props
+  const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id, Handicap_First, summary } = props.park
+  const { isCurr, setCurrentPark, setCanFetchDirection, mode } = props
 
   const positon = {lng: props.park.lng, lat: props.park.lat}
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()
-  
+  const isDisabled = summary.includes('身心') || Handicap_First > 0
+  const travelTime = mode === 'self' ? '預計 5 分鐘內' : `預計 ? 分鐘`
+
   return (
     <div 
     onClick={(e) => {
@@ -34,6 +37,7 @@ export default function Card (props) {
     }}
     className={isCurr? 'card current' : 'card'}>
       <h3 className="card__title">{ name }</h3>
+      
       {isCurr && <div className="card__info">
         <img src={addressImg} alt="address"></img>
         <span>{ address? address : '-' }</span>
@@ -55,7 +59,11 @@ export default function Card (props) {
       </div>
 
       <div className="card__info--bottom">
-        <p className="card__info--distance">預計 5 分鐘內可抵達</p>
+        <p className="card__info--distance">
+          {travelTime}
+        </p>
+
+        {isDisabled && <img className="card__info--disabled" src={disabled} alt="disabled-parking" />}
 
         <div className="card__info--avai">
           <img src={availableCarImg} alt="availableCar"></img>

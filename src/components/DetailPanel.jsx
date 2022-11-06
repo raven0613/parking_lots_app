@@ -50,7 +50,7 @@ export default function DetailPanel (props) {
     points = ' ...'
   }
   const subTitle = `${currentPark.name.slice(0, 10)}${points}`
-  const isDisabled = currentPark.summary.includes('身心')
+  const isDisabled = currentPark.summary.includes('身心') || currentPark.Handicap_First > 0
 
   if (currentPark) {
     return (
