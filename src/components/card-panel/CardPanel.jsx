@@ -4,10 +4,13 @@ import { allContext } from '../../App'
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
 
+
+
+
 export default function CardPanel (props) {
   const [isActive, setIsActive] = useState(false)
   const { nearParks } = useContext(allContext)
-  const { setCurrentPark, currentPark, setCanFetchDirection } = props
+  const { setCurrentPark, currentPark, setCanFetchDirection, selfPos, mode } = props
   //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
   const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
 
@@ -15,11 +18,17 @@ export default function CardPanel (props) {
   const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
-  // const params = useParams()
-  //parkId存在的話(已經在追蹤某停車場)就放入網址
-  // const parkId = params.parkId ? `/${params.parkId}` : ''
 
   //網址變化時偵測網址來改變 isActive
+   useEffect(() => {
+    console.log(location.pathname)
+    if (queryParams.get('nearby')) {
+      setIsActive(true)
+    } else {
+      setIsActive(false)
+    }
+   },[location]) 
+
    useEffect(() => {
     console.log(location.pathname)
     if (queryParams.get('nearby')) {
@@ -57,12 +66,13 @@ export default function CardPanel (props) {
             key={ park.id } 
             park={ park } 
             setCurrentPark={setCurrentPark}
-            setCanFetchDirection={setCanFetchDirection} />
+            setCanFetchDirection={setCanFetchDirection}
+            mode={mode} />
           )
         })}
 
       </div>
-      <img className="card__panel--icon" src={ Arrow } alt="" />
+      <img className="card__panel--icon" src={ Arrow } alt="toggle" />
     </div>
 
   )

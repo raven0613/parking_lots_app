@@ -21,7 +21,7 @@ function App() {
   //寫下所有路由設定
   return (
     <div className="App">
-      <Router>
+      <Router basename="/">
         <allContext.Provider value={contextValue}>
             
           <Routes>

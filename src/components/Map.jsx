@@ -12,6 +12,7 @@ import ParkingMark from "./ParkingMark"
 
 //一次性取得使用者的 currentPosition並且設為地圖中央
 const getUserPos = (setSelfPos, mode, setMapCenter) => {
+  console.log("getUserPos");
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
@@ -203,7 +204,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
             }}
           />
         )}
-        {selfPos && mode === "self" && (
+        {selfPos && (
           <Marker 
             position={selfPos} 
             className="self-point marker" 

@@ -19,7 +19,7 @@ const parkingLotsData = async() => {
         //TWD97轉經緯度
         const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
         return {
-          id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0
+          id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘'
         }
     })
     return parks
@@ -81,7 +81,8 @@ const parksWithRemainings = (parkings, remainings) => {
         ...park,
         FareInfo: {...park.FareInfo},
         availablecar: data.availablecar > 0?  data.availablecar : 0,
-        availablemotor: data.availablemotor > 0? data.availablemotor : 0
+        availablemotor: data.availablemotor > 0? data.availablemotor : 0,
+        travelTime: data.travelTime
       }
     }
     //沒找到就返回原資料
@@ -94,12 +95,39 @@ const availableCounts = (transOption, place) => {
   if (transOption === 'motor') return place.availablemotor.toString()
 }
 
-
+//計算到達時間
+const getNearParksTime = (origin, destinations, setNearParks) => {
+  console.log(origin, destinations)
+  console.log('要算一次到達時間囉')
+  if (!origin || !destinations.length) return console.log('沒有起始點或目標不能算距離')
+  const google = window.google;
+  const service = new google.maps.DistanceMatrixService()
+  service.getDistanceMatrix({
+    origins: [origin],
+    destinations,
+    travelMode: google.maps.TravelMode.DRIVING,
+    avoidHighways: true,
+    avoidTolls: true
+  }, (response, status) => {
+    if (status === "OK" && response) {
+      const resArr = response.rows[0].elements
+      
+      let i = 0
+      const newParks = destinations.map(park => {
+        i = i + 1
+        return {
+          ...park, travelTime: resArr[i - 1].duration.text
+        } 
+      })
+      setNearParks(newParks)
+    }
+  })
+}
 
 export default function ParkingMark (props) {
   //props
   const { mode, transOption, mapCenter, target, selfPos, setDirections, currentPark, setCurrentPark, setCanFetchDirection, remainings, setRemainings } = props
-  const { nearParks, setNearParks, allParks, setAllParks, queryString, setQueryString } = useContext(allContext)
+  const { nearParks, setNearParks, allParks, setAllParks } = useContext(allContext)
   //資料
   
   //fetching狀態
@@ -224,6 +252,13 @@ export default function ParkingMark (props) {
     setNearParks(availablePark)
   }, [mapCenter, mode, transOption, remainings, allParks, setNearParks])
 
+  //mapCenter, target改變時重新算一次時間
+  useEffect(() => {
+    //如果是在使用者附近就顯示五分鐘內
+    if (mode === 'self') return
+    // if (!selfPos || !nearParks) return
+    // getNearParksTime(selfPos, nearParks, setNearParks)
+  }, [mapCenter, target])
 
 
   //icon 的設定

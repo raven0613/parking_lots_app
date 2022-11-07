@@ -1,9 +1,14 @@
 import warning from '../assets/images/warning.svg'
 import { useEffect, useState } from "react"
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   const [isCarEnough, setIsCarEnough] = useState(true)
   const [isMotorEnough, setIsMotorEnough] = useState(true)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const queryParams = new URLSearchParams(location.search)
+
   let content = '您的目標停車場已無剩餘車位'
   let buttonContent = '重新尋找'
 
@@ -55,6 +60,8 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
             //self模式的話center回到中心
             //關掉目前搜尋的
             setCurrentPark(null)
+            const queryStr = location.search
+            navigate(`/map/${queryStr}`, {push: true})
           }}
           className="warning__btn">{buttonContent}</button>
       </div>

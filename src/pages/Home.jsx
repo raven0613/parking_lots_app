@@ -1,3 +1,4 @@
+import logo from '../assets/images/logo.svg'
 import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
@@ -16,7 +17,7 @@ const libraries = ["places"];
 
 
 export default function Home() {
-  console.log('Home又重新渲染')
+  // console.log('Home又重新渲染')
   //搜尋模式
   const [mode, setMode] = useState("self") //self, target, screen-center
   //搜尋相關
@@ -63,8 +64,7 @@ export default function Home() {
   }, []);
 
 
-  //處理目標的地址
-  //這邊要記得同步去找parkId
+  //處理目標的地址，模式變成 target
   let targetAddressRef = useRef(null)
   const getPlaceResult = (placeValue) => {
     targetAddressRef.current = placeValue
@@ -115,8 +115,14 @@ export default function Home() {
       />
 
       <div className="map__ui">
-        
+        <div className="sidebar">
+          <div className="sidebar__logo"><img src={logo} alt="" /></div>
+          <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
+          <ModeController setMode={setMode} mode={mode}/>
+          <Locate setMapCenter={setMapCenter} selfPos={selfPos} mapInstance={mapInstance} mode={mode} setMode={setMode}/>
+        </div>
         <div className="search__controller">
+          
           <Place
             getPlaceResult={getPlaceResult}
             speech={speech}
@@ -133,20 +139,31 @@ export default function Home() {
           ></Place>
           <Speech setSpeech={setSpeech}></Speech>
           <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
+
         </div>
         <CardPanel 
+          mode={mode}
           currentPark={currentPark} 
           selfPos={selfPos}
           directions={directions}
           setDirections={setDirections}
           setCurrentPark={setCurrentPark}
-          setCanFetchDirection={setCanFetchDirection}/>
-        <div className="detail__window">
-          <DetailPanel currentPark={currentPark}/>
-          <SecondsCounter remainings={remainings}/>
+          setCanFetchDirection={setCanFetchDirection}
+        />
+        <SecondsCounter remainings={remainings}/>
+        {/* 手機版會在  PC版要消失 */}
+        <div className="visible__controller">
+          <ModeController setMode={setMode} mode={mode}/>
+          <Locate 
+            setMapCenter={setMapCenter} 
+            selfPos={selfPos} 
+            mapInstance={mapInstance} 
+            mode={mode}
+            setMode={setMode}
+          />
         </div>
-        <ModeController setMode={setMode}/>
-        <Locate setMapCenter={setMapCenter} selfPos={selfPos} mapInstance={mapInstance}/>
+        <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
+        
       </div>
       <Footer />
       <Warning 
@@ -156,6 +173,6 @@ export default function Home() {
         setCurrentPark={setCurrentPark}
         mapRef={mapRef}/>
     </div>
-  );
+  )
 }
 
