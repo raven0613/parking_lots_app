@@ -23,14 +23,13 @@ export default function DetailPanel (props) {
   } else {
     className = 'detail__panel'
   }
-  const viewWidth = document.body.clientWidth
 
   const handleRWD = () => {
       if (window.innerWidth > 990)
           setDevice("PC");
       else if (window.innerWidth > 600)
           setDevice("tablet");
-      else if (window.innerWidth > 420)
+      else if (window.innerWidth > 500)
           setDevice("mobileL");
       else
           setDevice("mobile");

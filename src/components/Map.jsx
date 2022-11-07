@@ -204,7 +204,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
             }}
           />
         )}
-        {selfPos && mode === "self" && (
+        {selfPos && (
           <Marker 
             position={selfPos} 
             className="self-point marker" 

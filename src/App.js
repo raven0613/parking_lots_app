@@ -1,5 +1,5 @@
 
-import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 import React, { useState } from 'react';
 import Home from './pages/Home';
@@ -21,7 +21,7 @@ function App() {
   //寫下所有路由設定
   return (
     <div className="App">
-      <Router>
+      <Router basename="/">
         <allContext.Provider value={contextValue}>
             
           <Routes>

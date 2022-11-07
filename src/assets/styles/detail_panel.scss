@@ -1,18 +1,7 @@
 .detail__window {
   z-index: 2;
 }
-.counter {
-  position: absolute;
-  bottom: 0;
 
-  background-color: var(--white);
-  width: 15rem;
-  height: 2.5rem;
-  border-radius: 5px;
-  border: 1px solid var(--second-color);
-  text-align: center;
-  line-height: 2.5rem;
-}
 .detail__panel {
   pointer-events: auto;
   position:absolute;
@@ -117,15 +106,15 @@
     width: 30rem;
     top: auto;
     transform: translateX(0);
-    left: 6rem;
+    left: 7rem;
     bottom: -40%;
     box-shadow: 0 0 10px 1px var(--shadow-color);
 
     &.active {
-      bottom: 2rem;
+      bottom: 2.5rem;
     }
     &:hover {
-      opacity: 0.6;
+      opacity: 0.8;
       p {
         opacity: 1;
       }

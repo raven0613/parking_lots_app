@@ -8,7 +8,7 @@
   width: 80%;
   height: 4rem;
   display: flex;
-  // transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
 }
 
 .speech {
@@ -24,7 +24,7 @@
   
   
   &.isProcessing {
-    // transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
     color: beige;
     background-color: var(--shadow-darker);
   }

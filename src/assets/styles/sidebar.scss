@@ -1,0 +1,40 @@
+.sidebar {
+  display: none;
+}
+
+@media screen and (min-width: 600px) {
+  .sidebar {
+    pointer-events: auto;
+    display: block;
+    width: 5rem;
+    height: 100%;
+    background-color: var(--white);
+    box-shadow: 0 0 10px 1px var(--shadow-color);
+    transition: box-shadow 0.2s ease-in-out;
+
+    display: grid;
+    grid-template-rows: 8rem 1fr auto auto 4rem 4rem 2rem;
+    
+    .trans-type {
+      grid-row: 3/4;
+    }
+    .mode__controller {
+      grid-row: 4/5;
+    }
+    .locate {
+      grid-row: 5/6;
+    }
+    &__logo {
+      grid-row: 1/2;
+      margin: auto;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 2rem;
+      background-color: var(--main-color);
+      img {
+        width: 3rem;
+        padding-top: 0.75rem;
+      }
+    }
+  }
+}
