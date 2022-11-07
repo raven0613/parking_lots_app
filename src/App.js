@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 import React, { useState } from 'react';
 import Home from './pages/Home';
@@ -21,7 +21,7 @@ function App() {
   //寫下所有路由設定
   return (
     <div className="App">
-      <Router basename="/parking_lots_app">
+      <Router>
         <allContext.Provider value={contextValue}>
             
           <Routes>
