@@ -21,7 +21,6 @@ export default function CardPanel (props) {
 
   //網址變化時偵測網址來改變 isActive
    useEffect(() => {
-    console.log(location.pathname)
     if (queryParams.get('nearby')) {
       setIsActive(true)
     } else {
@@ -30,7 +29,6 @@ export default function CardPanel (props) {
    },[location]) 
 
    useEffect(() => {
-    console.log(location.pathname)
     if (queryParams.get('nearby')) {
       setIsActive(true)
     } else {

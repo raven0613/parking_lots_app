@@ -1,15 +1,19 @@
 import locate from '../assets/images/locate.svg'
 
-export default function Locate ({setMapCenter, mapRef, selfPos, mapInstance, mode, setMode}) {
+export default function Locate ({setMapCenter, selfPos, mapInstance, mode, setMode, setIsFollow}) {
 
   if (mode !== 'screen-center') {
     return (
       <button 
         onClick={() => {
-          console.log('定位到user')
-          // setMapCenter(selfPos) //screen模式可用
-          mapInstance.setCenter(selfPos) //原本self模式可用，但點了screen模式再切回來 mapInstance 就不見了
-          // mapRef?.current.setCenter(selfPos)
+          setIsFollow(true)
+          //一旦移動了就不跟隨，按下locate後恢復跟隨
+          //定位到user身上
+          if (!mapInstance.map) {
+            return mapInstance.setCenter(selfPos)
+          }
+          mapInstance.map.setCenter(selfPos)
+          
         }} 
         className="locate">
         <img src={locate} alt="locate"></img>
