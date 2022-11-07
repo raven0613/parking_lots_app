@@ -10,10 +10,10 @@ export default function Locate ({setMapCenter, selfPos, mapInstance, mode, setMo
           //一旦移動了就不跟隨，按下locate後恢復跟隨
           //定位到user身上
           if (!mapInstance.map) {
-            return mapInstance.setCenter(selfPos)
+            return mapInstance.panTo(selfPos)
           }
-          mapInstance.map.setCenter(selfPos)
-          
+          mapInstance.map.panTo(selfPos)
+          //setCenter 或 panTo(較滑順)
         }} 
         className="locate">
         <img src={locate} alt="locate"></img>
