@@ -14,7 +14,7 @@ import ParkingMark from "./ParkingMark"
 const getUserPos = (setSelfPos, mode, setMapCenter) => {
   console.log("getUserPos");
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(
+    navigator.geolocation.getCurrentPosition(
       (position) => {
         if (setSelfPos) {
           setSelfPos(() => {
@@ -117,9 +117,9 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     if (!mapInstance) return
     if (isFollow) {
       if (!mapInstance.map) {
-        return mapInstance.setCenter(selfPos)
+        return mapInstance.panTo(selfPos)
       }
-      mapInstance.map.setCenter(selfPos)
+      mapInstance.map.panTo(selfPos)
     }
   }, [selfPos, isFollow, mapInstance])
 
