@@ -53,8 +53,9 @@ export default function Home() {
   const mapRef = useRef();
   const [mapInstance, setMapInstance] = useState();
   // const center = useMemo(() => (selfPos), [selfPos])
-   const [isFollow, setIsFollow] = useState(true)
-
+  const [isFollow, setIsFollow] = useState(true)
+  const [isNearActive, setIsNearActive] = useState(false)
+  const [inputingVal, setInputingVal] = useState('')
   //設定是否要搜尋路線 的開關
   const [canFetchDirection, setCanFetchDirection] = useState(false)
 
@@ -86,7 +87,7 @@ export default function Home() {
 
 
 
-
+  
 
 
   if (!isLoaded) return <p>Loading...</p>;
@@ -115,6 +116,7 @@ export default function Home() {
         setRemainings={setRemainings}
         isFollow={isFollow}
         setIsFollow={setIsFollow}
+        setInputingVal={setInputingVal}
       />
 
       <div className="map__ui">
@@ -134,6 +136,8 @@ export default function Home() {
         <div className="search__controller">
           
           <Place
+            inputingVal={inputingVal}
+            setInputingVal={setInputingVal}
             getPlaceResult={getPlaceResult}
             speech={speech}
             targetAddressRef={targetAddressRef}
@@ -152,6 +156,8 @@ export default function Home() {
 
         </div>
         <CardPanel 
+          isNearActive={isNearActive}
+          setIsNearActive={setIsNearActive}
           mode={mode}
           currentPark={currentPark} 
           selfPos={selfPos}
@@ -163,7 +169,7 @@ export default function Home() {
         <SecondsCounter remainings={remainings}/>
         {/* 手機版會在  PC版要消失 */}
         <div className="visible__controller">
-          <ModeController setMode={setMode} mode={mode}/>
+          {/* <ModeController setMode={setMode} mode={mode}/> */}
           <Locate 
             setMapCenter={setMapCenter} 
             selfPos={selfPos} 
@@ -177,7 +183,7 @@ export default function Home() {
         <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
         
       </div>
-      <Footer />
+      <Footer mode={mode} setMode={setMode} setIsNearActive={setIsNearActive} />
       <Warning 
         currentPark={currentPark} 
         transOption={transOption}

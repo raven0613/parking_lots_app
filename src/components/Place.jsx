@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 
-export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef }) {
+export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef,inputingVal, setInputingVal }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
   const location = useLocation()
   
@@ -54,7 +54,7 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     //把值傳回去給map
     getPlaceResult(val)
   }
-  const [inputingVal, setInputingVal] = useState('')
+  
   // const [isInputing, setIsInputing] = useState(false)
 
   // const handleCompsition = (event) => {

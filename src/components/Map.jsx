@@ -100,7 +100,7 @@ const handleFetchDirections = (origin, destination, state, setter) => {
 }
 
 
-export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow}) {
+export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal}) {
 
 
   //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
@@ -158,6 +158,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
       setMapCenter(selfPos)
       setTarget(null)
       setSpeech('')
+      setInputingVal('')
       return
     }
     if (mode === 'target') {
@@ -170,6 +171,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
 
       setMapCenter(selfPos)
       setTarget(null)
+      setInputingVal('')
       setSpeech('')
       return
     }
