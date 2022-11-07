@@ -134,7 +134,7 @@ export default function ParkingMark (props) {
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
   const [isFetchingParks, setIsFetchingParks] = useState(false)
   //內部變數
-  const FETCH_PER_SEC = 20000
+  const FETCH_INRERVAL = 20000
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()
@@ -211,7 +211,7 @@ export default function ParkingMark (props) {
     //20秒抓一次剩餘車位資料
     const interval = setInterval(() => {
       fetchRemainingData()
-    }, FETCH_PER_SEC)
+    }, FETCH_INRERVAL)
     return () => clearInterval(interval)
 
   }, [])
@@ -230,7 +230,7 @@ export default function ParkingMark (props) {
     let filteredParkingLots = getPointsInDistance(allParks, selfPos, 0.0075)
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
     setNearParks(parksTransFilter(filteredParkingLots, transOption))
-  }, [selfPos, mode, transOption, remainings, allParks, setNearParks])
+  }, [selfPos, mode, transOption, remainings])
 
   // target的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
@@ -239,7 +239,7 @@ export default function ParkingMark (props) {
     //加入剩餘車位資料
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
     setNearParks(parksTransFilter(filteredParkingLots, transOption))
-  }, [target, mode, transOption, remainings, allParks, setNearParks])
+  }, [target, mode, transOption, remainings])
 
   // mapCenter的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
@@ -250,7 +250,7 @@ export default function ParkingMark (props) {
 
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
     setNearParks(availablePark)
-  }, [mapCenter, mode, transOption, remainings, allParks, setNearParks])
+  }, [mapCenter, mode, transOption, remainings])
 
   //mapCenter, target改變時重新算一次時間
   useEffect(() => {

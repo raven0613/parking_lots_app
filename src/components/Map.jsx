@@ -25,6 +25,7 @@ const getUserPos = (setSelfPos, mode, setMapCenter) => {
             }
           })
           if(mode !== 'self') return
+          if(!position) return
           setMapCenter(() => {
             console.log("setMapCenter");
             return {
@@ -46,6 +47,7 @@ const getUserPos = (setSelfPos, mode, setMapCenter) => {
 
 //監控使用者的 currentPosition
 const watchUserPos = (setSelfPos) => {
+  console.log('watchUserPos')
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
@@ -98,7 +100,7 @@ const handleFetchDirections = (origin, destination, state, setter) => {
 }
 
 
-export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings}) {
+export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow}) {
 
 
   //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
@@ -108,11 +110,24 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     watchUserPos(setSelfPos)
   }, []);
 
+  //selfPos改變的話要讓地圖中心跟隨
+  useEffect(() => {
+    if (!isFollow) return
+    if (!selfPos) return
+    if (!mapInstance) return
+    if (isFollow) {
+      if (!mapInstance.map) {
+        return mapInstance.setCenter(selfPos)
+      }
+      mapInstance.map.setCenter(selfPos)
+    }
+  }, [selfPos, isFollow, mapInstance])
+
   //如果移動地圖就改變 center 位置
   function handleCenterChanged() {
-    if (mode !== "screen-center") return console.log(mode);
+    if (mode !== "screen-center") return
     
-    console.log('mapInstance', mapInstance)
+    // console.log('mapInstance', mapInstance)
     
     if (mapInstance.map) {
       setMapCenter(mapInstance.map.center.toJSON())
@@ -124,14 +139,21 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
     console.log('地圖載入')
+    if (map.map) {
+      return setMapInstance(map.map)
+    }
     mapRef.current = map
-    setMapInstance(map)
+    return setMapInstance(map)
   }, [])
 
   //當搜尋 mode 改變時
   useEffect(() => {
     if (mode === 'self') {
       console.log('current mode: ', mode)
+      if (!isFollow) {
+        //mode回到self後恢復跟隨
+        setIsFollow(true)
+      }
       if (!selfPos) return
       setMapCenter(selfPos)
       setTarget(null)
@@ -142,12 +164,11 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
       console.log('current mode: ', mode)
       return
     }
-    if (mode === 'screen-center') {
+    if (mode === 'screen-center') { //這邊前後都是正常地圖
       setDirections(null)
       console.log('current mode: ', mode)
-      console.log('mapRef.current: ', mapRef.current)
-      setMapCenter(selfPos) //這樣的話是按下去之後，畫面不會移動但是準心跑回selfPos
-      // setMapCenter(mapRef.current.position.toJSON())  //原本
+
+      setMapCenter(selfPos)
       setTarget(null)
       setSpeech('')
       return
@@ -165,7 +186,6 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
   }, [canFetchDirection])
 
 
-  
 
   //map設定
   const options = useMemo(
@@ -189,6 +209,14 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
         center={mapCenter}
         mapContainerClassName="map"
         onDragEnd={handleCenterChanged}
+        onDragStart={() => {
+          if (!isFollow) return
+          setIsFollow(false)
+        }}
+        onZoomChanged={() => {
+          if (!isFollow) return
+          setIsFollow(false)
+        }}
         options={options}
         onLoad={onLoad}
       >
@@ -230,7 +258,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
         )}
         {target && <Marker 
           position={target} 
-          zIndex={999}
+          zIndex={998}
           icon={{
             url: targetMarker,
             scaledSize: { width: 48, height: 48 },

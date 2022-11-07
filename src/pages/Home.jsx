@@ -46,13 +46,14 @@ export default function Home() {
   const [remainings, setRemainings] = useState()
   //導航路線
   const [directions, setDirections] = useState();
-  const mapRef = useRef();
+  
   //設定初始點
   const [mapCenter, setMapCenter] = useState({ lng: 121.46, lat: 25.041 });
 
+  const mapRef = useRef();
   const [mapInstance, setMapInstance] = useState();
   // const center = useMemo(() => (selfPos), [selfPos])
-
+   const [isFollow, setIsFollow] = useState(true)
 
   //設定是否要搜尋路線 的開關
   const [canFetchDirection, setCanFetchDirection] = useState(false)
@@ -112,6 +113,8 @@ export default function Home() {
         setCanFetchDirection={setCanFetchDirection}
         remainings={remainings}
         setRemainings={setRemainings}
+        isFollow={isFollow}
+        setIsFollow={setIsFollow}
       />
 
       <div className="map__ui">
@@ -119,7 +122,14 @@ export default function Home() {
           <div className="sidebar__logo"><img src={logo} alt="" /></div>
           <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
           <ModeController setMode={setMode} mode={mode}/>
-          <Locate setMapCenter={setMapCenter} selfPos={selfPos} mapInstance={mapInstance} mode={mode} setMode={setMode}/>
+          <Locate 
+            setMapCenter={setMapCenter} 
+            selfPos={selfPos} 
+            mapInstance={mapInstance} 
+            mode={mode} 
+            setMode={setMode} 
+            isFollow={isFollow}
+            setIsFollow={setIsFollow}/>
         </div>
         <div className="search__controller">
           
@@ -160,6 +170,8 @@ export default function Home() {
             mapInstance={mapInstance} 
             mode={mode}
             setMode={setMode}
+            isFollow={isFollow}
+            setIsFollow={setIsFollow}
           />
         </div>
         <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
