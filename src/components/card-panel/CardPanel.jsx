@@ -8,9 +8,9 @@ import Arrow from '../../assets/images/card-panel-arrow.svg'
 
 
 export default function CardPanel (props) {
-  const [isActive, setIsActive] = useState(false)
+  // const [isActive, setIsActive] = useState(false)
   const { nearParks } = useContext(allContext)
-  const { setCurrentPark, currentPark, setCanFetchDirection, selfPos, mode } = props
+  const { setCurrentPark, currentPark, setCanFetchDirection, selfPos, mode, setIsNearActive, isNearActive } = props
   //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
   const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
 
@@ -22,17 +22,17 @@ export default function CardPanel (props) {
   //網址變化時偵測網址來改變 isActive
    useEffect(() => {
     if (queryParams.get('nearby')) {
-      setIsActive(true)
+      setIsNearActive(true)
     } else {
-      setIsActive(false)
+      setIsNearActive(false)
     }
    },[location]) 
 
    useEffect(() => {
     if (queryParams.get('nearby')) {
-      setIsActive(true)
+      setIsNearActive(true)
     } else {
-      setIsActive(false)
+      setIsNearActive(false)
     }
    },[location]) 
 
@@ -40,18 +40,18 @@ export default function CardPanel (props) {
     <div 
     onClick={() => {
       const currPath = location.pathname
-      if (!isActive) {   //打開
+      if (!isNearActive) {   //打開
         queryParams.append('nearby', 'true') //把 queryParams 增加 nearby=true
       } else {   //關掉
         queryParams.delete('nearby') //把 queryParams 增加 nearby=true
       }
       navigate(`${currPath}?${queryParams}`, {push: true})
-      setIsActive(!isActive)
+      setIsNearActive(!isNearActive)
     }}
-    className={isActive? 'card__panel active': 'card__panel'}>
+    className={isNearActive? 'card__panel active': 'card__panel'}>
       {/* 裝card的class 點擊後禁止點到後面的 card__panel => 手機版防止點擊 cardPanel 關閉 */}
-      <div className="card__panel--container scroll-bar" onClick={(e) => e.stopPropagation()}>
-
+      <div className="card__panel--container scroll-bar" 
+        onClick={(e) => e.stopPropagation()}>
         {currentPark? <Card 
         key={ currentPark.id } 
         park={ currentPark } 
