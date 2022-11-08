@@ -2,11 +2,11 @@ import parkMarker from '../assets/images/marker-parking.svg'
 import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 import { Marker } from '@react-google-maps/api';
-import { coordinatesConvert, getStraightDistance } from '../utils/helpers'
+import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime } from '../utils/helpers'
 import { useState, useEffect, useContext, useRef } from 'react';
-import { allContext } from '../App'
+import { allContext } from '../pages/Home'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
-
+//我要改全域資料了喔
 //得到所有停車場資料
 const parkingLotsData = async() => {
   try {
@@ -50,85 +50,17 @@ const getPointsInDistance = (datas, targetPoint, distance) => {
     getStraightDistance(targetPoint, {lng: data.lng, lat: data.lat}) < distance)
 }
 
-//篩選汽車/機車資料
-const parksTransFilter = (parkings, transOption) => {
-  if(!parkings) {
-    console.log('[trans]no parking data')
-    return []
-  } 
-  if (transOption === 'car') {
-    return parkings.filter(park => park.totalcar !== 0)
-  }
-  if (transOption === 'motor') {
-    return parkings.filter(park => park.totalmotor !== 0)
-  }
-}
-//把剩餘車位的資料合併進停車場資料(回傳陣列資料)
-const parksWithRemainings = (parkings, remainings) => {
-  if (!parkings) {
-    console.log('combine remainings - no parkings data')
-    return []
-  }
-  if (!remainings) {
-    console.log('combine remainings - no remainings data')
-    return parkings
-  }
-  return parkings.map(park => {
-    //find 找出 id 相符的資料
-    const data = remainings.find(rm => rm.id === park.id)
-    if (data) {
-      return {
-        ...park,
-        FareInfo: {...park.FareInfo},
-        availablecar: data.availablecar > 0?  data.availablecar : 0,
-        availablemotor: data.availablemotor > 0? data.availablemotor : 0,
-        travelTime: data.travelTime
-      }
-    }
-    //沒找到就返回原資料
-    return park
-  }) 
-}
+
+//得到不同車種的剩餘車位資料
 const availableCounts = (transOption, place) => {
   if (transOption === 'car') return place.availablecar.toString()
   
   if (transOption === 'motor') return place.availablemotor.toString()
 }
 
-//計算到達時間
-const getNearParksTime = (origin, destinations, setNearParks) => {
-  console.log(origin, destinations)
-  console.log('要算一次到達時間囉')
-  if (!origin || !destinations.length) return console.log('沒有起始點或目標不能算距離')
-  const google = window.google;
-  const service = new google.maps.DistanceMatrixService()
-  service.getDistanceMatrix({
-    origins: [origin],
-    destinations,
-    travelMode: google.maps.TravelMode.DRIVING,
-    avoidHighways: true,
-    avoidTolls: true
-  }, (response, status) => {
-    if (status === "OK" && response) {
-      const resArr = response.rows[0].elements
-      
-      let i = 0
-      const newParks = destinations.map(park => {
-        i = i + 1
-        return {
-          ...park, travelTime: resArr[i - 1].duration.text
-        } 
-      })
-      setNearParks(newParks)
-    }
-  })
-}
 
-export default function ParkingMark (props) {
-  //props
-  const { mode, transOption, mapCenter, target, selfPos, setDirections, currentPark, setCurrentPark, setCanFetchDirection, remainings, setRemainings } = props
-  const { nearParks, setNearParks, allParks, setAllParks } = useContext(allContext)
-  //資料
+export default function ParkingMark () {
+  const { nearParks, setNearParks, allParks, setAllParks, mode, transOption, mapCenter, target, selfPos, setDirections, currentPark, setCurrentPark, setCanFetchDirection, remainings, setRemainings, mapInstance } = useContext(allContext)
   
   //fetching狀態
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
@@ -221,6 +153,27 @@ export default function ParkingMark (props) {
     if (currentPark) {
       const currentParksWithRemainings = parksWithRemainings([currentPark], remainings)[0]
       setCurrentPark(currentParksWithRemainings)
+    }
+    //檢查如果沒抓到資料就再抓一次
+    if (!allParks) {
+      console.log('重新抓取allParks資料')
+      async function fetchParksData () {
+        try {
+          if (isFetchingParks) return
+          setIsFetchingParks(true)
+          const parks = await parkingLotsData()
+
+          // let a = parks.filter(park => park.FareInfo?.Holiday)
+
+          setAllParks(parks) 
+          setIsFetchingParks(false)       
+        } 
+        catch (error) {
+          setIsFetchingParks(false)
+          console.log(error)
+        }
+      } 
+      fetchParksData ()
     }
   }, [remainings])
 

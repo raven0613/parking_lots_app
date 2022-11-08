@@ -15,7 +15,9 @@ import Footer from '../components/Footer'
 import Warning from '../components/Warning'
 const libraries = ["places"];
 
+export const allContext = React.createContext('')
 
+//我要開始搬移全域資料囉
 export default function Home() {
   // console.log('Home又重新渲染')
   //搜尋模式
@@ -54,10 +56,32 @@ export default function Home() {
   const [mapInstance, setMapInstance] = useState();
   // const center = useMemo(() => (selfPos), [selfPos])
   const [isFollow, setIsFollow] = useState(true)
+  //看是否要啟動cardPanel
   const [isNearActive, setIsNearActive] = useState(false)
   const [inputingVal, setInputingVal] = useState('')
   //設定是否要搜尋路線 的開關
   const [canFetchDirection, setCanFetchDirection] = useState(false)
+  const [allParks, setAllParks] = useState()
+  const [nearParks, setNearParks] = useState()
+
+  const contextValue = {
+    nearParks, setNearParks, 
+    allParks, setAllParks, 
+    mapCenter, setMapCenter, 
+    mode, setMode, 
+    mapInstance, setMapInstance, 
+    target, setTarget, 
+    setSpeech, 
+    selfPos, setSelfPos, 
+    directions, setDirections, 
+    transOption, mapRef,  
+    currentPark, setCurrentPark, 
+    canFetchDirection, setCanFetchDirection, 
+    remainings, setRemainings, 
+    isFollow, setIsFollow, 
+    setInputingVal
+  }
+
 
   //一載入就去抓使用者的上次交通工具設定
   useEffect(() => {
@@ -92,105 +116,62 @@ export default function Home() {
 
   if (!isLoaded) return <p>Loading...</p>;
   return (
-    <div className="map__container">
-      <Map 
-        mapCenter={mapCenter}
-        setMapCenter={setMapCenter}
-        mode={mode}
-        mapInstance={mapInstance}
-        setMapInstance={setMapInstance}
-        target={target}
-        setTarget={setTarget}
-        setSpeech={setSpeech}
-        setSelfPos={setSelfPos}
-        directions={directions}
-        setDirections={setDirections}
-        transOption={transOption}
-        mapRef={mapRef}
-        selfPos={selfPos}
-        currentPark={currentPark}
-        setCurrentPark={setCurrentPark}
-        canFetchDirection={canFetchDirection}
-        setCanFetchDirection={setCanFetchDirection}
-        remainings={remainings}
-        setRemainings={setRemainings}
-        isFollow={isFollow}
-        setIsFollow={setIsFollow}
-        setInputingVal={setInputingVal}
-      />
+    <allContext.Provider value={contextValue}>
 
-      <div className="map__ui">
-        <div className="sidebar">
-          <div className="sidebar__logo"><img src={logo} alt="" /></div>
-          <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
-          <ModeController setMode={setMode} mode={mode}/>
-          <Locate 
-            setMapCenter={setMapCenter} 
-            selfPos={selfPos} 
-            mapInstance={mapInstance} 
-            mode={mode} 
-            setMode={setMode} 
-            isFollow={isFollow}
-            setIsFollow={setIsFollow}/>
-        </div>
-        <div className="search__controller">
-          
-          <Place
-            inputingVal={inputingVal}
-            setInputingVal={setInputingVal}
-            getPlaceResult={getPlaceResult}
-            speech={speech}
-            targetAddressRef={targetAddressRef}
-            setTarget={(position) => {
-              //輸入 target 後，模式切換成 target
-              setMode("target");
-              setTarget(position);
-              console.log(position)
-              //移動地圖中心至 target
-              // mapRef.current?.panTo(position)
-              setMapCenter(position);
-            }}
-          ></Place>
-          <Speech setSpeech={setSpeech}></Speech>
-          <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
+      <div className="map__container">
+        <Map />
 
-        </div>
-        <CardPanel 
-          isNearActive={isNearActive}
-          setIsNearActive={setIsNearActive}
-          mode={mode}
-          currentPark={currentPark} 
-          selfPos={selfPos}
-          directions={directions}
-          setDirections={setDirections}
-          setCurrentPark={setCurrentPark}
-          setCanFetchDirection={setCanFetchDirection}
-        />
-        <SecondsCounter remainings={remainings}/>
-        {/* 手機版會在  PC版要消失 */}
-        <div className="visible__controller">
-          {/* <ModeController setMode={setMode} mode={mode}/> */}
-          <Locate 
-            setMapCenter={setMapCenter} 
-            selfPos={selfPos} 
-            mapInstance={mapInstance} 
-            mode={mode}
-            setMode={setMode}
-            isFollow={isFollow}
-            setIsFollow={setIsFollow}
+        <div className="map__ui">
+          <div className="sidebar">
+            <div className="sidebar__logo"><img src={logo} alt="" /></div>
+            <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
+            <ModeController setMode={setMode} mode={mode}/>
+            <Locate />
+          </div>
+          <div className="search__controller">
+            
+            <Place
+              inputingVal={inputingVal}
+              setInputingVal={setInputingVal}
+              getPlaceResult={getPlaceResult}
+              speech={speech}
+              targetAddressRef={targetAddressRef}
+              setTarget={(position) => {
+                //輸入 target 後，模式切換成 target
+                setMode("target");
+                setTarget(position);
+                console.log(position)
+                //移動地圖中心至 target
+                // mapRef.current?.panTo(position)
+                setMapCenter(position);
+              }}
+            ></Place>
+            <Speech setSpeech={setSpeech}></Speech>
+            <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
+
+          </div>
+          <CardPanel 
+            isNearActive={isNearActive}
+            setIsNearActive={setIsNearActive}
           />
+          <SecondsCounter remainings={remainings}/>
+          {/* 手機版會在  PC版要消失 */}
+          <div className="visible__controller">
+            {/* <ModeController setMode={setMode} mode={mode}/> */}
+            <Locate />
+          </div>
+          <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
+          
         </div>
-        <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
-        
+        <Footer setIsNearActive={setIsNearActive} isNearActive={isNearActive} />
+        <Warning 
+          currentPark={currentPark} 
+          transOption={transOption}
+          target={target}
+          setCurrentPark={setCurrentPark}
+          mapRef={mapRef}/>
       </div>
-      <Footer mode={mode} setMode={setMode} setIsNearActive={setIsNearActive} />
-      <Warning 
-        currentPark={currentPark} 
-        transOption={transOption}
-        target={target}
-        setCurrentPark={setCurrentPark}
-        mapRef={mapRef}/>
-    </div>
+    </allContext.Provider>
   )
 }
 

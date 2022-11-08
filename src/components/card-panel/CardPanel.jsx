@@ -1,6 +1,6 @@
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useState, useContext, useEffect } from "react";
-import { allContext } from '../../App'
+import { allContext } from '../../pages/Home'
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
 
@@ -8,9 +8,8 @@ import Arrow from '../../assets/images/card-panel-arrow.svg'
 
 
 export default function CardPanel (props) {
-  // const [isActive, setIsActive] = useState(false)
-  const { nearParks } = useContext(allContext)
-  const { setCurrentPark, currentPark, setCanFetchDirection, selfPos, mode, setIsNearActive, isNearActive } = props
+  const { nearParks, setCurrentPark, currentPark, setCanFetchDirection, selfPos, mode  } = useContext(allContext)
+  const { setIsNearActive, isNearActive } = props
   //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
   const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
 
@@ -27,15 +26,7 @@ export default function CardPanel (props) {
       setIsNearActive(false)
     }
    },[location]) 
-
-   useEffect(() => {
-    if (queryParams.get('nearby')) {
-      setIsNearActive(true)
-    } else {
-      setIsNearActive(false)
-    }
-   },[location]) 
-
+  
   return (
     <div 
     onClick={() => {
@@ -52,12 +43,16 @@ export default function CardPanel (props) {
       {/* 裝card的class 點擊後禁止點到後面的 card__panel => 手機版防止點擊 cardPanel 關閉 */}
       <div className="card__panel--container scroll-bar" 
         onClick={(e) => e.stopPropagation()}>
+        
+        {/* 都沒有的話就顯示提示 */}
+        {!currentPark? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
+
         {currentPark? <Card 
         key={ currentPark.id } 
         park={ currentPark } 
         isCurr={true} 
         /> : <></>}
-
+  
         {parksWithoutCurrentPark && parksWithoutCurrentPark.map(park => {
           return (
             <Card 
