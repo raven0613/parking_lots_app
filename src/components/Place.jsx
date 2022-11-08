@@ -86,7 +86,7 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
   return (
     <Combobox className='combobox' onSelect={ handleSelect }>
       <ComboboxInput 
-      value={value} 
+      value={inputingVal} 
       // onCompositionStart={handleCompsition}
       // onCompositionUpdate={handleCompsition}
       onCompositionEnd={() => setValue(inputingVal)}

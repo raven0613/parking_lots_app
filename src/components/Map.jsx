@@ -16,7 +16,7 @@ import { allContext } from '../pages/Home'
 
 export default function Map() {
 
-  const { mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal } = useContext(allContext)
+  const { mapCenter, setMapCenter, mode, setMode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal } = useContext(allContext)
 
   //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
@@ -27,6 +27,7 @@ export default function Map() {
 
   //selfPos改變的話要讓地圖中心跟隨
   useEffect(() => {
+    if (mode !== 'self') return
     if (!isFollow) return
     if (!selfPos) return
     if (!mapInstance) return
@@ -81,7 +82,7 @@ export default function Map() {
     }
     if (mode === 'screen-center') {
       console.log('current mode: ', mode)
-      
+
       setDirections(null)
       setMapCenter(selfPos)
       setTarget(null)
@@ -96,7 +97,7 @@ export default function Map() {
     if (!canFetchDirection) return console.log('canfetchDirection是 false')
     if (!currentPark) return console.log('沒有點選停車場')
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
-    // handleFetchDirections(selfPos, positon , directions, setDirections)
+    handleFetchDirections(selfPos, positon , directions, setDirections)
     //推薦完路線就改回false
     setCanFetchDirection(false)
   }, [canFetchDirection])
@@ -117,18 +118,28 @@ export default function Map() {
     }),
     []
   )
-
+//我要改UX囉
   return(
     <div className="map">
       <GoogleMap
         zoom={15}
         center={mapCenter}
         mapContainerClassName="map"
-        onDragEnd={handleCenterChanged}
-        onDragStart={() => {
-          if (!isFollow) return
+        onDragEnd={() => {
+          if (mode === 'target') return
+          setMode('screen-center')
+          handleCenterChanged()
+
           setIsFollow(false)
+          
         }}
+        // onDragStart={() => {
+        //   if (mode === 'target') return
+        //   setMode('screen-center')
+        //   if (!isFollow) return
+        //   setIsFollow(false)
+        // }}
+        
         //會造成一進入的時候就轉成false
         // onZoomChanged={() => {
         //   if (!isFollow) return
@@ -153,6 +164,7 @@ export default function Map() {
           <Marker 
             position={selfPos} 
             className="self-point marker" 
+            animation={window.google.maps.Animation.DROP}
             icon={{
               url: selfMarker,
               scaledSize: { width: 32, height: 32 },
@@ -174,6 +186,7 @@ export default function Map() {
           />
         )}
         {target && <Marker 
+          animation={window.google.maps.Animation.BOUNCE}
           position={target} 
           zIndex={998}
           icon={{

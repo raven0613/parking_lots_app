@@ -1,4 +1,5 @@
 import logo from '../assets/images/logo.svg'
+import name from '../assets/images/name.svg'
 import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
@@ -7,6 +8,7 @@ import Place from "../components/Place";
 import CardPanel from '../components/card-panel/CardPanel'
 import ModeController from '../components/ModeController'
 import TransTypeController from '../components/TransTypeController'
+import MarkerController from '../components/MarkerController'
 import DetailPanel from '../components/DetailPanel'
 import Speech from '../components/Speech'
 import SecondsCounter from '../components/SecondsCounter'
@@ -40,6 +42,8 @@ export default function Home() {
   const [selfPos, setSelfPos] = useState()
   //要顯示哪種交通工具的停車場
   const [transOption, setTransOption] = useState('car')
+  //要顯示費率還是位子
+  const [markerOption, setMarkerOption] = useState('pay')  //pay, counts
   //設定搜尋目標點
   const [target, setTarget] = useState();
   //設定目前點的停車場
@@ -79,7 +83,8 @@ export default function Home() {
     canFetchDirection, setCanFetchDirection, 
     remainings, setRemainings, 
     isFollow, setIsFollow, 
-    setInputingVal
+    setInputingVal,
+    markerOption
   }
 
 
@@ -105,11 +110,6 @@ export default function Home() {
     }
   }, [location])
 
-  
-
-
-
-
 
   
 
@@ -123,7 +123,8 @@ export default function Home() {
 
         <div className="map__ui">
           <div className="sidebar">
-            <div className="sidebar__logo"><img src={logo} alt="" /></div>
+            <div className="sidebar__logo"><img src={logo} alt="logo" /><img src={name} alt="name" /></div>
+            <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
             <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
             <ModeController setMode={setMode} mode={mode}/>
             <Locate />
@@ -147,6 +148,7 @@ export default function Home() {
               }}
             ></Place>
             <Speech setSpeech={setSpeech}></Speech>
+            <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
             <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
 
           </div>
@@ -169,7 +171,7 @@ export default function Home() {
           transOption={transOption}
           target={target}
           setCurrentPark={setCurrentPark}
-          mapRef={mapRef}/>
+          mapCenter={mapCenter}/>
       </div>
     </allContext.Provider>
   )

@@ -1,13 +1,18 @@
-.trans-type {
+.control-type {
   pointer-events: auto;
   height: 4rem;
   width: 8rem;
   position: absolute;
-  right: 0;
   top: 5rem;
   background-color: var(--main-color);
   border-radius: 2rem;
 
+  &__marker {
+    right: 9rem;
+  }
+  &__trans {
+    right: 0;
+  }
   &__btn {
     width: 4rem;
     height: 100%;
@@ -23,15 +28,18 @@
       right: 50%;
       transform: translate(50%, -50%);
     }
-
+    p {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+        right: 50%;
+        transform: translate(50%, -50%);
+    }
   }
-
   &__car {
     border-radius: 2rem 0 0 2rem;
     background-color: var(--main-color);
   }
-
-
   &__motor {
     border-radius: 0 2rem 2rem 0;
     background-color: var(--main-color);
@@ -115,7 +123,7 @@
 }
 
 @media screen and (min-width: 600px) {
-  .trans-type {
+  .control-type {
     position:static;
     height: 7rem;
     width: 3.5rem;
@@ -202,7 +210,7 @@
     }
   }
   .search__controller {
-    .trans-type {
+    .control-type {
       display: none;
     }
   }
