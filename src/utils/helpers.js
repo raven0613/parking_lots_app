@@ -207,7 +207,7 @@ export const payexFilter = (allParks) => {
       const index = park.payex.indexOf('元/時')
       const start = index - digit >= 0 ? index - digit : 0
       const payStr = park.payex.slice(start, index)
-      const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '-' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
+      const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '10' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
       return {
         ...park, pay: pay
       }
@@ -217,7 +217,7 @@ export const payexFilter = (allParks) => {
       const index = park.payex.indexOf('元/次')
       const start = index - digit >= 0 ? index - digit : 0
       const payStr = park.payex.slice(start, index)
-      const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '-' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
+      const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '10' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
       return {
         ...park, pay: pay
       }
@@ -230,7 +230,7 @@ export const payexFilter = (allParks) => {
       const index = park.payex.indexOf('元')
       const start = index - digit >= 0 ? index - digit : 0
       const payStr = park.payex.slice(start, index)
-      const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '-' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
+      const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '10' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
       return {
         ...park, pay: pay
       }

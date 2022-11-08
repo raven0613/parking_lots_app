@@ -7,10 +7,10 @@ import { useContext } from 'react';
 
 export default function Footer (props) {
   const { isNearActive, setIsNearActive } = props
-  const { mode, setMode } = useContext(allContext)
+  const { mode, setMode, setIsFollow } = useContext(allContext)
 
-  let selfClass = `footer__btn ${mode === 'self' ? 'active' : ''}`
-  let screenClass = `footer__btn ${mode === 'screen-center' ? 'active' : ''}`
+  let selfClass = `footer__btn ${mode === 'self' ? '' : ''}`
+  let screenClass = `footer__btn ${isNearActive ? '' : 'active'}`
   let nearclass = `footer__btn ${isNearActive ? 'active' : ''}`
 
   //路由相關
@@ -23,11 +23,13 @@ export default function Footer (props) {
       <div 
         onClick={() => {
           navigate(`/map`, {push: true})
-          setMode("screen-center")
+          // setMode("screen-center")
+          //改成只是把cardPanel關掉
+          setIsNearActive(false)
         }} 
         className={screenClass}>
         <img src={mapSearch} alt="map-search"></img>
-        <p>全地圖搜尋</p>
+        <p>地圖</p>
       </div>
       <div         
         onClick={() => {
@@ -36,7 +38,7 @@ export default function Footer (props) {
         }} 
       className={selfClass}>
         <img src={selfSearch} alt="self-search"></img>
-        <p>自身範圍搜尋</p>
+        <p>定位</p>
       </div>
       <div 
         onClick={() => {

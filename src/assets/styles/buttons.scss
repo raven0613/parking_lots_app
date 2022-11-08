@@ -109,17 +109,7 @@
 
 
 .locate {
-  pointer-events: auto;
-  width: 4rem;
-  height: 4rem;
-  background-color: var(--main-color);
-  border-radius: 3rem;
-
-
-  img {
-    margin: auto;
-    width: 2rem;
-  }
+  display: none;
 }
 
 @media screen and (min-width: 600px) {
@@ -196,11 +186,27 @@
       border-radius: 0 0 2.5rem 2.5rem;
     }
   }
+
+  // .locate {
+  //   position: static;
+  //   margin: auto;
+  //   width: 3.5rem;
+  //   height: 3.5rem;
+  // }
+
   .locate {
-    position: static;
-    margin: auto;
+    display: block;
+    pointer-events: auto;
     width: 3.5rem;
     height: 3.5rem;
+    background-color: var(--main-color);
+    border-radius: 3rem;
+    margin: auto;
+
+    img {
+      margin: auto;
+      width: 2rem;
+    }
   }
 
   //刪除手機版按紐UI

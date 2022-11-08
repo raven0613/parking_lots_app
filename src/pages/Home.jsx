@@ -126,7 +126,7 @@ export default function Home() {
             <div className="sidebar__logo"><img src={logo} alt="logo" /><img src={name} alt="name" /></div>
             <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
             <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
-            <ModeController setMode={setMode} mode={mode}/>
+            {/* <ModeController setMode={setMode} mode={mode}/> */}
             <Locate />
           </div>
           <div className="search__controller">
