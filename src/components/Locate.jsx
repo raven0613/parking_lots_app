@@ -1,6 +1,9 @@
 import locate from '../assets/images/locate.svg'
+import { useContext } from 'react';
+import { allContext } from '../pages/Home'
 
-export default function Locate ({selfPos, mapInstance, mode, setMode, setIsFollow}) {
+export default function Locate () {
+  const { mode, setMode, selfPos, mapInstance, setIsFollow } = useContext(allContext)
 
   if (mode !== 'screen-center') {
     return (

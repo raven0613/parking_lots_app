@@ -40,7 +40,7 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   }, [currentPark, transOption])
 
 
-  if(!isCarEnough || !isMotorEnough) {
+  if(!isCarEnough || !isMotorEnough || !warning) {
     return (
       <div className="warning">
         <div className="warning__content">
@@ -60,8 +60,9 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
             //self模式的話center回到中心
             //關掉目前搜尋的
             setCurrentPark(null)
+            // const path = location.pathname
             const queryStr = location.search
-            navigate(`/map/${queryStr}`, {push: true})
+            navigate(`map${queryStr}`, {push: true})
           }}
           className="warning__btn">{buttonContent}</button>
       </div>

@@ -3,105 +3,20 @@ import centerMarker from '../assets/images/map-center.svg'
 import selfMarker from '../assets/images/marker-self.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
 
-import React, { useMemo, useCallback, useRef, useState, useEffect } from "react"
+import React, { useMemo, useCallback, useEffect, useContext } from "react"
 import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
 
 import ParkingMark from "./ParkingMark"
+import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
+
+import { allContext } from '../pages/Home'
 
 
 
-//一次性取得使用者的 currentPosition並且設為地圖中央
-const getUserPos = (setSelfPos, mode, setMapCenter) => {
-  console.log("getUserPos");
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        if (setSelfPos) {
-          setSelfPos(() => {
-            console.log("setSelfPos");
-            return {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            }
-          })
-          if(mode !== 'self') return
-          if(!position) return
-          setMapCenter(() => {
-            console.log("setMapCenter");
-            return {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-          });
-        }
-      },
-      (error) => {
-        console.log('無法取得您的位置', error)
-      }
-    );
-  } else {
-    //目前如果沒有允許就跑不出地圖
-    alert("你的裝置不支援地理位置功能。");
-  }
-}
 
-//監控使用者的 currentPosition
-const watchUserPos = (setSelfPos) => {
-  console.log('watchUserPos')
-  if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(
-      (position) => {
-        if (setSelfPos) {
-          setSelfPos(() => {
-            console.log("setSelfPos");
-            return {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            }
-          })
-        }
-      },
-      (error) => {
-        console.log('無法取得您的位置', error)
-      }
-    );
-  } else {
-    //目前如果沒有允許就跑不出地圖
-    alert("你的裝置不支援地理位置功能。");
-  }
-}
+export default function Map() {
 
-//獲得路線資訊
-const handleFetchDirections = (origin, destination, state, setter) => {
-  console.log('推薦路線')
-  //如果已經有路線，就把他清除
-  if (state) {
-    setter(null)
-  }
-  if (!origin || !destination) return console.log("沒有目標");
-  
-  const google = window.google;
-
-  //創建距離api的實例
-  const service = new google.maps.DirectionsService();
-  //調用DirectionsService.route來發送請求
-  service.route(
-    {
-      origin,
-      destination,
-      travelMode: google.maps.TravelMode.DRIVING,
-    },
-    (result, status) => {
-      if (status === "OK" && result) {
-        setter(result)
-      }
-    }
-  )
-}
-
-
-export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal}) {
-
+  const { mapCenter, setMapCenter, mode, setMode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal } = useContext(allContext)
 
   //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
@@ -112,6 +27,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
 
   //selfPos改變的話要讓地圖中心跟隨
   useEffect(() => {
+    if (mode !== 'self') return
     if (!isFollow) return
     if (!selfPos) return
     if (!mapInstance) return
@@ -126,8 +42,6 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
   //如果移動地圖就改變 center 位置
   function handleCenterChanged() {
     if (mode !== "screen-center") return
-    
-    // console.log('mapInstance', mapInstance)
     
     if (mapInstance.map) {
       setMapCenter(mapInstance.map.center.toJSON())
@@ -150,6 +64,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
   useEffect(() => {
     if (mode === 'self') {
       console.log('current mode: ', mode)
+
       if (!isFollow) {
         //mode回到self後恢復跟隨
         setIsFollow(true)
@@ -165,10 +80,10 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
       console.log('current mode: ', mode)
       return
     }
-    if (mode === 'screen-center') { //這邊前後都是正常地圖
-      setDirections(null)
+    if (mode === 'screen-center') {
       console.log('current mode: ', mode)
 
+      setDirections(null)
       setMapCenter(selfPos)
       setTarget(null)
       setInputingVal('')
@@ -182,7 +97,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     if (!canFetchDirection) return console.log('canfetchDirection是 false')
     if (!currentPark) return console.log('沒有點選停車場')
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
-    // handleFetchDirections(selfPos, positon , directions, setDirections)
+    handleFetchDirections(selfPos, positon , directions, setDirections)
     //推薦完路線就改回false
     setCanFetchDirection(false)
   }, [canFetchDirection])
@@ -203,22 +118,33 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
     }),
     []
   )
-
+//我要改UX囉
   return(
     <div className="map">
       <GoogleMap
         zoom={15}
         center={mapCenter}
         mapContainerClassName="map"
-        onDragEnd={handleCenterChanged}
-        onDragStart={() => {
-          if (!isFollow) return
+        onDragEnd={() => {
+          if (mode === 'target') return
+          setMode('screen-center')
+          handleCenterChanged()
+
           setIsFollow(false)
+          
         }}
-        onZoomChanged={() => {
-          if (!isFollow) return
-          setIsFollow(false)
-        }}
+        // onDragStart={() => {
+        //   if (mode === 'target') return
+        //   setMode('screen-center')
+        //   if (!isFollow) return
+        //   setIsFollow(false)
+        // }}
+        
+        //會造成一進入的時候就轉成false
+        // onZoomChanged={() => {
+        //   if (!isFollow) return
+        //   setIsFollow(false)
+        // }}
         options={options}
         onLoad={onLoad}
       >
@@ -238,6 +164,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
           <Marker 
             position={selfPos} 
             className="self-point marker" 
+            animation={window.google.maps.Animation.DROP}
             icon={{
               url: selfMarker,
               scaledSize: { width: 32, height: 32 },
@@ -259,6 +186,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
           />
         )}
         {target && <Marker 
+          animation={window.google.maps.Animation.BOUNCE}
           position={target} 
           zIndex={998}
           icon={{
@@ -267,21 +195,7 @@ export default function Map({mapCenter, setMapCenter, mode, mapInstance, setMapI
             className: 'marker'
           }}
           />}
-        <ParkingMark 
-          mode={mode}
-          transOption={transOption}
-          mapCenter={mapCenter}
-          target={target}
-          selfPos={selfPos}
-          handleFetchDirections={handleFetchDirections}
-          directions={directions}
-          setDirections={setDirections}
-          currentPark={currentPark}
-          setCurrentPark={setCurrentPark}
-          setCanFetchDirection={setCanFetchDirection}
-          remainings={remainings}
-          setRemainings={setRemainings}
-        />
+        <ParkingMark />
       </GoogleMap>
     </div>
   )

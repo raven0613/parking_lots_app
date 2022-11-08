@@ -5,8 +5,8 @@ import motor from '../assets/images/motorbike.svg'
 export default function TransTypeController (props) {
   const { transOption, setTransOption } = props
   const [isCar, setIsCar] = useState(true)
-  let carClass = `trans-type__btn trans-type__car ${isCar? 'active' : ''}`
-  let motorClass = `trans-type__btn trans-type__motor ${isCar? '' : 'active'}`
+  let carClass = `control-type__btn control-type__car ${isCar? 'active' : ''}`
+  let motorClass = `control-type__btn control-type__motor ${isCar? '' : 'active'}`
   
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function TransTypeController (props) {
   }, [transOption])
 
   return (
-    <div className='trans-type'>
+    <div className='control-type control-type__trans'>
       
       <button
         className={carClass}

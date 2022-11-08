@@ -6,23 +6,12 @@ import Home from './pages/Home';
 import Parks from './pages/Parks';
 import ParkDetail from './pages/ParkDetail';
 
-export const allContext = React.createContext('')
 
 function App() {
-  const [allParks, setAllParks] = useState()
-  const [nearParks, setNearParks] = useState()
-
-  const contextValue = {
-    nearParks, setNearParks, allParks, setAllParks,
-  }
-
-  
-
   //寫下所有路由設定
   return (
     <div className="App">
       <Router>
-        <allContext.Provider value={contextValue}>
             
           <Routes>
             <Route path="/" 
@@ -48,7 +37,6 @@ function App() {
             </Route>
           </Routes>
 
-        </allContext.Provider>
       </Router>
     </div>
     

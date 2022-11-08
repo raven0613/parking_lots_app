@@ -18,6 +18,12 @@
     height: 100%;
     overflow-y: scroll;
     padding-right: 0.5rem;
+    .card__panel--container-empty {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      padding-top: 40vh;
+    }
   }
 
   &--icon {
@@ -123,6 +129,9 @@
     &--container {
       pointer-events: unset;
       cursor: auto;
+      .card__panel--container-empty {
+        padding-top: 47vh;
+      }
     }
     &:hover {
       cursor: pointer;

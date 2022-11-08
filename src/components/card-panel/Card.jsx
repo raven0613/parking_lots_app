@@ -33,7 +33,7 @@ export default function Card (props) {
 
       //點擊卡片後呼叫 Map 的建議路線功能+設定為目前點選的停車場
       setCurrentPark(props.park)
-      setCanFetchDirection(true)
+      // setCanFetchDirection(true)
     }}
     className={isCurr? 'card current' : 'card'}>
       <h3 className="card__title">{ name }</h3>
