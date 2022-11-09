@@ -6,15 +6,13 @@
   top: 5rem;
   background-color: var(--main-color);
   border-radius: 2rem;
-  
+  right: -1rem;
 
   &__marker {
     top: 9.5rem;
-    right: 0;
   }
   &__trans {
     top: 4rem;
-    right: 0;
   }
   &__btn {
     width: 100%;
@@ -111,9 +109,27 @@
   }
 }
 
-
 .locate {
-  display: none;
+  pointer-events: auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--main-color);
+  border-radius: 3rem;
+  margin: auto;
+
+  position: absolute;
+  right: -1rem;
+  top: 15rem;
+  
+  img {
+    margin: auto;
+    width: 1.5rem;
+  }
+}
+.sidebar {
+  .locate {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 600px) {
@@ -182,36 +198,18 @@
     }
   }
 
-  // .locate {
-  //   position: static;
-  //   margin: auto;
-  //   width: 3.5rem;
-  //   height: 3.5rem;
-  // }
-
   .locate {
-    display: block;
-    pointer-events: auto;
+    position: static;
+    margin: auto;
     width: 3.5rem;
     height: 3.5rem;
-    background-color: var(--main-color);
-    border-radius: 3rem;
-    margin: auto;
-
-    img {
-      margin: auto;
-      width: 2rem;
-    }
   }
 
-  //刪除手機版按紐UI
-  .visible__controller {
-    .mode__controller {
-      display: none;
-    }
-  }
   .search__controller {
     .control-type {
+      display: none;
+    }
+    .locate {
       display: none;
     }
   }

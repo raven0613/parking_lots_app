@@ -111,7 +111,12 @@ export default function Home() {
   }, [location])
 
 
-  
+  let detailWindowClass = ''
+  if (currentPark) {
+    detailWindowClass = 'detail__window active'
+  } else {
+    detailWindowClass = 'detail__window'
+  }
 
 
   if (!isLoaded) return <p>Loading...</p>;
@@ -126,7 +131,6 @@ export default function Home() {
             <div className="sidebar__logo"><img src={logo} alt="logo" /><img src={name} alt="name" /></div>
             <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
             <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
-            {/* <ModeController setMode={setMode} mode={mode}/> */}
             <Locate />
           </div>
           <div className="search__controller">
@@ -135,34 +139,35 @@ export default function Home() {
               inputingVal={inputingVal}
               setInputingVal={setInputingVal}
               getPlaceResult={getPlaceResult}
+              setMode={setMode}
               speech={speech}
               targetAddressRef={targetAddressRef}
               setTarget={(position) => {
                 //輸入 target 後，模式切換成 target
                 setMode("target");
                 setTarget(position);
-                console.log(position)
                 //移動地圖中心至 target
-                // mapRef.current?.panTo(position)
                 setMapCenter(position);
               }}
             ></Place>
             <Speech setSpeech={setSpeech}></Speech>
             <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
             <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
-
+            <Locate />
           </div>
           <CardPanel 
             isNearActive={isNearActive}
             setIsNearActive={setIsNearActive}
           />
           <SecondsCounter remainings={remainings}/>
-          {/* 手機版會在  PC版要消失 */}
-          <div className="visible__controller">
-            {/* <ModeController setMode={setMode} mode={mode}/> */}
-            <Locate />
+
+          <div className={detailWindowClass}>
+            <div className='detail__control'>
+              {/* 可以放一排控制鈕 */}
+            </div>
+            <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
           </div>
-          <DetailPanel currentPark={currentPark} setCurrentPark={setCurrentPark}/>
+
           
         </div>
         <Footer setIsNearActive={setIsNearActive} isNearActive={isNearActive} />

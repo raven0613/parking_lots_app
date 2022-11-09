@@ -5,6 +5,7 @@ import targetMarker from '../assets/images/marker-target2.svg'
 
 import React, { useMemo, useCallback, useEffect, useContext } from "react"
 import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
+import { useLocation } from 'react-router-dom'
 
 import ParkingMark from "./ParkingMark"
 import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
@@ -18,12 +19,20 @@ export default function Map() {
 
   const { mapCenter, setMapCenter, mode, setMode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal } = useContext(allContext)
 
+  const location = useLocation()
   //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
     console.log('Map load')
-    getUserPos(setSelfPos, mode, setMapCenter)
-    watchUserPos(setSelfPos)
+    // getUserPos(setSelfPos, mode, setMapCenter)
+    // watchUserPos(setSelfPos)
   }, []);
+
+  useEffect(() => {
+    watchUserPos(setSelfPos)
+    if (location.search) return
+    getUserPos(setSelfPos, mode, setMapCenter)
+    // setMapCenter({lat: 25.0408065, lng: 121.5397976})   //北車的點
+  }, [location]);
 
   //selfPos改變的話要讓地圖中心跟隨
   useEffect(() => {
@@ -119,7 +128,6 @@ export default function Map() {
     }),
     []
   )
-//我要改UX囉
   return(
     <div className="map">
       <GoogleMap
@@ -130,19 +138,11 @@ export default function Map() {
           if (mode === 'target') return
           setMode('screen-center')
           handleCenterChanged()
-
           setIsFollow(false)
-          
         }}
         // onDragStart={() => {
         //   if (mode === 'target') return
         //   setMode('screen-center')
-        //   if (!isFollow) return
-        //   setIsFollow(false)
-        // }}
-        
-        //會造成一進入的時候就轉成false
-        // onZoomChanged={() => {
         //   if (!isFollow) return
         //   setIsFollow(false)
         // }}

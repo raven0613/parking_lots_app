@@ -10,6 +10,7 @@ import back from '../assets/images/back.svg'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState, useContext } from 'react'
 import { allContext } from '../pages/Home'
+import { useRef } from 'react'
 
 
 export default function DetailPanel () {
@@ -18,14 +19,8 @@ export default function DetailPanel () {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const [device, setDevice] = useState('PC')
-
-
-  let className = ''
-  if (currentPark) {
-    className = 'detail__panel active'
-  } else {
-    className = 'detail__panel'
-  }
+  const currentRef = useRef(currentPark)
+  const [isDetailActive, setIsDetailActive] = useState(false)
 
   const handleRWD = () => {
       if (window.innerWidth > 990)
@@ -45,20 +40,25 @@ export default function DetailPanel () {
           window.removeEventListener('resize',handleRWD)
       })
   },[]);
-  const [isDetailActive, setIsDetailActive] = useState(false)
+
+  //currentRef用來記錄原值以免造成空版
+  useEffect(()=>{ 
+    if (!currentPark) return
+    currentRef.current = currentPark
+  },[currentPark]);
+
+  //看有沒有 currentPark 來決定要顯示哪個
+  const currentDisplay = currentPark? currentPark : currentRef.current
+
+  
   const containerClass = isDetailActive ? 'detail__container active' : 'detail__container'
 
-  if (!currentPark) return <></>
-  // let points = ''
-  // if (currentPark.name.length > 10) {
-  //   points = ' ...'
-  // }
-  // const subTitle = `${currentPark.name.slice(0, 10)}${points}`
-  const isDisabled = currentPark.summary.includes('身心') || currentPark.Handicap_First > 0
-
-  if (currentPark) {
+  if (!currentDisplay) return <></>
+  const isDisabled = currentDisplay.summary.includes('身心') || currentDisplay.Handicap_First > 0
+  
+  if (currentDisplay) {
     return (
-        <div className={className}>
+        <div className="detail__panel">
           <div className="detail__title">
             <img 
               className="detail__title--back" 
@@ -72,30 +72,73 @@ export default function DetailPanel () {
                 }
                 return navigate(`/map`)
               }}/>
-            <h2 className="detail__title--title">{currentPark.name}</h2>
-            {isDisabled && <img className="detail__title--img" src={disabled} alt="disabled-parking" />}
+            <h3 className="detail__title--title">{currentDisplay.name}</h3>
+
+            {/* 路線按紐 */}
+            {!directions && <button onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setCanFetchDirection(true)
+            }} className="detail__title--navi">
+              <img src={navigateIcon} alt='navigate'></img>
+              <p>路線</p>
+            </button>}
+            
+            {directions && <button onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setDirections(null)
+            }} className="detail__title--navi">
+              <img src={navigateIcon} alt='navigate'></img>
+              <p>關閉</p>
+            </button>}
+
           </div>
+
+
+          <div className="detail__info">
+            {/* 剩餘車位 */}
+            <div className="detail__info--available">
+              <img className="detail__info--img" src={availableCar} alt="availableCar" />
+              <p className="detail__info--counts number">{currentDisplay.availablecar}</p>
+
+              <img className="detail__info--img" src={availableMotor} alt="availableMotor" />
+              <p className="detail__info--counts number">{currentDisplay.availablemotor}</p>
+            </div>
+
+            {/* 預計到達時間 */}
+            {directions && <p className="detail__info--time">預計 {directions.routes[0].legs[0].duration.text}</p>}
+
+          </div>
+
+
 
           <div className={containerClass}>
             <div className="detail__content">
-              <img className="detail__content--img" src={payex} alt="payex" />
-              <p className="detail__content--content">{currentPark.payex}</p>
+              {/* 價格顯示方式 */}
+              {device !== 'PC' && device !== 'tablet' && isDetailActive && payexContent (currentDisplay)}
+              {device !== 'PC' && device !== 'tablet' && !isDetailActive && payContent (currentDisplay)}
+              
+              {device === 'PC' && payexContent (currentDisplay)}
+              {device === 'tablet' && payexContent (currentDisplay)}
             </div>
             
             <div className="detail__content">
               <img className="detail__content--img" src={serviceTime} alt="serviceTime" />
-              <p className="detail__content--content">{currentPark.serviceTime}</p>
+              <p className="detail__content--content">{currentDisplay.serviceTime}</p>
             </div>
 
             <div className="detail__content">
               <img className="detail__content--img" src={address} alt="address" />
-              <p className="detail__content--content">{currentPark.address}</p>
+              <p className="detail__content--content">{currentDisplay.address}</p>
             </div>
 
             <div className="detail__content">
               <img className="detail__content--img" src={tel} alt="tel" />
-              <p className="detail__content--content">{currentPark.tel}</p>
+              <p className="detail__content--content">{currentDisplay.tel}</p>
             </div>
+
+            {isDisabled && <img className="detail__container--img" src={disabled} alt="disabled-parking" />}
 
             <button className='detail__container--button' 
               onClick={(e) => {
@@ -107,41 +150,25 @@ export default function DetailPanel () {
             </button>
           </div>
 
-
-          <div className="detail__bottom">
-            {!directions && <button onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setCanFetchDirection(true)
-            }} className="detail__bottom--navi">
-              <img src={navigateIcon} alt='navigate'></img>
-              <p>路線</p>
-            </button>}
-
-            {directions && <button onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setDirections(null)
-            }} className="detail__bottom--navi">
-              <img src={navigateIcon} alt='navigate'></img>
-              <p>關閉</p>
-            </button>}
-
-            {directions && <p className="detail__bottom--distance">預計 {directions.routes[0].legs[0].duration.text}</p>}
-
-            
-
-            <div className="detail__bottom--available">
-              <img className="detail__bottom--img" src={availableCar} alt="availableCar" />
-              <p className="detail__bottom--counts number">{currentPark.availablecar}</p>
-
-              <img className="detail__bottom--img" src={availableMotor} alt="availableMotor" />
-              <p className="detail__bottom--counts number">{currentPark.availablemotor}</p>
-            </div>
-          </div>
-
         </div>
     )
   }
 
+}
+
+function payContent (currentDisplay) {
+  return (
+    <>
+      <img className="detail__content--img" src={payex} alt="payex" />
+      <p className="detail__content--content">{currentDisplay.pay}元</p>
+    </>
+  )
+}
+function payexContent (currentDisplay) {
+  return (
+    <>
+      <img className="detail__content--img" src={payex} alt="payex" />
+      <p className="detail__content--content">{currentDisplay.payex}元</p>
+    </>
+  )
 }
