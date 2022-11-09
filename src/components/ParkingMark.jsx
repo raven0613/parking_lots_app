@@ -20,7 +20,7 @@ const parkingLotsData = async() => {
         //TWD97轉經緯度
         const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
         return {
-          id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘'
+          id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-'
         }
     })
     return parks

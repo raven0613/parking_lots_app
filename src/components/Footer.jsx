@@ -22,9 +22,10 @@ export default function Footer (props) {
     <footer className='footer'>
       <div 
         onClick={() => {
-          navigate(`/map`, {push: true})
+          const currPath = location.pathname
+          navigate(`${currPath}`, {push: true})
           // setMode("screen-center")
-          //改成只是把cardPanel關掉
+          //改成只是把cardPanel關掉，原本有點選卡片的話要保留
           setIsNearActive(false)
         }} 
         className={screenClass}>

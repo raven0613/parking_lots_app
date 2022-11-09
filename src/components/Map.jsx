@@ -45,7 +45,9 @@ export default function Map() {
     
     if (mapInstance.map) {
       setMapCenter(mapInstance.map.center.toJSON())
+      // mapInstance.map.panTo(mapInstance.map.center.toJSON())
     } else {
+      // mapInstance.panTo(mapInstance.center.toJSON())
       setMapCenter(mapInstance.center.toJSON())
     }
   }
@@ -84,7 +86,6 @@ export default function Map() {
       console.log('current mode: ', mode)
 
       setDirections(null)
-      setMapCenter(selfPos)
       setTarget(null)
       setInputingVal('')
       setSpeech('')
