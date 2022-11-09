@@ -1,3 +1,4 @@
+import cancel from '../assets/images/cancel.svg'
 import { useLocation } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
@@ -6,7 +7,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 
-export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef,inputingVal, setInputingVal }) {
+export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef, inputingVal, setInputingVal, setMode }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
   const location = useLocation()
   
@@ -84,26 +85,42 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
   
 
   return (
-    <Combobox className='combobox' onSelect={ handleSelect }>
-      <ComboboxInput 
-      value={inputingVal} 
-      // onCompositionStart={handleCompsition}
-      // onCompositionUpdate={handleCompsition}
-      onCompositionEnd={() => setValue(inputingVal)}
-      // onChange={e => setValue(e.target.value)} 
-      onChange={handleChange} 
-      disabled={!ready}
-      className="combobox-input" 
-      placeholder='請輸入地點'/>
-      <ComboboxPopover className='combobox-pop'>
-        <ComboboxList className=''>
-          {status === "OK" &&
-            data.map(({ place_id, description }) => (
-              <ComboboxOption key={ place_id } value={ description } className='combobox-option'/>
-            ))
-          }
-        </ComboboxList>
-      </ComboboxPopover>
-    </Combobox>
+    <>
+      <Combobox className='combobox' onSelect={ handleSelect }>
+        <ComboboxInput 
+        value={inputingVal} 
+        // onCompositionStart={handleCompsition}
+        // onCompositionUpdate={handleCompsition}
+        onCompositionEnd={() => setValue(inputingVal)}
+        // onChange={e => setValue(e.target.value)} 
+        onChange={handleChange} 
+        disabled={!ready}
+        className="combobox-input" 
+        placeholder='請輸入地點'/>
+        <ComboboxPopover className='combobox-pop'>
+          <ComboboxList className=''>
+            {status === "OK" &&
+              data.map(({ place_id, description }) => (
+                <ComboboxOption key={ place_id } value={ description } className='combobox-option'/>
+              ))
+            }
+          </ComboboxList>
+        </ComboboxPopover>
+      </Combobox>
+      <button 
+        className='combobox-clear'
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setInputingVal('')
+          setValue('')
+          setTarget(null)
+          setMode('screen-mode')
+        }}>
+        <img src={cancel} alt='cancel'></img>
+      </button>
+    </>
+
+
   )
 }

@@ -20,22 +20,24 @@ export default function TransTypeController (props) {
   }, [transOption])
 
   return (
-    <div className='control-type control-type__trans'>
-      
-      <button
-        className={carClass}
-        onClick={() => {
-          setTransOption('car')
+    <div className='control-type control-type__trans'
+      onClick={() => {
+        if(transOption === 'car') {
+          setTransOption('motor')
+          localStorage.setItem('transOption', 'motor')
+        }
+        if(transOption === 'motor') { 
+          setTransOption('car') 
           localStorage.setItem('transOption', 'car')
-        }}><img src={car} alt="car" />
+        }
+      }}
+    >
+      <button
+        className={carClass} ><img src={car} alt="car" />
       </button>
 
       <button
-        className={motorClass}
-        onClick={() => {
-          setTransOption('motor')
-          localStorage.setItem('transOption', 'motor')
-        }}><img src={motor} alt="motor" />
+        className={motorClass} ><img src={motor} alt="motor" />
       </button>
     </div>
   )

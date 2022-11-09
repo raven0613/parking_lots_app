@@ -20,7 +20,7 @@ const parkingLotsData = async() => {
         //TWD97轉經緯度
         const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
         return {
-          id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘'
+          id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-'
         }
     })
     return parks
@@ -84,32 +84,6 @@ export default function ParkingMark () {
   //記住網址原本的id值
   const parkIdRef = useRef()
 
-  //有所有停車場資料(initParkingLots)後 & 網址改變時
-  useEffect(() => {
-    //偵測網址上有沒有parkId要導航
-    if (!allParks) return
-    if (!parkId) {
-      setDirections(null)
-      setCurrentPark(null)
-      return
-    } 
-    // if (!queryParams) return
-    if (queryParams.get('target')) {
-      console.log(queryParams)
-    }
-
-    const paramsPark = allParks.find(park => park.id === parkId)
-    if (!paramsPark) return console.log('轉到找不到此id頁面')
-    setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])
-    
-    //網址改變只要不是改到id 就不要推薦路線
-    if(parkIdRef.current === parkId) return
-    // setCanFetchDirection(true)
-    parkIdRef.current = paramsPark.id
-  }, [allParks, location])
-
-
-
   //一載入就抓所有資料
   useEffect(() => {
     console.log('on ParkingMark load')
@@ -153,6 +127,43 @@ export default function ParkingMark () {
     return () => clearInterval(interval)
     
   }, [])
+
+  //有所有停車場資料(initParkingLots)後 & 網址改變時
+  useEffect(() => {
+    //偵測網址上有沒有parkId要導航
+    if (!allParks) return
+    if (!parkId) {
+      setDirections(null)
+      setCurrentPark(null)
+      return
+    } 
+    //檢查如果沒抓到資料就再抓一次
+    if (!allParks) {
+      console.log('重新抓取allParks資料')
+      async function fetchParksData () {
+        try {
+          if (isFetchingParks) return
+          setIsFetchingParks(true)
+          const parks = await parkingLotsData()
+          setAllParks(payexFilter(parks)) 
+          setIsFetchingParks(false)       
+        } 
+        catch (error) {
+          setIsFetchingParks(false)
+          console.log(error)
+        }
+      } 
+      fetchParksData ()
+    }
+
+    const paramsPark = allParks.find(park => park.id === parkId)
+    if (!paramsPark) return console.log('轉到找不到此id頁面')
+    setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])
+    
+    //網址改變只要不是改到id 就不要推薦路線
+    if(parkIdRef.current === parkId) return
+    parkIdRef.current = paramsPark.id
+  }, [allParks, location])
 
   //剩餘車位資料成功抓進來後重新丟進 currentPark
   useEffect(() => {
@@ -232,7 +243,7 @@ export default function ParkingMark () {
     if (mode === 'self') return
     // if (!selfPos || !nearParks) return
     // getNearParksTime(selfPos, nearParks, setNearParks)
-  }, [mapCenter, target])
+  }, [mapCenter, target, location])
 
 
   //icon 的設定

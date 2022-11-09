@@ -191,15 +191,16 @@ export const watchUserPos = (setSelfPos) => {
     alert("你的裝置不支援地理位置功能。");
   }
 }
-
+//目前問題: 中山堂  中山雅樂軒
 //土法煉鋼篩價格
 export const payexFilter = (allParks) => {
   if (!allParks) return
   const digit = 4
   const allParksWithPayex = allParks.map(park => {
-    if (park.FareInfo.length) {
+    if (park.id === '310') return { ...park, pay: 20 }
+    else if (park.FareInfo.length) {
       return {
-        ...park, pay: park.FareInfo.WorkingDay[0].Fare
+        ...park, pay: park.FareInfo.WorkingDay[0].Fare.toJSON()
       }
     }
     else if (park.payex.includes('元/時')) {
@@ -209,7 +210,7 @@ export const payexFilter = (allParks) => {
       const payStr = park.payex.slice(start, index)
       const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '10' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
       return {
-        ...park, pay: pay
+        ...park, pay: pay? pay: '-'
       }
     }
     else if (park.payex.includes('元/次')) {
@@ -219,7 +220,17 @@ export const payexFilter = (allParks) => {
       const payStr = park.payex.slice(start, index)
       const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '10' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
       return {
-        ...park, pay: pay
+        ...park, pay: pay? pay: '-'
+      }
+    }
+    else if (park.payex.includes('計時')) {
+      //篩出文字
+      const index = park.payex.indexOf('計時')
+      const end = index + digit + 2
+      const payStr = park.payex.slice(index, end)
+      const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '10' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'')
+      return {
+        ...park, pay: pay? pay: '-'
       }
     }
     else if (park.payex.includes('元/季') || park.payex.includes('元/月')) {
@@ -232,7 +243,7 @@ export const payexFilter = (allParks) => {
       const payStr = park.payex.slice(start, index)
       const pay = Number(payStr.replace(/[^0-9]/ig,'')) > 200? '10' : payStr.replace(/[^0-9]/ig,'').replace(/\b(0+)/gi,'').replace(/\b(0+)/gi,'') //去掉頭的0
       return {
-        ...park, pay: pay
+        ...park, pay: pay? pay: '-'
       }
     }
     return { ...park, pay: '-' }

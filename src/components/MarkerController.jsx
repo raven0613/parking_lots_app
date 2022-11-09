@@ -15,22 +15,16 @@ export default function MarkerController (props) {
   }, [markerOption])
 
   return (
-    <div className='control-type control-type__marker'>
-      
-      <button
-        className={payClass}
-        onClick={() => {
-          setMarkerOption('pay')
-          console.log(markerOption)
-        }}><p>價格</p>
+    <div className='control-type control-type__marker'
+      onClick={() => {
+        if(markerOption === 'pay') return setMarkerOption('counts')
+        if(markerOption === 'counts') return setMarkerOption('pay')
+      }}
+    >
+      <button className={payClass} ><p>價格</p>
       </button>
 
-      <button
-        className={countsClass}
-        onClick={() => {
-          setMarkerOption('counts')
-          console.log(markerOption)
-        }}><p>車位</p>
+      <button className={countsClass} ><p>車位</p>
       </button>
     </div>
   )
