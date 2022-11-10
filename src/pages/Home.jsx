@@ -4,7 +4,6 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import Map from "../components/Map";
 import Place from "../components/Place";
 import CardPanel from '../components/card-panel/CardPanel'
-import ModeController from '../components/ModeController'
 import TransTypeController from '../components/TransTypeController'
 import MarkerController from '../components/MarkerController'
 import DetailPanel from '../components/DetailPanel'
@@ -61,6 +60,7 @@ export default function Home() {
   const [isFollow, setIsFollow] = useState(true)
   //看是否要啟動cardPanel
   const [isNearActive, setIsNearActive] = useState(false)
+
   const [inputingVal, setInputingVal] = useState('')
   //設定是否要搜尋路線 的開關
   const [canFetchDirection, setCanFetchDirection] = useState(false)
@@ -91,6 +91,7 @@ export default function Home() {
   //一載入就去抓使用者的上次交通工具設定
   useEffect(() => {
     console.log("on page loaded");
+    if (!localStorage.getItem('transOption')) return
     setTransOption(localStorage.getItem('transOption'))
   }, []);
 
@@ -121,12 +122,13 @@ export default function Home() {
   }
 
 
-  if (!isLoaded) return <p>Loading...</p>;
+  
   return (
     <allContext.Provider value={contextValue}>
-
+      
       <div className="map__container">
-        <Map />
+        {!isLoaded && <div className="map__loading"></div>}
+        {isLoaded && <Map />}
 
         <div className="map__ui">
           <Sidebar />

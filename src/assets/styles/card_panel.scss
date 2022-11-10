@@ -34,7 +34,12 @@
     display: block;
   }
 }
+
+
 .card {
+  background-image:none;
+  background-repeat: no-repeat;
+  background-position: 98% 2%;
   width: 100%;
   height: auto;
   background-color: var(--white);
@@ -45,14 +50,20 @@
   padding: 0.5rem 0.8rem;
   cursor: pointer;
 
+  transition: 0.2s ease-out;
   &.current {
     background-image: url(../images/card-pin.svg);
-    background-repeat: no-repeat;
-    background-position: 98% 2%;
     margin-bottom: 1.2rem;
     box-shadow: 2px 2px 5px 1px var(--card-shadow-color);
     cursor: auto;
-    height: auto;
+    .card__info {
+      &.address {
+        display: flex;
+      }
+      &.tel {
+        display: flex;
+      }
+    }
   }
 
   &:hover {
@@ -68,6 +79,10 @@
     font-size: 1rem;
     display: flex;
     align-items: flex-start;
+    &.address,
+    &.tel {
+      display: none;
+    }
 
     img {
       width: auto;

@@ -1,30 +1,32 @@
 import warning from '../assets/images/warning.svg'
 import { useEffect, useState } from "react"
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useRef } from 'react'
 
 export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   const [isCarEnough, setIsCarEnough] = useState(true)
   const [isMotorEnough, setIsMotorEnough] = useState(true)
+  
   const location = useLocation()
   const navigate = useNavigate()
   const queryParams = new URLSearchParams(location.search)
 
   //提醒內容
-  let content = ''
+  const contentRef = useRef('')
 
   let buttonContent = '重新尋找'
   if (currentPark && currentPark.availablecar < 1) {
-    content = '您的目標停車場已無剩餘車位'
+    contentRef.current = '您的目標停車場已無剩餘車位'
   }
 
   if (transOption === 'car') {
     if (currentPark && currentPark.totalcar < 1) {
-      content = '您的目標停車場無汽車停車格'
+      contentRef.current = '您的目標停車場無汽車停車格'
     }
   } 
   else if (transOption === 'motor') {
     if (currentPark && currentPark.totalmotor < 1) {
-      content = '您的目標停車場無機車停車格'
+      contentRef.current = '您的目標停車場無機車停車格'
     }
   }
 
@@ -45,12 +47,13 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   }, [currentPark, transOption])
 
 
-  if(!isCarEnough || !isMotorEnough || !warning) {
+  const warningClass = !isCarEnough || !isMotorEnough || !warning? 'warning active' : 'warning'
+
     return (
-      <div className="warning">
+      <div className={warningClass}>
         <div className="warning__content">
           <img src={warning} alt="warning" />
-          <p>{content}</p>
+          <p>{contentRef.current}</p>
         </div>
         <button
           onClick={(e) => {
@@ -67,11 +70,11 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
             setCurrentPark(null)
             // const path = location.pathname
             const queryStr = location.search
-            navigate(`map${queryStr}`, {push: true})
+            navigate(`${queryStr}`, {push: true})
           }}
           className="warning__btn">{buttonContent}</button>
       </div>
     )
-  }
+  
 
 }

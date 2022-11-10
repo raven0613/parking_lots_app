@@ -3,8 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
-import { useEffect } from 'react'
-import { useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 
 export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef, inputingVal, setInputingVal, setMode }) {
@@ -37,7 +36,7 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     handleSelect()
   }, [targetAddressRef.current])
 
-  // const [isOnComposition, setIsOnComposition] = useState(false);
+  const [isOnComposition, setIsOnComposition] = useState(false)
 
   //點選選項時
   const handleSelect = async (val) => {
