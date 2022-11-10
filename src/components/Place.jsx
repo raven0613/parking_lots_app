@@ -4,12 +4,15 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
 import { useEffect } from 'react'
+import { useRef } from 'react'
 
 
 export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef, inputingVal, setInputingVal, setMode }) {
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
   const location = useLocation()
   const navigate = useNavigate()
+
+  const inputRef = useRef('')
 
   useEffect(() => {
     const text = speech? speech : ''
@@ -43,8 +46,6 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     setValue(val, false)
     //關掉建議窗
     clearSuggestions()  
-
-
     //把地址傳進 getGeocode 
     const results = await getGeocode({ address: val })
     //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
@@ -80,19 +81,24 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
   // }
   const handleChange = event => {
     console.log("handleChange");
-    setInputingVal(' ' + event.target.value)
+    // inputRef.current = event.target.value
+    // setInputingVal(event.target.value)
     // handleCompsition(event);
+    setValue(event.target.value)
   }
+  useEffect(() => {  
+    inputRef.current = value 
+  }, [value])
   
 
   return (
     <>
       <Combobox className='combobox' onSelect={ handleSelect }>
         <ComboboxInput 
-        value={inputingVal} 
+        value={value} 
         // onCompositionStart={handleCompsition}
         // onCompositionUpdate={handleCompsition}
-        onCompositionEnd={() => setValue(inputingVal)}
+        // onCompositionEnd={() => setValue(inputRef.current)}
         // onChange={e => setValue(e.target.value)} 
         onChange={handleChange} 
         disabled={!ready}
