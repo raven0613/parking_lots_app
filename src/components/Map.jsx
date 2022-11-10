@@ -84,6 +84,7 @@ export default function Map() {
       setTarget(null)
       setSpeech('')
       setInputingVal('')
+      setSelfPos(selfPos)
       return
     }
     if (mode === 'target') {

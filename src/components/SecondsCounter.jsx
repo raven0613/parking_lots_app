@@ -5,10 +5,10 @@ export default function SecondsCounter ({remainings}) {
   // 距離上次抓到資料隔多久
   useEffect(() => {
     if (afterLastFetch === undefined) return
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       setAfterLastFetch(afterLastFetch + 1)
     }, 1000)
-    return () => clearInterval(interval)
+    return () => window.clearInterval(interval)
   }, [afterLastFetch])
 
 

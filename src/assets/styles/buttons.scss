@@ -128,10 +128,17 @@
   position: absolute;
   right: -1rem;
   top: 15rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
   
   img {
-    margin: auto;
+    // margin: auto;
     width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    margin: 0;
   }
   &.disabled {
     background-color: var(--card-border-color);
@@ -211,7 +218,6 @@
 
   .locate {
     position: static;
-    margin: auto;
     width: 3.5rem;
     height: 3.5rem;
   }

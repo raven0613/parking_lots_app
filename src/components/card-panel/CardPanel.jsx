@@ -31,7 +31,6 @@ export default function CardPanel (props) {
       return setIsNearActive(true)
     } 
    },[location]) 
-  
   return (
     <div 
     onClick={() => {
@@ -52,19 +51,29 @@ export default function CardPanel (props) {
         {/* 都沒有的話就顯示提示 */}
         {!currentPark? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
 
-        {currentPark? <Card 
+        {/* {currentPark? <Card 
         key={ currentPark.id } 
         park={ currentPark } 
         isCurr={true} 
-        /> : <></>}
+        /> : <></>} */}
   
-        {parksWithoutCurrentPark && parksWithoutCurrentPark.map(park => {
+        {/* {parksWithoutCurrentPark && parksWithoutCurrentPark.map(park => {
           return (
             <Card 
             key={ park.id } 
             park={ park } 
             setCurrentPark={setCurrentPark}
             setCanFetchDirection={setCanFetchDirection}
+            mode={mode} />
+          )
+        })} */}
+        {nearParks && nearParks.map(park => {
+          return (
+            <Card 
+            key={ park.id } 
+            park={ park } 
+            currentPark={currentPark}
+            setCurrentPark={setCurrentPark}
             mode={mode} />
           )
         })}
