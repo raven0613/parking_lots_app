@@ -12,7 +12,7 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   const queryParams = new URLSearchParams(location.search)
 
   //提醒內容
-  const contentRef = useRef('')
+  const contentRef = useRef('您的目標停車場無機車停車格')
 
   let buttonContent = '重新尋找'
   if (currentPark && currentPark.availablecar < 1) {
@@ -53,32 +53,32 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
     return 'warning'
   }
 
-    return (
-      <div className={warningClass()}>
-        <div className="warning__content">
-          <img src={warning} alt="warning" />
-          <p>{contentRef.current}</p>
-        </div>
-        <button
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            //關掉視窗
-            setIsMotorEnough(true)
-            setIsCarEnough(true)
-            //關掉導航
-            //是target模式的話重新就目標找一次
-            //是screen模式的話就重進screen模式
-            //self模式的話center回到中心
-            //關掉目前搜尋的
-            // const path = location.pathname
-            const queryStr = location.search
-            navigate(`.${queryStr}`, {push: true})  //這邊網址要注意
-            setCurrentPark(null)
-          }}
-          className="warning__btn">{buttonContent}</button>
+  return (
+    <div className={warningClass()}>
+      <div className="warning__content">
+        <img src={warning} alt="warning" />
+        <p>{contentRef.current}</p>
       </div>
-    )
+      <button
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          //關掉視窗
+          setIsMotorEnough(true)
+          setIsCarEnough(true)
+          //關掉導航
+          //是target模式的話重新就目標找一次
+          //是screen模式的話就重進screen模式
+          //self模式的話center回到中心
+          //關掉目前搜尋的
+          // const path = location.pathname
+          const queryStr = location.search
+          navigate(`.${queryStr}`, {push: true})  //這邊網址要注意
+          setCurrentPark(null)
+        }}
+        className="warning__btn">{buttonContent}</button>
+    </div>
+  )
   
 
 }
