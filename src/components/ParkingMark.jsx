@@ -2,35 +2,28 @@ import parkMarker from '../assets/images/marker-parking.svg'
 import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 import { Marker } from '@react-google-maps/api';
-import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter } from '../utils/helpers'
+import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData } from '../utils/helpers'
 import { useState, useEffect, useContext, useRef } from 'react';
 import { allContext } from '../pages/Home'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.svg'
 
-//得到所有停車場資料
+
+//從API得到所有停車場資料
 const parkingLotsData = async() => {
   try {
     const response = await getParkingLots()
-    if (response.statusText !== 'OK') return console.log('請稍後再試')
-    console.log('抓到停車場資料')
-    const parks = response.data.data.park.map(park => {
-        const {id, area, name, summary, address, tel, payex, serviceTime, tw97x, tw97y, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo: {...FareInfo}} = park
-        
-        //TWD97轉經緯度
-        const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
-        return {
-          id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-'
-        }
-    })
-    return parks
+    if (response.status !== 200) return console.log('抓不到停車場資料')
+    console.log('成功抓到停車場資料')
+    return response.data.data.park
   }
   catch(error) {
     console.log('error', error)
   }
 }
 
-//得到剩餘停車位資料
+
+//從API得到剩餘停車位資料
 const remainingData = async() => {
   try {
     const response = await getRemaining()
@@ -51,18 +44,24 @@ const getPointsInDistance = (datas, targetPoint, distance) => {
     getStraightDistance(targetPoint, {lng: data.lng, lat: data.lat}) < distance)
 }
 
-
-//得到不同車種的剩餘車位資料
-const availableCounts = (transOption, place) => {
+//得到單一目標不同車種的剩餘車位資料
+export const availableCounts = (transOption, place) => {
   if (transOption === 'car') return place.availablecar.toString()
   
   if (transOption === 'motor') return place.availablemotor.toString()
 }
-//得到不同車種的費率資料
+//得到單一目標不同車種的費率資料
 const payment = (transOption, place) => {
   if (transOption === 'car') return place.pay.toString()
   
   if (transOption === 'motor') return place.pay.toString()
+}
+
+//初次合併完成的所有資料
+const combinedInitAllParksData = (parks, formattedParksData, coordinatesConvert, payexFilter) => {
+    const formattedParks = formattedParksData(parks, coordinatesConvert)
+    const formattedParksWithPay = payexFilter(formattedParks)
+    return formattedParksWithPay
 }
 
 
@@ -94,8 +93,9 @@ export default function ParkingMark () {
         setIsFetchingParks(true)
         const parks = await parkingLotsData()
 
+        const allParks = combinedInitAllParksData(parks, formattedParksData, coordinatesConvert, payexFilter)
 
-        setAllParks(payexFilter(parks))
+        setAllParks(allParks)
         setIsFetchingParks(false)       
       } 
       catch (error) {
@@ -145,7 +145,9 @@ export default function ParkingMark () {
           if (isFetchingParks) return
           setIsFetchingParks(true)
           const parks = await parkingLotsData()
-          setAllParks(payexFilter(parks)) 
+          const allParks = combinedInitAllParksData(parks, formattedParksData, coordinatesConvert, payexFilter)
+          
+          setAllParks(allParks) 
           setIsFetchingParks(false)       
         } 
         catch (error) {
@@ -179,7 +181,9 @@ export default function ParkingMark () {
           if (isFetchingParks) return
           setIsFetchingParks(true)
           const parks = await parkingLotsData()
-          setAllParks(payexFilter(parks)) 
+          const allParks = combinedInitAllParksData(parks, formattedParksData, coordinatesConvert, payexFilter)
+          
+          setAllParks(allParks) 
           setIsFetchingParks(false)       
         } 
         catch (error) {
@@ -196,7 +200,11 @@ export default function ParkingMark () {
     if (mode !== 'self') return
     let filteredParkingLots = getPointsInDistance(allParks, selfPos, 0.0075)
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
-    setNearParks(parksTransFilter(filteredParkingLots, transOption))
+    filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
+    //篩選只顯示>0的
+    const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
+
+    setNearParks(availablePark)
   }, [selfPos, mode, transOption, remainings])
 
   // target的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
@@ -205,7 +213,10 @@ export default function ParkingMark () {
     let filteredParkingLots = getPointsInDistance(allParks, target, 0.0075)
     //加入剩餘車位資料
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
-    setNearParks(parksTransFilter(filteredParkingLots, transOption))
+    filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
+    const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
+
+    setNearParks(availablePark)
   }, [target, mode, transOption, remainings])
 
   // mapCenter的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
@@ -214,7 +225,8 @@ export default function ParkingMark () {
     let filteredParkingLots = getPointsInDistance(allParks, mapCenter, 0.0075)
     //加入剩餘車位資料
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
-
+    filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
+    
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
     setNearParks(availablePark)
   }, [mapCenter, mode, transOption, remainings])
@@ -229,7 +241,8 @@ export default function ParkingMark () {
           if (isFetchingParks) return
           setIsFetchingParks(true)
           const parks = await parkingLotsData()
-          setAllParks(payexFilter(parks))
+          const allParks = combinedInitAllParksData(parks, formattedParksData, coordinatesConvert, payexFilter)
+          setAllParks(allParks)
           setIsFetchingParks(false)       
         } 
         catch (error) {

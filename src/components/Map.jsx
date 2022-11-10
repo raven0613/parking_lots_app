@@ -23,10 +23,9 @@ export default function Map() {
   //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
     console.log('Map load')
-    // getUserPos(setSelfPos, mode, setMapCenter)
-    // watchUserPos(setSelfPos)
   }, []);
 
+  //網址改變就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
     watchUserPos(setSelfPos)
     if (location.search) return
@@ -80,7 +79,7 @@ export default function Map() {
         //mode回到self後恢復跟隨
         setIsFollow(true)
       }
-      if (!selfPos) return
+      if (!selfPos) watchUserPos(setSelfPos)  //沒抓到就再抓
       setMapCenter(selfPos)
       setTarget(null)
       setSpeech('')
@@ -94,10 +93,10 @@ export default function Map() {
     if (mode === 'screen-center') {
       console.log('current mode: ', mode)
 
-      setDirections(null)
-      setTarget(null)
-      setInputingVal('')
-      setSpeech('')
+      // setDirections(null)
+      // setTarget(null)
+      // setInputingVal('')
+      // setSpeech('')
       return
     }
   }, [mode])
@@ -113,12 +112,11 @@ export default function Map() {
   }, [canFetchDirection])
 
 
-
   //map設定
   const options = useMemo(
     () => ({
       //在google map後台設定，不須保密
-      mapId: "feb728f5023695e4",
+      mapId: 'feb728f5023695e4',
       //地圖上的UI不顯示
       disableDefaultUI: true,
       //地圖上的標記不能點
@@ -135,17 +133,12 @@ export default function Map() {
         center={mapCenter}
         mapContainerClassName="map"
         onDragEnd={() => {
-          if (mode === 'target') return
-          setMode('screen-center')
           handleCenterChanged()
-          setIsFollow(false)
         }}
-        // onDragStart={() => {
-        //   if (mode === 'target') return
-        //   setMode('screen-center')
-        //   if (!isFollow) return
-        //   setIsFollow(false)
-        // }}
+        onDragStart={() => {
+          setIsFollow(false)
+          setMode('screen-center')
+        }}
         options={options}
         onLoad={onLoad}
       >
@@ -187,7 +180,7 @@ export default function Map() {
           />
         )}
         {target && <Marker 
-          animation={window.google.maps.Animation.BOUNCE}
+
           position={target} 
           zIndex={998}
           icon={{

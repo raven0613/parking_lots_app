@@ -172,11 +172,11 @@
     width: 30rem;
     height: auto;
     left: 22rem;
-    bottom: -16rem;
+    bottom: -18rem;
     transition: 0.25s ease-out;
 
     &.active {
-      bottom: 2rem;
+      bottom: 2.5rem;
     }
   }
   .detail__panel {

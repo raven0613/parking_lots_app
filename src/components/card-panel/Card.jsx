@@ -74,9 +74,6 @@ export default function Card (props) {
           <span>{ availablemotor }</span>
         </div>
       </div>
-      
-
-
     </div>
   )
 }

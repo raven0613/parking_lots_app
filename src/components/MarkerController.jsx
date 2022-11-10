@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react'
-import car from '../assets/images/car-.svg'
-import motor from '../assets/images/motorbike.svg'
+import price from '../assets/images/price.svg'
+import parks from '../assets/images/parks.svg'
 
 export default function MarkerController (props) {
   const { markerOption, setMarkerOption } = props
-  const [isPay, setIsPay] = useState(true)
 
-  let payClass = `control-type__btn control-type__car ${markerOption === 'pay' ? '' : 'active'}`
-  let countsClass = `control-type__btn control-type__motor ${markerOption === 'counts' ? 'active' : ''}`
-  
+  let disabled = markerOption? '' : 'disabled'
+  let payClass = `${disabled} control-type__btn control-type__up
+  ${markerOption === 'pay' ? '' : 'active'}`
 
-  useEffect(() => {
-    console.log(markerOption)
-  }, [markerOption])
+  let countsClass = `${disabled} control-type__btn control-type__down
+  ${markerOption === 'counts' ? 'active' : ''}`
+
 
   return (
     <div className='control-type control-type__marker'
@@ -21,10 +20,14 @@ export default function MarkerController (props) {
         if(markerOption === 'counts') return setMarkerOption('pay')
       }}
     >
-      <button className={payClass} ><p>價格</p>
+      <button className={payClass} >
+        <img src={price} alt='price'>
+        </img>
       </button>
 
-      <button className={countsClass} ><p>車位</p>
+      <button className={countsClass} >
+        <img src={parks} alt='parks'>
+        </img>
       </button>
     </div>
   )

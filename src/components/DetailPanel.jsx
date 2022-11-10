@@ -168,7 +168,7 @@ function payexContent (currentDisplay) {
   return (
     <>
       <img className="detail__content--img" src={payex} alt="payex" />
-      <p className="detail__content--content">{currentDisplay.payex}元</p>
+      <p className="detail__content--content">{currentDisplay.payex}</p>
     </>
   )
 }

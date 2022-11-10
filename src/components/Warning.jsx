@@ -9,8 +9,13 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   const navigate = useNavigate()
   const queryParams = new URLSearchParams(location.search)
 
-  let content = '您的目標停車場已無剩餘車位'
+  //提醒內容
+  let content = ''
+
   let buttonContent = '重新尋找'
+  if (currentPark && currentPark.availablecar < 1) {
+    content = '您的目標停車場已無剩餘車位'
+  }
 
   if (transOption === 'car') {
     if (currentPark && currentPark.totalcar < 1) {
