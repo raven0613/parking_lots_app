@@ -31,6 +31,7 @@ export default function CardPanel (props) {
       return setIsNearActive(true)
     } 
    },[location]) 
+
   return (
     <div 
     onClick={() => {

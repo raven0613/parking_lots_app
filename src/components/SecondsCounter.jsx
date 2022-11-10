@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react'
 export default function SecondsCounter ({remainings}) {
   const [afterLastFetch, setAfterLastFetch] = useState(0)
   // 距離上次抓到資料隔多久
+
   useEffect(() => {
-    if (afterLastFetch === undefined) return
     const interval = window.setInterval(() => {
-      setAfterLastFetch(afterLastFetch + 1)
+      setAfterLastFetch((prev) => prev + 1)
     }, 1000)
     return () => window.clearInterval(interval)
-  }, [afterLastFetch])
+  }, [])
 
 
   //剩餘車位資料成功抓進來後計時歸0

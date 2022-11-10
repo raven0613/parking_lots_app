@@ -110,21 +110,16 @@
   line-height: 2.5rem;
   text-shadow: 2px 2px 3px rgb(255, 255, 255);
   font-size: 0.875rem;
-  // font-weight: 600;
 }
 
 @media screen and (min-width: 600px) {
   .counter {
-    bottom: 0;
-    top: auto;
     left: 7.8rem;
+    text-align: start;
+    bottom: 0;
   }
 }
-.counter {
-  position: fixed;
-  left: 7.8rem;
-  text-align: start
-}
+
 
 @keyframes App-logo-spin {
   from {

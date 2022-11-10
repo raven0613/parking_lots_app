@@ -40,9 +40,8 @@ export default function Card (props) {
       const queryStr = location.search
       navigate(`/map/${id}${queryStr}`, {push: true})
 
-      //點擊卡片後呼叫 Map 的建議路線功能+設定為目前點選的停車場
+      //點擊卡片設定為目前點選的停車場
       setCurrentPark(props.park)
-      // setCanFetchDirection(true)
     }}
     className={cardClass}>
 
