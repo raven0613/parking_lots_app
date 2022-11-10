@@ -18,6 +18,8 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
   const navigate = useNavigate()
 
   const inputRef = useRef('')
+  const [isOnComposition, setIsOnComposition] = useState(false)
+
 
   useEffect(() => {
     const text = speech? speech : ''
@@ -42,78 +44,98 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     handleSelect()
   }, [targetAddressRef.current])
 
-  const [isOnComposition, setIsOnComposition] = useState(false)
+  
 
   //點選選項時
-  const handleSelect = async (val) => {
-    //傳入的 val 為地址
-    //這邊要傳入 false，不然建議框不會消失
-    setValue(val, false)
-    //關掉建議窗
-    clearSuggestions()  
-    //把地址傳進 getGeocode 
-    const results = await getGeocode({ address: val })
-    //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
-    console.log(results)
-    const { lat, lng } = await getLatLng(results[0])
-    //把點選結果的座標存進 target
-    setTarget({ lat, lng })
+  // const handleSelect = async (val) => {
+  //   //傳入的 val 為地址
+  //   //這邊要傳入 false，不然建議框不會消失
+  //   setValue(val, false)
+  //   //關掉建議窗
+  //   clearSuggestions()  
+  //   //把地址傳進 getGeocode 
+  //   const results = await getGeocode({ address: val })
+  //   //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
+  //   console.log(results)
+  //   const { lat, lng } = await getLatLng(results[0])
+  //   //把點選結果的座標存進 target
+  //   setTarget({ lat, lng })
     
-    //把值傳回去給map
-    getPlaceResult(val)
-  }
+  //   //把值傳回去給map
+  //   getPlaceResult(val)
+  // }
   
+  const onChange = (e) => {
+    // console.log("onChange", e.target.value);
+    // setValue(e.target.value)
 
-  const handleComposition = (e) => {
-    console.log('type', e.type)
-    if (e.type === 'compositionend') {
-      setIsOnComposition(false)
-      if (!isOnComposition) {
-        setValue(e.target.value)
-      }
-    } else {
-      setIsOnComposition(true)
+    if (!isOnComposition && e.target.value) {
+      console.log("onChange", e.target.value);
+      setValue(e.target.value)
     }
   }
+  const handleComposition = (e) => {
+    if (e.type === "compositionend") {
+      let isOnComposition = false;
+      setIsOnComposition(isOnComposition);
+      setValue(e.target.value)
 
-
-  const handleChange = event => {
-    console.log("handleChange");
-    if(isOnComposition) return
-    // inputRef.current = event.target.value
-    // setInputingVal(event.target.value)
-    // handleCompsition(event);
-
-    console.log(event.target)
-    setValue(event.target.value)
-  }
-  // useEffect(() => {  
-  //   inputRef.current = value 
-  // }, [value])
-  
-
-
-  const handleInput = e => {
-    console.log(e.target)
-    setValue(e.target.value);
+      if (!isOnComposition && e.target.value) {
+        console.log("compositionend", e.target.value);
+      }
+    } else {
+      setIsOnComposition(true);
+    }
   };
+  const renderSuggestions = () =>
+    data.map((suggestion) => {
+      const {
+        place_id,
+        structured_formatting: { main_text, secondary_text },
+      } = suggestion;
+      console.log(suggestion)
+      return (
+        <li key={place_id} onClick={handleSelect(suggestion)}>
+          <strong>{main_text}</strong> <small>{secondary_text}</small>
+        </li>
+      );
+    });
+
+  const handleSelect =
+    ({ description }) =>
+    () => {
+      // When user selects a place, we can replace the keyword without request data from API
+      // by setting the second parameter to "false"
+      setInputingVal(description)
+      setValue(description, false);
+      clearSuggestions();
+
+      // Get latitude and longitude via utility functions
+      getGeocode({ address: description }).then((results) => {
+        const { lat, lng } = getLatLng(results[0]);
+        console.log("📍 Coordinates: ", { lat, lng });
+      });
+    };
 
   return (
     <>
-      {/* <input 
-        value={value}
+      <input 
+        defaultValue={inputingVal}
         type="text"
-        onChange={(e) => {handleChange(e)}}
+        onChange={onChange}
+        onCompositionStart={handleComposition}
+        onCompositionUpdate={handleComposition}
+        onCompositionEnd={handleComposition}
         className="combobox"
         disabled={!ready}
         placeholder='請輸入地點'
         ></input>
-        {status === "OK" && <ul>{renderSuggestions()}</ul>} */}
+        {status === "OK" && <ul>{renderSuggestions()}</ul>}
 
-      <Combobox className='combobox' onSelect={ handleSelect }>
+      {/* <Combobox className='combobox' onSelect={ handleSelect }>
         <ComboboxInput 
         value={value} 
-        onChange={handleInput}
+        onChange={onChange}
         onCompositionStart={handleComposition}
         onCompositionUpdate={handleComposition}
         onCompositionEnd={handleComposition}
@@ -131,7 +153,7 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
             }
           </ComboboxList>
         </ComboboxPopover>
-      </Combobox>
+      </Combobox> */}
       <button 
         className='combobox-clear'
         onClick={(e) => {
