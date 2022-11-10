@@ -47,10 +47,14 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   }, [currentPark, transOption])
 
 
-  const warningClass = !isCarEnough || !isMotorEnough || !warning? 'warning active' : 'warning'
+  const warningClass = () => {
+    if (!warning) return 'warning'
+    if (!isCarEnough || !isMotorEnough) return 'warning active'
+    return 'warning'
+  }
 
     return (
-      <div className={warningClass}>
+      <div className={warningClass()}>
         <div className="warning__content">
           <img src={warning} alt="warning" />
           <p>{contentRef.current}</p>
@@ -67,10 +71,10 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
             //是screen模式的話就重進screen模式
             //self模式的話center回到中心
             //關掉目前搜尋的
-            setCurrentPark(null)
             // const path = location.pathname
             const queryStr = location.search
-            navigate(`${queryStr}`, {push: true})
+            navigate(`.${queryStr}`, {push: true})  //這邊網址要注意
+            setCurrentPark(null)
           }}
           className="warning__btn">{buttonContent}</button>
       </div>

@@ -8,6 +8,7 @@ import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
 import { useLocation } from 'react-router-dom'
 
 import ParkingMark from "./ParkingMark"
+import SelfMarker from "./SelfMarker"
 import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
 
 import { allContext } from '../pages/Home'
@@ -27,6 +28,7 @@ export default function Map() {
 
   //網址改變就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
+    if (selfPos) return
     watchUserPos(setSelfPos)
     if (location.search) return
     getUserPos(setSelfPos, mode, setMapCenter)
@@ -81,10 +83,11 @@ export default function Map() {
       }
       if (!selfPos) watchUserPos(setSelfPos)  //沒抓到就再抓
       setMapCenter(selfPos)
-      setTarget(null)
-      setSpeech('')
-      setInputingVal('')
+      // setTarget(null)
+      // setSpeech('')
+      // setInputingVal('')
       setSelfPos(selfPos)
+      
       return
     }
     if (mode === 'target') {
@@ -155,7 +158,7 @@ export default function Map() {
             }}
           />
         )}
-        {selfPos && (
+        {/* {selfPos && (
           <Marker 
             position={selfPos} 
             className="self-point marker" 
@@ -166,6 +169,9 @@ export default function Map() {
               className: 'marker'
             }}
             />
+        )} */}
+        {selfPos && (
+          <SelfMarker  selfPos={selfPos}/>
         )}
         {mapCenter && mode === "screen-center" && (
           <Marker
@@ -180,6 +186,7 @@ export default function Map() {
             zIndex={999}
           />
         )}
+
         {target && <Marker 
 
           position={target} 

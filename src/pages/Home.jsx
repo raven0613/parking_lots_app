@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
-import { useJsApiLoader } from "@react-google-maps/api";
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import React, { useRef, useState, useEffect } from "react";
+import { useLoadScript } from "@react-google-maps/api";
+import { useNavigate, useLocation } from 'react-router-dom'
 import Map from "../components/Map";
 import Place from "../components/Place";
 import CardPanel from '../components/card-panel/CardPanel'
@@ -13,9 +13,9 @@ import Locate from '../components/Locate'
 import Sidebar from '../components/Sidebar'
 import Footer from '../components/Footer'
 import Warning from '../components/Warning'
-const libraries = ["places"];
 
 export const allContext = React.createContext('')
+const libraries = ["places"]
 
 //我要開始搬移全域資料囉
 export default function Home() {
@@ -30,10 +30,11 @@ export default function Home() {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
 
-  const { isLoaded } = useJsApiLoader({
+
+  const { isLoaded } = useLoadScript({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
-    libraries,
+    libraries
   })
 
   //使用者的 currentPosition
@@ -56,7 +57,6 @@ export default function Home() {
 
   const mapRef = useRef();
   const [mapInstance, setMapInstance] = useState();
-  // const center = useMemo(() => (selfPos), [selfPos])
   const [isFollow, setIsFollow] = useState(true)
   //看是否要啟動cardPanel
   const [isNearActive, setIsNearActive] = useState(false)
@@ -105,10 +105,8 @@ export default function Home() {
   }
   //網址改變時如果有地址就去搜尋
   useEffect(() => {
-    console.log('home location')
     // if (!queryParams) return
     if (queryParams.get('target')) {
-      console.log('target')
       setMode('target')
       targetAddressRef.current = queryParams.get('target')
     }
@@ -135,7 +133,7 @@ export default function Home() {
 
           <div className="search__controller">
             
-            <Place
+            {isLoaded && <Place 
               inputingVal={inputingVal}
               setInputingVal={setInputingVal}
               getPlaceResult={getPlaceResult}
@@ -149,7 +147,7 @@ export default function Home() {
                 //移動地圖中心至 target
                 setMapCenter(position);
               }}
-            ></Place>
+            ></Place>}
             <Speech setSpeech={setSpeech}></Speech>
             <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
             <TransTypeController transOption={transOption} setTransOption={setTransOption}/>

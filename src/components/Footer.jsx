@@ -7,7 +7,7 @@ import { useContext } from 'react';
 
 export default function Footer (props) {
   const { isNearActive, setIsNearActive } = props
-  const { mode, setMode, setIsFollow } = useContext(allContext)
+  const { mode, setMode, setIsFollow, mapInstance, selfPos } = useContext(allContext)
 
   let selfClass = `footer__btn ${mode === 'self' ? '' : ''}`
   let screenClass = `footer__btn ${isNearActive ? '' : 'active'}`
@@ -34,7 +34,21 @@ export default function Footer (props) {
       </div>
       <div         
         onClick={() => {
-          navigate(`/map`, {push: true})
+          if(mode !== 'screen-center') {
+            if (!setIsFollow) return
+            if (!mapInstance) return
+
+            setIsFollow(true)
+            //一旦移動了就不跟隨，按下locate後恢復跟隨
+            //定位到user身上
+            if (!mapInstance.map) {
+              mapInstance.setZoom(15)
+              return mapInstance.panTo(selfPos)
+            }
+            mapInstance.map.setZoom(15)
+            mapInstance.map.panTo(selfPos)
+          }
+          navigate(`${location.pathname}`, {push: true})
           setMode("self")
         }} 
       className={selfClass}>

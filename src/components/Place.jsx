@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from 'react'
 
 
 export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef, inputingVal, setInputingVal, setMode }) {
+  
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
   const location = useLocation()
   const navigate = useNavigate()
