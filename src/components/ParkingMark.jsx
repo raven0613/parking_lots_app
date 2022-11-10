@@ -227,6 +227,7 @@ export default function ParkingMark () {
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
     filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
     
+    //篩掉0的
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
     setNearParks(availablePark)
   }, [mapCenter, mode, transOption, remainings])
@@ -312,6 +313,7 @@ export default function ParkingMark () {
 
       {nearParksWithOutCurrent && nearParksWithOutCurrent.map(park => {
         const positon = {lng: park.lng, lat: park.lat}
+        // 切換這邊就可以切換要不要顯示0
         if (availableCounts(transOption, park) < 1) return <p key={park.id}></p>
         return (
           <Marker 

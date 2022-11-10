@@ -1,5 +1,5 @@
 import cancel from '../assets/images/cancel.svg'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useFetcher, useLocation, useNavigate } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
 import "@reach/combobox/styles.css"
@@ -8,7 +8,12 @@ import { useEffect, useState, useRef } from 'react'
 
 export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef, inputingVal, setInputingVal, setMode }) {
   
-  const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete()
+  const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete({
+    requestOptions: {
+      /* Define search scope here */
+    },
+    debounce: 300,
+  })
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -58,29 +63,23 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     getPlaceResult(val)
   }
   
-  // const [isInputing, setIsInputing] = useState(false)
 
-  // const handleCompsition = (event) => {
-  //   const { type } = event
-  //   console.log(type)
+  const handleComposition = (e) => {
+    console.log('type', e.type)
+    if (e.type === 'compositionend') {
+      setIsOnComposition(false)
+      if (!isOnComposition) {
+        setValue(e.target.value)
+      }
+    } else {
+      setIsOnComposition(true)
+    }
+  }
 
-  //   if (type === 'compositionstart') {
-  //     setIsInputing(true)
-  //   }
-  //   else if (type === 'compositionupdate') {
-  //   }
-  //   else if (type === 'compositionend') {
-  //     setIsInputing(false)
-  //     setInputingVal(event.target.value)
-  //   }
-  //   else if (type === 'change') {
-  //     if (!isInputing) {
-  //       setInputingVal(event.target.value)
-  //     }
-  //   }
-  // }
+
   const handleChange = event => {
     console.log("handleChange");
+    if(isOnComposition) return
     // inputRef.current = event.target.value
     // setInputingVal(event.target.value)
     // handleCompsition(event);
@@ -92,21 +91,10 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
   //   inputRef.current = value 
   // }, [value])
   
-    const renderSuggestions = () =>
-      data.map((suggestion) => {
-        const {
-          place_id,
-          structured_formatting: { main_text, secondary_text },
-        } = suggestion;
 
-        return (
-          <li key={place_id} onClick={handleSelect(suggestion)}>
-            <strong>{main_text}</strong> <small>{secondary_text}</small>
-          </li>
-        );
-      });
 
   const handleInput = e => {
+    console.log(e.target)
     setValue(e.target.value);
   };
 
@@ -126,9 +114,9 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
         <ComboboxInput 
         value={value} 
         onChange={handleInput}
-        // onCompositionStart={handleCompsition}
-        // onCompositionUpdate={handleCompsition}
-        // onCompositionEnd={() => setValue(inputRef.current)}
+        onCompositionStart={handleComposition}
+        onCompositionUpdate={handleComposition}
+        onCompositionEnd={handleComposition}
         // onChange={e => setValue(e.target.value)} 
         // onChange={handleChange} 
         disabled={!ready}
