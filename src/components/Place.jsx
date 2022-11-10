@@ -84,23 +84,53 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     // inputRef.current = event.target.value
     // setInputingVal(event.target.value)
     // handleCompsition(event);
+
+    console.log(event.target)
     setValue(event.target.value)
   }
-  useEffect(() => {  
-    inputRef.current = value 
-  }, [value])
+  // useEffect(() => {  
+  //   inputRef.current = value 
+  // }, [value])
   
+    const renderSuggestions = () =>
+      data.map((suggestion) => {
+        const {
+          place_id,
+          structured_formatting: { main_text, secondary_text },
+        } = suggestion;
+
+        return (
+          <li key={place_id} onClick={handleSelect(suggestion)}>
+            <strong>{main_text}</strong> <small>{secondary_text}</small>
+          </li>
+        );
+      });
+
+  const handleInput = e => {
+    setValue(e.target.value);
+  };
 
   return (
     <>
+      {/* <input 
+        value={value}
+        type="text"
+        onChange={(e) => {handleChange(e)}}
+        className="combobox"
+        disabled={!ready}
+        placeholder='請輸入地點'
+        ></input>
+        {status === "OK" && <ul>{renderSuggestions()}</ul>} */}
+
       <Combobox className='combobox' onSelect={ handleSelect }>
         <ComboboxInput 
         value={value} 
+        onChange={handleInput}
         // onCompositionStart={handleCompsition}
         // onCompositionUpdate={handleCompsition}
         // onCompositionEnd={() => setValue(inputRef.current)}
         // onChange={e => setValue(e.target.value)} 
-        onChange={handleChange} 
+        // onChange={handleChange} 
         disabled={!ready}
         className="combobox-input" 
         placeholder='請輸入地點'/>
