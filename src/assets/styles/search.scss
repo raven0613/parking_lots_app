@@ -4,11 +4,16 @@
   top: 2rem;
   left: 50%;
   transform: translateX(-50%);
+  
   margin: 0;
   width: 80%;
   height: 3rem;
   display: flex;
   transition: 0.2s ease-out;
+
+  background-color: var(--white);
+  border-radius: 2rem;
+  box-shadow: 1px 1px 5px 1px var(--shadow-color);
 }
 
 .speech {
@@ -32,17 +37,24 @@
 .combobox {
   height: 100%;
   width: 100%;
+  input {
+    padding-bottom: 0.25rem;
+    width: 90%;
+  }
+  label {
+    width: 90%;
+  }
 }
 .combobox-input {
   pointer-events: auto;
   height: 100%;
   width: 100%;
-  line-height: 4rem;
+  line-height: 3rem;
   border-radius: 2rem;
   font-size: 1.2rem;
-  padding: 0.25rem 5rem 0 1.5rem;
+  padding: 0.25rem 3rem 0 1.5rem;
   border: none;
-  box-shadow: 1px 1px 5px 1px var(--shadow-color);
+  
 
   // transition: 0.2s ease-out;
 } 
@@ -95,9 +107,14 @@
       margin: auto;
     }
   }
+  .combobox {
+    input {
+      width: 100%;
+    }
+  }
   .combobox-input {
     font-size: 1.2rem;
-    padding: 0.25rem 1.5rem 0 1.5rem;
+    padding: 0.25rem 3rem 0 1.5rem;
   }
   .combobox-clear {
     right: 1rem;

@@ -114,7 +114,11 @@
     left: 7.8rem;
   }
 }
-
+.counter {
+  position: fixed;
+  left: 7.8rem;
+  text-align: start
+}
 
 @keyframes App-logo-spin {
   from {

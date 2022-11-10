@@ -1,5 +1,3 @@
-import logo from '../assets/images/logo.svg'
-import name from '../assets/images/name.svg'
 import React, { useMemo, useCallback, useRef, useState, useEffect } from "react";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
@@ -13,6 +11,7 @@ import DetailPanel from '../components/DetailPanel'
 import Speech from '../components/Speech'
 import SecondsCounter from '../components/SecondsCounter'
 import Locate from '../components/Locate'
+import Sidebar from '../components/Sidebar'
 import Footer from '../components/Footer'
 import Warning from '../components/Warning'
 const libraries = ["places"];
@@ -78,13 +77,14 @@ export default function Home() {
     setSpeech, 
     selfPos, setSelfPos, 
     directions, setDirections, 
-    transOption, mapRef,  
+    transOption, setTransOption,
+    mapRef,  
     currentPark, setCurrentPark, 
     canFetchDirection, setCanFetchDirection, 
     remainings, setRemainings, 
     isFollow, setIsFollow, 
     setInputingVal,
-    markerOption
+    markerOption, setMarkerOption
   }
 
 
@@ -104,12 +104,14 @@ export default function Home() {
   }
   //網址改變時如果有地址就去搜尋
   useEffect(() => {
+    console.log('home location')
     // if (!queryParams) return
     if (queryParams.get('target')) {
+      console.log('target')
+      setMode('target')
       targetAddressRef.current = queryParams.get('target')
     }
   }, [location])
-
 
   let detailWindowClass = ''
   if (currentPark) {
@@ -127,12 +129,8 @@ export default function Home() {
         <Map />
 
         <div className="map__ui">
-          <div className="sidebar">
-            <div className="sidebar__logo"><img src={logo} alt="logo" /><img src={name} alt="name" /></div>
-            <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
-            <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
-            <Locate />
-          </div>
+          <Sidebar />
+
           <div className="search__controller">
             
             <Place

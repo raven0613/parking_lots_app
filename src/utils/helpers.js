@@ -33,6 +33,24 @@ export function getStraightDistance ( a, b ) {
     const distance = Math.sqrt(sum)
     return distance
 }
+
+//初次取得資料時把需要的key都加進去
+export const formattedParksData = (parks, coordinatesConvert) => {
+  if (!parks || !coordinatesConvert) return console.log('formattedParksData no parks', parks)
+
+  const formattedParks = parks.map(park => {
+    const {id, area, name, summary, address, tel, payex, serviceTime, tw97x, tw97y, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo: {...FareInfo}} = park
+    //TWD97轉經緯度
+    const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
+    
+    return {
+      id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-'
+    }
+  })
+  return formattedParks
+}
+
+
 //篩選汽車/機車資料
 export const parksTransFilter = (parkings, transOption) => {
   if(!parkings) {
@@ -46,6 +64,7 @@ export const parksTransFilter = (parkings, transOption) => {
     return parkings.filter(park => park.totalmotor !== 0)
   }
 }
+
 //把剩餘車位的資料合併進停車場資料(回傳陣列資料)
 export const parksWithRemainings = (parkings, remainings) => {
   if (!parkings) {
@@ -64,8 +83,7 @@ export const parksWithRemainings = (parkings, remainings) => {
         ...park,
         FareInfo: {...park.FareInfo},
         availablecar: data.availablecar > 0?  data.availablecar : 0,
-        availablemotor: data.availablemotor > 0? data.availablemotor : 0,
-        travelTime: data.travelTime
+        availablemotor: data.availablemotor > 0? data.availablemotor : 0
       }
     }
     //沒找到就返回原資料
@@ -198,9 +216,9 @@ export const payexFilter = (allParks) => {
   const digit = 4
   const allParksWithPayex = allParks.map(park => {
     if (park.id === '310') return { ...park, pay: 20 }
-    else if (park.FareInfo.length) {
+    else if (park.FareInfo.WorkingDay) {
       return {
-        ...park, pay: park.FareInfo.WorkingDay[0].Fare.toJSON()
+        ...park, pay: park.FareInfo.WorkingDay[0].Fare
       }
     }
     else if (park.payex.includes('元/時')) {

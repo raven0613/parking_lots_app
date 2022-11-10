@@ -20,11 +20,16 @@ export default function CardPanel (props) {
 
   //網址變化時偵測網址來改變 isActive
    useEffect(() => {
-    if (queryParams.get('nearby')) {
-      setIsNearActive(true)
-    } else {
-      setIsNearActive(false)
+    if (!queryParams.has('nearby')) {
+      return setIsNearActive(false)
     }
+    if (queryParams.has('nearby') && queryParams.get('nearby') !== 'true') {
+      console.log('404')
+      return setIsNearActive(false)
+    }
+    if (queryParams.get('nearby') === 'true') {
+      return setIsNearActive(true)
+    } 
    },[location]) 
   
   return (
