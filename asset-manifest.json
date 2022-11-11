@@ -1,11 +1,12 @@
 {
   "files": {
-    "main.css": "/parking_lots_app/static/css/main.9c774b62.css",
-    "main.js": "/parking_lots_app/static/js/main.bdc3109b.js",
+    "main.css": "/parking_lots_app/static/css/main.05762aed.css",
+    "main.js": "/parking_lots_app/static/js/main.229aaa92.js",
     "static/media/404word.svg": "/parking_lots_app/static/media/404word.b3b3ad2e7bd637311d4935d4fea05a87.svg",
     "static/media/name.svg": "/parking_lots_app/static/media/name.0faf22a0f3c1ae146181cb1f8411a3f4.svg",
     "static/media/404image.svg": "/parking_lots_app/static/media/404image.ee5039323f393717538731d936393a12.svg",
     "static/media/404back.svg": "/parking_lots_app/static/media/404back.a5c73d95ef96cc98cfbc5e1694d02a3f.svg",
+    "static/media/pregnancy.svg": "/parking_lots_app/static/media/pregnancy.4571ce6efe9b8c0fc7fb9bb4cc131cea.svg",
     "static/media/logo.svg": "/parking_lots_app/static/media/logo.d764e303ca2312c124fee566b7020b6d.svg",
     "static/media/detail-car.svg": "/parking_lots_app/static/media/detail-car.593ae7b3f4d1732b98ba2528d2c9507b.svg",
     "static/media/car-.svg": "/parking_lots_app/static/media/car-.9a9c4a61e4eb70edbfcc94b6c9b85a08.svg",
@@ -23,6 +24,7 @@
     "static/media/address.svg": "/parking_lots_app/static/media/address.bfa6b7571942021d22b6bfed132ca74e.svg",
     "static/media/back.svg": "/parking_lots_app/static/media/back.d13b75974ab638f0a3963e8305e8714f.svg",
     "static/media/locate.svg": "/parking_lots_app/static/media/locate.83fbc555cbd431ad80bbdcc283e0023b.svg",
+    "static/media/filter.svg": "/parking_lots_app/static/media/filter.adb0ea1559442dd1891699b006b26115.svg",
     "static/media/parks.svg": "/parking_lots_app/static/media/parks.7c01fb171c31f5e422764c07bd8f4a14.svg",
     "static/media/card-pin.svg": "/parking_lots_app/static/media/card-pin.2121bd6d2cad6e862704.svg",
     "static/media/navigate.svg": "/parking_lots_app/static/media/navigate.6a670d7fd3c5274d7bf6159ab688ab76.svg",
@@ -30,16 +32,19 @@
     "static/media/cancel.svg": "/parking_lots_app/static/media/cancel.fc61b9d0e371d44c16085eeda21f66ff.svg",
     "static/media/marker-target2.svg": "/parking_lots_app/static/media/marker-target2.28a2c974471a9dadce8b4fd07555adab.svg",
     "static/media/marker-self.svg": "/parking_lots_app/static/media/marker-self.2c4b9faac2c1ad745b0f2cc8e49c9fef.svg",
+    "static/media/charging.svg": "/parking_lots_app/static/media/charging.7d4d36fdf8274737f404916b611ad41f.svg",
     "static/media/card-panel-arrow.svg": "/parking_lots_app/static/media/card-panel-arrow.bb0366415986e76e39615053e6f83429.svg",
     "static/media/service-time.svg": "/parking_lots_app/static/media/service-time.689112ef5b46288617f49900ee060723.svg",
+    "static/media/marker-parking-current.svg": "/parking_lots_app/static/media/marker-parking-current.5a9b7c3bc30a0a72222e.svg",
     "static/media/marker-parking-small.svg": "/parking_lots_app/static/media/marker-parking-small.77b680dc0e7f919dc20e832508d4d6a7.svg",
     "static/media/marker-parking.svg": "/parking_lots_app/static/media/marker-parking.845fbfcf283de787086ed7763e195d11.svg",
+    "static/media/filter-clear.svg": "/parking_lots_app/static/media/filter-clear.28de3203f30d9ead7f1291052163bee6.svg",
     "static/media/map-center.svg": "/parking_lots_app/static/media/map-center.0e304bcbde652857803b5f978713fda0.svg",
-    "main.9c774b62.css.map": "/parking_lots_app/static/css/main.9c774b62.css.map",
-    "main.bdc3109b.js.map": "/parking_lots_app/static/js/main.bdc3109b.js.map"
+    "main.05762aed.css.map": "/parking_lots_app/static/css/main.05762aed.css.map",
+    "main.229aaa92.js.map": "/parking_lots_app/static/js/main.229aaa92.js.map"
   },
   "entrypoints": [
-    "static/css/main.9c774b62.css",
-    "static/js/main.bdc3109b.js"
+    "static/css/main.05762aed.css",
+    "static/js/main.229aaa92.js"
   ]
 }
