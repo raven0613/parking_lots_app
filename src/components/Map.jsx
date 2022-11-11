@@ -83,11 +83,7 @@ export default function Map() {
       }
       if (!selfPos) watchUserPos(setSelfPos)  //沒抓到就再抓
       setMapCenter(selfPos)
-      // setTarget(null)
-      // setSpeech('')
-      // setInputingVal('')
       setSelfPos(selfPos)
-      
       return
     }
     if (mode === 'target') {
@@ -96,11 +92,6 @@ export default function Map() {
     }
     if (mode === 'screen-center') {
       console.log('current mode: ', mode)
-
-      // setDirections(null)
-      // setTarget(null)
-      // setInputingVal('')
-      // setSpeech('')
       return
     }
   }, [mode])
@@ -141,6 +132,7 @@ export default function Map() {
         }}
         onDragStart={() => {
           setIsFollow(false)
+          if(mode === 'filter') return console.log('onDragStart 請先關閉篩選')
           setMode('screen-center')
         }}
         options={options}

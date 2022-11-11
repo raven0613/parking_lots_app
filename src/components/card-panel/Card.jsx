@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom'
+import charging from '../../assets/images/charging.svg'
+import pregnancy from '../../assets/images/pregnancy.svg'
 import availableCarImg from '../../assets/images/detail-car.svg'
 import availableMotorImg from '../../assets/images/detail-motor.svg'
 import disabled from '../../assets/images/disabled.svg'
@@ -12,13 +14,14 @@ import { useState } from "react";
 
 
 export default function Card (props) {
-  const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id, Handicap_First, summary } = props.park
+  const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id, Handicap_First, summary, ChargingStation, Pregnancy_First } = props.park
   const { currentPark, setCurrentPark } = props
 
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()
   const isDisabled = summary.includes('身心') || Handicap_First > 0
+  const isPregnancy = Pregnancy_First > 0
 
   const [cardClass, setCardClass] = useState('card')
 
@@ -71,7 +74,12 @@ export default function Card (props) {
           
         </p>
 
+        
+        {isPregnancy && <img className="card__info--disabled" src={pregnancy} alt="pregnancy-parking" />}
+
         {isDisabled && <img className="card__info--disabled" src={disabled} alt="disabled-parking" />}
+
+        {ChargingStation > 0 && <img className="card__info--charging" src={charging} alt="charging" />}
 
         <div className="card__info--avai">
           <img src={availableCarImg} alt="availableCar"></img>

@@ -24,7 +24,7 @@ export default function CardPanel (props) {
       return setIsNearActive(false)
     }
     if (queryParams.has('nearby') && queryParams.get('nearby') !== 'true') {
-      console.log('404')
+      navigate('/not-found', {push: true})
       return setIsNearActive(false)
     }
     if (queryParams.get('nearby') === 'true') {
