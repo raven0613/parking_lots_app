@@ -93,7 +93,7 @@ export default function Home() {
     console.log("on page loaded");
     if (!localStorage.getItem('transOption')) return
     setTransOption(localStorage.getItem('transOption'))
-  }, []);
+  }, [])
 
 
   //處理目標的地址，模式變成 target
@@ -101,8 +101,9 @@ export default function Home() {
   const getPlaceResult = (placeValue) => {
     targetAddressRef.current = placeValue
     if (!targetAddressRef) return
-    navigate(`/map?target=${targetAddressRef.current}`)
+    navigate(`/map?target=${targetAddressRef.current}`, {push: true})
   }
+
   //網址改變時如果有地址就去搜尋
   useEffect(() => {
     // if (!queryParams) return
@@ -112,6 +113,7 @@ export default function Home() {
     }
   }, [location])
 
+
   let detailWindowClass = ''
   if (currentPark) {
     detailWindowClass = 'detail__window active'
@@ -119,8 +121,6 @@ export default function Home() {
     detailWindowClass = 'detail__window'
   }
 
-
-  
   return (
     <allContext.Provider value={contextValue}>
       
