@@ -10,6 +10,7 @@ import DetailPanel from '../components/DetailPanel'
 import Speech from '../components/Speech'
 import SecondsCounter from '../components/SecondsCounter'
 import Locate from '../components/Locate'
+import FilterPanel from '../components/FilterPanel'
 import Sidebar from '../components/Sidebar'
 import Footer from '../components/Footer'
 import Warning from '../components/Warning'
@@ -21,7 +22,7 @@ const libraries = ["places"]
 export default function Home() {
   // console.log('Home又重新渲染')
   //搜尋模式
-  const [mode, setMode] = useState("self") //self, target, screen-center
+  const [mode, setMode] = useState("self") //self, target, screen-center, filter
   //搜尋相關
   const [ speech, setSpeech ] =  useState()
 
@@ -67,6 +68,10 @@ export default function Home() {
   const [allParks, setAllParks] = useState()
   const [nearParks, setNearParks] = useState()
 
+  const [isEmptyParkId, setIsEmptyParkId] = useState(false)
+  const [filterConditions, setFilterConditions] = useState([])
+  const [userFilteredParks, setUserFilteredParks] = useState([])
+
   const contextValue = {
     nearParks, setNearParks, 
     allParks, setAllParks, 
@@ -84,7 +89,10 @@ export default function Home() {
     remainings, setRemainings, 
     isFollow, setIsFollow, 
     setInputingVal,
-    markerOption, setMarkerOption
+    markerOption, setMarkerOption,
+    isEmptyParkId, setIsEmptyParkId,
+    filterConditions, setFilterConditions,
+    userFilteredParks, setUserFilteredParks,
   }
 
 
@@ -104,13 +112,19 @@ export default function Home() {
     navigate(`/map?target=${targetAddressRef.current}`, {push: true})
   }
 
-  //網址改變時如果有地址就去搜尋
+  //網址改變時
   useEffect(() => {
+    //如果id不對就跳警告
+
+
+    //如果有地址就去搜尋
     // if (!queryParams) return
     if (queryParams.get('target')) {
       setMode('target')
       targetAddressRef.current = queryParams.get('target')
     }
+    
+
   }, [location])
 
 
@@ -149,6 +163,8 @@ export default function Home() {
               }}
             ></Place>}
             <Speech setSpeech={setSpeech}></Speech>
+
+            <FilterPanel filterConditions={filterConditions} setFilterConditions={setFilterConditions} />
             <MarkerController markerOption={markerOption} setMarkerOption={setMarkerOption}/>
             <TransTypeController transOption={transOption} setTransOption={setTransOption}/>
             <Locate />
@@ -170,6 +186,8 @@ export default function Home() {
         </div>
         <Footer setIsNearActive={setIsNearActive} isNearActive={isNearActive} />
         <Warning 
+          setIsEmptyParkId={setIsEmptyParkId}
+          isEmptyParkId={isEmptyParkId}
           currentPark={currentPark} 
           transOption={transOption}
           target={target}

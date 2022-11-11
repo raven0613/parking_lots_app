@@ -2,7 +2,7 @@ import parkMarker from '../assets/images/marker-parking.svg'
 import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 import { Marker } from '@react-google-maps/api';
-import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData } from '../utils/helpers'
+import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks } from '../utils/helpers'
 import { useState, useEffect, useContext, useRef } from 'react';
 import { allContext } from '../pages/Home'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
@@ -66,7 +66,7 @@ const combinedInitAllParksData = (parks, formattedParksData, coordinatesConvert,
 
 
 export default function ParkingMark () {
-  const { nearParks, setNearParks, allParks, setAllParks, mode, transOption, mapCenter, target, selfPos, setDirections, currentPark, setCurrentPark, setCanFetchDirection, remainings, setRemainings, mapInstance, markerOption } = useContext(allContext)
+  const { nearParks, setNearParks, allParks, setAllParks, mode, transOption, mapCenter, target, selfPos, setDirections, currentPark, setCurrentPark, setCanFetchDirection, remainings, setRemainings, mapInstance, markerOption, setIsEmptyParkId, filterConditions, userFilteredParks, setUserFilteredParks } = useContext(allContext)
   
   //fetching狀態
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
@@ -159,7 +159,9 @@ export default function ParkingMark () {
     }
 
     const paramsPark = allParks.find(park => park.id === parkId)
-    if (!paramsPark) return console.log('轉到找不到此id頁面')
+    if (!paramsPark) return setIsEmptyParkId(true)
+    
+    //確保拿到最新的資料
     setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])
     
     //網址改變只要不是改到id 就不要推薦路線
@@ -190,7 +192,7 @@ export default function ParkingMark () {
           setIsFetchingParks(false)
           console.log(error)
         }
-      } 
+      }
       fetchParksData ()
     }
   }, [remainings])
@@ -198,31 +200,35 @@ export default function ParkingMark () {
   //selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
   useEffect(() => {
     if (mode !== 'self') return
-    let filteredParkingLots = getPointsInDistance(allParks, selfPos, 0.0075)
+    const basedParks = userFilteredParks? userFilteredParks : allParks
+    let filteredParkingLots = getPointsInDistance(basedParks, selfPos, 0.01)
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
     filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
     //篩選只顯示>0的
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
 
     setNearParks(availablePark)
-  }, [selfPos, mode, transOption, remainings])
+  }, [selfPos, mode, transOption, remainings, userFilteredParks])
 
   // target的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'target') return
-    let filteredParkingLots = getPointsInDistance(allParks, target, 0.0075)
+    const basedParks = userFilteredParks? userFilteredParks : allParks
+    let filteredParkingLots = getPointsInDistance(basedParks, target, 0.01)
     //加入剩餘車位資料
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
     filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
 
     setNearParks(availablePark)
-  }, [target, mode, transOption, remainings])
+  }, [target, mode, transOption, remainings, userFilteredParks])
 
   // mapCenter的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'screen-center') return
-    let filteredParkingLots = getPointsInDistance(allParks, mapCenter, 0.0075)
+    //決定以誰為基準
+    const basedParks = userFilteredParks? userFilteredParks : allParks
+    let filteredParkingLots = getPointsInDistance(basedParks, mapCenter, 0.01)
     //加入剩餘車位資料
     filteredParkingLots = parksWithRemainings(filteredParkingLots, remainings)
     filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
@@ -230,7 +236,18 @@ export default function ParkingMark () {
     //篩掉0的
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
     setNearParks(availablePark)
-  }, [mapCenter, mode, transOption, remainings])
+  }, [mapCenter, mode, transOption, remainings, userFilteredParks])
+
+
+  // filter 條件切換
+  useEffect(() => {
+    console.log(filterConditions)
+    let filteredParkingLots = userFilterParks(filterConditions, allParks)
+    setUserFilteredParks(filteredParkingLots)
+    console.log(filteredParkingLots)
+  }, [filterConditions])
+
+
 
   //mapCenter, target改變時重新算一次時間
   useEffect(() => {
@@ -335,7 +352,6 @@ export default function ParkingMark () {
               const queryStr = location.search
               navigate(`/map/${park.id}${queryStr}`, {push: true})
               setCurrentPark(park)
-              // setCanFetchDirection(true)
             }} />
         )
       })}

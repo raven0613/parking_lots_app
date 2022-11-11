@@ -39,15 +39,48 @@ export const formattedParksData = (parks, coordinatesConvert) => {
   if (!parks || !coordinatesConvert) return console.log('formattedParksData no parks', parks)
 
   const formattedParks = parks.map(park => {
-    const {id, area, name, summary, address, tel, payex, serviceTime, tw97x, tw97y, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo: {...FareInfo}} = park
+    const {id, area, name, summary, address, tel, payex, serviceTime, tw97x, tw97y, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo: {...FareInfo}, ChargingStation} = park
     //TWD97轉經緯度
     const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
     
     return {
-      id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-'
+      id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-', ChargingStation: ChargingStation? ChargingStation : '0'
     }
   })
   return formattedParks
+}
+
+export const userFilterParks = (conditions, parks) => {
+  if (!parks || !conditions) return console.log('沒有資料可篩選')
+  let newArr = []
+  conditions.forEach(condition => {
+    if (condition === 'disabled') {
+      if (newArr.length) {
+        newArr = newArr.filter(park => Number(park.Handicap_First) > 0 || park.summary.includes('身障'))
+        return
+      }
+      newArr = parks.filter(park => Number(park.Handicap_First) > 0 || park.summary.includes('身障'))
+    }
+    if (condition === 'pregnancy') {
+      if (newArr.length) {
+        newArr = newArr.filter(park => Number(park.Pregnancy_First) > 0)
+        return
+      }
+      newArr = parks.filter(park => Number(park.Pregnancy_First) > 0)
+    }
+    if (condition === 'charging') {
+      if (newArr.length) {
+        newArr = newArr.filter(park => Number(park.ChargingStation) > 0)
+        return
+      }
+      newArr = parks.filter(park => Number(park.ChargingStation) > 0)
+    }
+    if (condition === 'all') {
+      newArr = [...parks]
+    }
+  })
+  
+  return newArr
 }
 
 
@@ -192,7 +225,7 @@ export const watchUserPos = (setSelfPos) => {
       (position) => {
         if (setSelfPos) {
           setSelfPos(() => {
-            console.log("setSelfPos");
+            console.log("setSelfPos")
             return {
               lat: position.coords.latitude,
               lng: position.coords.longitude,

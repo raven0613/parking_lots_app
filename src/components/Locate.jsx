@@ -15,6 +15,7 @@ export default function Locate () {
         onClick={() => {
           if (!setIsFollow) return
           if (!mapInstance) return
+          if (!selfPos) return console.log('目前沒有使用者位置')
 
           setIsFollow(true)
           //一旦移動了就不跟隨，按下locate後恢復跟隨

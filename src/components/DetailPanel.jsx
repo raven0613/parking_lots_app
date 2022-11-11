@@ -1,5 +1,7 @@
 import availableCar from '../assets/images/detail-car.svg'
 import navigateIcon from '../assets/images/navigate.svg'
+import pregnancy from '../assets/images/pregnancy.svg'
+import charging from '../assets/images/charging.svg'
 import availableMotor from '../assets/images/detail-motor.svg'
 import disabled from '../assets/images/disabled.svg'
 import address from '../assets/images/address.svg'
@@ -55,6 +57,7 @@ export default function DetailPanel () {
 
   if (!currentDisplay) return <></>
   const isDisabled = currentDisplay.summary.includes('身心') || currentDisplay.Handicap_First > 0
+  const isPregnancy = currentDisplay.Pregnancy_First > 0
   
   if (currentDisplay) {
     return (
@@ -104,6 +107,8 @@ export default function DetailPanel () {
 
               <img className="detail__info--img" src={availableMotor} alt="availableMotor" />
               <p className="detail__info--counts number">{currentDisplay.availablemotor}</p>
+
+              {currentDisplay.ChargingStation > 0 && <img className="detail__info--img" src={charging} alt="charging" />}
             </div>
 
             {/* 預計到達時間 */}
@@ -138,7 +143,12 @@ export default function DetailPanel () {
               <p className="detail__content--content">{currentDisplay.tel}</p>
             </div>
 
-            {isDisabled && <img className="detail__container--img" src={disabled} alt="disabled-parking" />}
+            <div className="detail__container--img">
+              {isPregnancy && <img className="detail__container--img-pregnancy" src={pregnancy} alt="pregnancy-parking" />}
+
+              {isDisabled && <img className="detail__container--img-disabled" src={disabled} alt="disabled-parking" />}
+            </div>
+
 
             <button className='detail__container--button' 
               onClick={(e) => {

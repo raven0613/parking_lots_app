@@ -3,13 +3,13 @@ import { useEffect, useState } from "react"
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useRef } from 'react'
 
-export default function Warning ({ currentPark, transOption, setCurrentPark }) {
+export default function Warning ({ currentPark, transOption, setCurrentPark, isEmptyParkId, setIsEmptyParkId }) {
   const [isCarEnough, setIsCarEnough] = useState(true)
   const [isMotorEnough, setIsMotorEnough] = useState(true)
   
   const location = useLocation()
   const navigate = useNavigate()
-  const queryParams = new URLSearchParams(location.search)
+  // const queryParams = new URLSearchParams(location.search)
 
   //提醒內容
   const contentRef = useRef('您的目標停車場無機車停車格')
@@ -28,6 +28,9 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
     if (currentPark && currentPark.totalmotor < 1) {
       contentRef.current = '您的目標停車場無機車停車格'
     }
+  }
+  if (isEmptyParkId) {
+    contentRef.current = '查無此停車場'
   }
 
   useEffect(() => {
@@ -50,6 +53,7 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
   const warningClass = () => {
     if (!warning) return 'warning'
     if (!isCarEnough || !isMotorEnough) return 'warning active'
+    if (isEmptyParkId) return 'warning active'
     return 'warning'
   }
 
@@ -66,6 +70,7 @@ export default function Warning ({ currentPark, transOption, setCurrentPark }) {
           //關掉視窗
           setIsMotorEnough(true)
           setIsCarEnough(true)
+          setIsEmptyParkId(false)
           //關掉導航
           //是target模式的話重新就目標找一次
           //是screen模式的話就重進screen模式

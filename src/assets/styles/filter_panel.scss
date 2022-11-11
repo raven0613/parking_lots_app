@@ -1,0 +1,104 @@
+//toggle在button那
+.filter {
+  &__panel {
+    background-color: var(--white);
+    height: 2.5rem;
+    width: 2.5rem;
+    box-shadow: 1px 1px 5px 1px var(--shadow-color);
+    position: absolute;
+    right: -1rem;
+    top: 4rem;
+    z-index: 0;
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    padding-left: 0.2rem;
+
+    transition: 0.2s ease-out;
+    &.active {
+      width: 14.5rem;
+      .filter__btn {
+        transition: 0.2s ease-out;
+        opacity: 1;
+        &.clear {
+          right: 3rem;
+        }
+        &.disabled {
+          right: 6rem;
+        }
+        &.pregnancy {
+          right: 9rem;
+        }
+        &.charging {
+          right: 12rem;
+        }
+      }
+    }
+
+  }
+
+  &__btn {
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 2rem;
+    background-color: var(--card-shadow-color);
+    margin-right: 0.2rem;
+    
+    position: absolute;
+    right: 0.2rem;
+    opacity: 0;
+    transition: 0.2s ease-out;
+    &:hover {
+      background-color: var(--main-color);
+    }
+    
+    &.active {
+      background-color: var(--main-color);
+      opacity: 1;
+    }
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .filter {
+    &__panel {
+      height: 3rem;
+      width: 3rem;
+      left: 0;
+      &.active {
+        width: 15.9rem;
+    
+        .filter__btn {
+    
+          &.clear {
+            left: 3.5rem;
+          }
+    
+          &.disabled {
+            left: 6.7rem;
+          }
+    
+          &.pregnancy {
+            left: 9.9rem;
+          }
+    
+          &.charging {
+            left: 13.1rem;
+          }
+        }
+      }
+    }
+    &__btn {
+      width: 2.6rem;
+      height: 2.6rem;
+      border-radius: 2rem;
+      background-color: var(--card-shadow-color);
+      margin-right: 0.2rem;
+      left: 0.2rem;
+      
+    }
+
+
+
+  }
+}

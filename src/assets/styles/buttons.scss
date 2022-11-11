@@ -13,10 +13,10 @@
   }
 
   &__marker {
-    top: 9.5rem;
+    top: 13rem;
   }
   &__trans {
-    top: 4rem;
+    top: 7.25rem;
   }
   &__btn {
     width: 100%;
@@ -81,6 +81,31 @@
   }
 }
 
+.filter__toggle {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--main-color);
+  border-radius: 2rem;
+  padding: 0;
+  line-height: 2.5rem;
+  margin: auto;
+  position: absolute;
+  right: -1rem;
+  top: 4rem;
+  z-index: 1;
+  transition: 0.2s ease-out;
+  &:hover {
+    background-color: var(--main-light-color);
+  }
+
+  img {
+    width: 1.8rem;
+    margin: auto;
+  }
+  &.active {
+  }
+}
+
 .mode__controller {
   pointer-events: auto;
   width: 20rem;
@@ -132,7 +157,7 @@
 
   position: absolute;
   right: -1rem;
-  top: 15rem;
+  top: 18.75rem;
 
   display: flex;
   align-items: center;
@@ -242,6 +267,19 @@
     }
     .locate {
       display: none;
+    }
+  }
+
+  .filter__toggle {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 2rem;
+    padding: 0;
+    right: 22rem;
+
+    img {
+      width: 1.8rem;
+      margin: auto;
     }
   }
 }

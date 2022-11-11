@@ -145,9 +145,16 @@
     right: 0;
     bottom: 0;
     height: 1.5rem;
-    width: 1.5rem;
+    width: auto;
     margin-bottom: 0.25rem;
+    display: flex;
+    &-pregnancy, &-disabled {
+      height: 1.5rem;
+      width: auto;
+      margin-left: 1rem;
+    }
   }
+
 }
 .detail__content {
   width: 100%;

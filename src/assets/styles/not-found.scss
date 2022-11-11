@@ -58,6 +58,19 @@
     box-shadow: 0 0 10px 1px var(--main-shadow-color);
   }
 }
+@media screen and (min-width: 600px) {
+  .not-found {
+    &__btn {
+      font-size: 1rem;
+      display: flex;
+      align-items: flex-end;
+      position: fixed;
+      left: 7rem;
+      bottom: 2rem;
+      width: auto;
+    }
+    }
+}
 
 @media screen and (min-width: 900px) {
   .not-found {
@@ -79,15 +92,6 @@
       transform: translate(-50%);
     }
   
-    &__btn {
-      font-size: 1rem;
-      display: flex;
-      align-items: flex-end;
-      position: fixed;
-      left: 7rem;
-      bottom: 2rem;
-      width: auto;
-    }
   
     &__img {
       position: absolute;
