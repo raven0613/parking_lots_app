@@ -34,7 +34,11 @@
         }
       }
     }
-
+  }
+  &__img {
+    width: 1.4rem;
+    height: 1.4rem;
+    margin: auto;
   }
 
   &__btn {
@@ -97,8 +101,11 @@
       left: 0.2rem;
       
     }
-
-
-
+    &__img {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin: auto;
+    }
   }
+
 }
