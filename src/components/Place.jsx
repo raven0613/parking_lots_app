@@ -23,6 +23,7 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
 
   useEffect(() => {
     const text = speech? speech : ''
+    setV(text)
     setInputingVal(text)
     setValue(text)
   }, [speech])
