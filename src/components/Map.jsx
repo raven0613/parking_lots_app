@@ -71,7 +71,6 @@ export default function Map() {
   //當搜尋 mode 改變時
   useEffect(() => {
     if (mode === 'self') {
-      console.log('current mode: ', mode)
 
       if (!isFollow) {
         //mode回到self後恢復跟隨
@@ -83,11 +82,9 @@ export default function Map() {
       return
     }
     if (mode === 'target') {
-      console.log('current mode: ', mode)
       return
     }
     if (mode === 'screen-center') {
-      console.log('current mode: ', mode)
       return
     }
   }, [mode])
