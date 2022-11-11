@@ -13,8 +13,7 @@ import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.sv
 const parkingLotsData = async() => {
   try {
     const response = await getParkingLots()
-    if (response.status !== 200) return console.log('抓不到停車場資料')
-    console.log('成功抓到停車場資料')
+    if (response.status !== 200) return
     return response.data.data.park
   }
   catch(error) {
@@ -27,8 +26,7 @@ const parkingLotsData = async() => {
 const remainingData = async() => {
   try {
     const response = await getRemaining()
-    if (response.statusText !== 'OK') return console.log('請稍後再試')
-    console.log('抓到剩餘車位資料')
+    if (response.statusText !== 'OK') return
     return response.data.data.park
   }
   catch(error) {
@@ -37,7 +35,7 @@ const remainingData = async() => {
 }
 //得到距離(這邊是經緯度)少於某數的所有停車場資料
 const getPointsInDistance = (datas, targetPoint, distance) => {
-  if(!datas) return console.log('no data')
+  if(!datas) return
   if (isNaN(distance)) return datas
 
   return datas.filter(data => 
@@ -85,7 +83,6 @@ export default function ParkingMark () {
 
   //一載入就抓所有資料
   useEffect(() => {
-    console.log('on ParkingMark load')
     //先把資料抓下來
     async function fetchParksData () {
       try {
@@ -139,7 +136,6 @@ export default function ParkingMark () {
     } 
     //檢查如果沒抓到資料就再抓一次
     if (!allParks) {
-      console.log('重新抓取allParks資料')
       async function fetchParksData () {
         try {
           if (isFetchingParks) return
@@ -177,7 +173,6 @@ export default function ParkingMark () {
     }
     //檢查如果沒抓到資料就再抓一次
     if (!allParks) {
-      console.log('重新抓取allParks資料')
       async function fetchParksData () {
         try {
           if (isFetchingParks) return
@@ -241,10 +236,8 @@ export default function ParkingMark () {
 
   // filter 條件切換
   useEffect(() => {
-    console.log(filterConditions)
     let filteredParkingLots = userFilterParks(filterConditions, allParks)
     setUserFilteredParks(filteredParkingLots)
-    console.log(filteredParkingLots)
   }, [filterConditions])
 
 
@@ -253,7 +246,6 @@ export default function ParkingMark () {
   useEffect(() => {
     //檢查如果沒抓到資料就再抓一次
     if (!allParks) {
-      console.log('重新抓取allParks資料')
       async function fetchParksData () {
         try {
           if (isFetchingParks) return
