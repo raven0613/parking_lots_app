@@ -7,6 +7,10 @@
   background-color: var(--main-color);
   border-radius: 2.5rem;
   right: -1rem;
+  transition: 0.2s ease-out;
+  &:hover {
+    background-color: var(--main-light-color);
+  }
 
   &__marker {
     top: 9.5rem;
@@ -20,6 +24,8 @@
     border: none;
     cursor: pointer;
     position: relative;
+    
+
     img {
       z-index: 1;
       width: 1.4rem;
@@ -41,12 +47,11 @@
     }
   }
   &__up {
+
     border-radius: 2.5rem 2.5rem 0 0;
-    background-color: var(--main-color);
   }
   &__down {
     border-radius: 0 0 2.5rem 2.5rem;
-    background-color: var(--main-color);
 
     &::before {
       transition: 0.25s ease-in;
@@ -60,7 +65,7 @@
       top: -2.3rem;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 0 10px 1px rgb(49, 165, 146);
+      box-shadow: 0 0 10px 1px var(--main-shadow-color);
     }
     &.active {
       &::before {
@@ -140,9 +145,18 @@
     padding: 0;
     margin: 0;
   }
+  transition: 0.2s ease-out;
+
+  &:hover {
+    background-color: var(--main-light-color);
+  }
   &.disabled {
     background-color: var(--card-border-color);
+    &:hover {
+      background-color: var(--card-border-color);
+    }
   }
+
 }
 .sidebar {
   .locate {

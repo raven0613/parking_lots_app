@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 
 
-export default function SelfMark ({selfPos}) {
+export default function SelfMarker ({selfPos}) {
 
   useEffect(() => {
     
