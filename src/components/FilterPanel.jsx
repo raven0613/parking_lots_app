@@ -64,7 +64,7 @@ export default function FilterPanel () {
             return setFilterConditions([...filterConditions, 'disabled'])
           }} 
         className={`filter__btn disabled ${isDisabledActive? 'active' : ''}`}>
-        <img className="filter__img" src={disabled} alt="disabled" />
+          <img className="filter__img" src={disabled} alt="disabled" />
         </button>
 
 
