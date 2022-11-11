@@ -36,7 +36,7 @@ export function getStraightDistance ( a, b ) {
 
 //初次取得資料時把需要的key都加進去
 export const formattedParksData = (parks, coordinatesConvert) => {
-  if (!parks || !coordinatesConvert) return console.log('formattedParksData no parks', parks)
+  if (!parks || !coordinatesConvert) return
 
   const formattedParks = parks.map(park => {
     const {id, area, name, summary, address, tel, payex, serviceTime, tw97x, tw97y, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo: {...FareInfo}, ChargingStation} = park
@@ -127,7 +127,6 @@ export const parksWithRemainings = (parkings, remainings) => {
 //計算到達時間
 export const getNearParksTime = (origin, destinations, setNearParks) => {
   console.log(origin, destinations)
-  console.log('要算一次到達時間囉')
   if (!origin || !destinations.length) return console.log('沒有起始點或目標不能算距離')
   const google = window.google;
   const service = new google.maps.DistanceMatrixService()
@@ -156,7 +155,6 @@ export const getNearParksTime = (origin, destinations, setNearParks) => {
 
 //獲得路線資訊
 export const handleFetchDirections = (origin, destination, state, setter) => {
-  console.log('推薦路線')
   //如果已經有路線，就把他清除
   if (state) {
     setter(null)
@@ -184,13 +182,11 @@ export const handleFetchDirections = (origin, destination, state, setter) => {
 
 //一次性取得使用者的 currentPosition並且設為地圖中央
 export const getUserPos = (setSelfPos, mode, setMapCenter) => {
-  console.log("getUserPos");
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         if (setSelfPos) {
           setSelfPos(() => {
-            console.log("setSelfPos");
             return {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
@@ -199,7 +195,6 @@ export const getUserPos = (setSelfPos, mode, setMapCenter) => {
           if(mode !== 'self') return
           if(!position) return
           setMapCenter(() => {
-            console.log("setMapCenter");
             return {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
@@ -219,13 +214,11 @@ export const getUserPos = (setSelfPos, mode, setMapCenter) => {
 
 //監控使用者的 currentPosition
 export const watchUserPos = (setSelfPos) => {
-  console.log('watchUserPos')
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
         if (setSelfPos) {
           setSelfPos(() => {
-            console.log("setSelfPos")
             return {
               lat: position.coords.latitude,
               lng: position.coords.longitude,

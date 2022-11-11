@@ -62,7 +62,7 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
       // setInputingVal(e.target.value)
 
       if (!isOnComposition && e.target.value) {
-        console.log("compositionend", e.target.value);
+        // console.log("compositionend", e.target.value);
       }
     } else {
       setIsOnComposition(true);

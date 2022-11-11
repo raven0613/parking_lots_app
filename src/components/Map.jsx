@@ -21,10 +21,7 @@ export default function Map() {
   const { mapCenter, setMapCenter, mode, setMode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal } = useContext(allContext)
 
   const location = useLocation()
-  //一載入就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
-  useEffect(() => {
-    console.log('Map load')
-  }, []);
+
 
   //網址改變就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
@@ -64,7 +61,6 @@ export default function Map() {
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
-    console.log('地圖載入')
     if (map.map) {
       return setMapInstance(map.map)
     }
@@ -98,8 +94,8 @@ export default function Map() {
 
   //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
   useEffect(() => {
-    if (!canFetchDirection) return console.log('canfetchDirection是 false')
-    if (!currentPark) return console.log('沒有點選停車場')
+    if (!canFetchDirection) return
+    if (!currentPark) return
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
     handleFetchDirections(selfPos, positon , directions, setDirections)
     //推薦完路線就改回false
@@ -132,7 +128,6 @@ export default function Map() {
         }}
         onDragStart={() => {
           setIsFollow(false)
-          if(mode === 'filter') return console.log('onDragStart 請先關閉篩選')
           setMode('screen-center')
         }}
         options={options}

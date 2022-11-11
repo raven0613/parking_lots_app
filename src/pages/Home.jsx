@@ -98,7 +98,6 @@ export default function Home() {
 
   //一載入就去抓使用者的上次交通工具設定
   useEffect(() => {
-    console.log("on page loaded");
     if (!localStorage.getItem('transOption')) return
     setTransOption(localStorage.getItem('transOption'))
   }, [])
