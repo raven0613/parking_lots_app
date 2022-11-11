@@ -39,7 +39,12 @@ export default function Speech (props) {
   if (isProcessing) return (
     <button 
       className="speech isProcessing">
-      <img src={speech} alt="speech"></img>
+      {/* <img className="speech__img" src={speech} alt="speech"></img> */}
+      <div className='speech__isProcessing'>
+        <div className="line"></div>
+        <div className="line"></div>
+        <div className="line"></div>
+      </div>
     </button>
   )
   return (
