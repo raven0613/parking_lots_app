@@ -39,7 +39,7 @@
     width: 1.4rem;
     height: 1.4rem;
     padding: 0;
-    margin: auto;
+    margin: 0;
   }
 
   &__btn {
@@ -48,7 +48,12 @@
     border-radius: 2rem;
     background-color: var(--card-shadow-color);
     margin-right: 0.2rem;
-    
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
     position: absolute;
     right: 0.2rem;
     opacity: 0;
