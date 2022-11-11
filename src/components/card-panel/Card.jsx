@@ -15,7 +15,6 @@ export default function Card (props) {
   const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id, Handicap_First, summary } = props.park
   const { currentPark, setCurrentPark } = props
 
-  const positon = {lng: props.park.lng, lat: props.park.lat}
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()

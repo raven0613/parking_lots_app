@@ -29,9 +29,6 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
 
 
 
-  useEffect(() => {
-    setInputingVal('')
-  }, [location])
   //網址上有地址進來的時候設定target，並且寫入inputValue
   useEffect(() => {
     if (!targetAddressRef.current) return
@@ -108,7 +105,7 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     const ref = useOnclickOutside(() => {
       clearSuggestions()
     })
-    const [v, setV] = useState()
+    const [v, setV] = useState('')
 
   return (
     <>

@@ -32,6 +32,12 @@ export default function CardPanel (props) {
     } 
    },[location]) 
 
+  const isCurrentCardOnly = () => {
+    if (!nearParks) return true
+    if (!currentPark) return false
+    return nearParks.some(park => park.id === currentPark.id)
+  }
+
   return (
     <div 
     onClick={() => {
@@ -52,11 +58,13 @@ export default function CardPanel (props) {
         {/* 都沒有的話就顯示提示 */}
         {!currentPark? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
 
-        {/* {currentPark? <Card 
+        {!isCurrentCardOnly() && currentPark && <Card 
         key={ currentPark.id } 
         park={ currentPark } 
+        currentPark={currentPark}
+        setCurrentPark={setCurrentPark}
         isCurr={true} 
-        /> : <></>} */}
+        />}
   
         {/* {parksWithoutCurrentPark && parksWithoutCurrentPark.map(park => {
           return (
