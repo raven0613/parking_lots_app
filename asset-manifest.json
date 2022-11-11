@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/parking_lots_app/static/css/main.3f6706c5.css",
+    "main.css": "/parking_lots_app/static/css/main.cda31ed0.css",
     "main.js": "/parking_lots_app/static/js/main.ae6f0296.js",
     "static/media/404word.svg": "/parking_lots_app/static/media/404word.b3b3ad2e7bd637311d4935d4fea05a87.svg",
     "static/media/name.svg": "/parking_lots_app/static/media/name.0faf22a0f3c1ae146181cb1f8411a3f4.svg",
@@ -40,11 +40,11 @@
     "static/media/marker-parking.svg": "/parking_lots_app/static/media/marker-parking.845fbfcf283de787086ed7763e195d11.svg",
     "static/media/filter-clear.svg": "/parking_lots_app/static/media/filter-clear.28de3203f30d9ead7f1291052163bee6.svg",
     "static/media/map-center.svg": "/parking_lots_app/static/media/map-center.0e304bcbde652857803b5f978713fda0.svg",
-    "main.3f6706c5.css.map": "/parking_lots_app/static/css/main.3f6706c5.css.map",
+    "main.cda31ed0.css.map": "/parking_lots_app/static/css/main.cda31ed0.css.map",
     "main.ae6f0296.js.map": "/parking_lots_app/static/js/main.ae6f0296.js.map"
   },
   "entrypoints": [
-    "static/css/main.3f6706c5.css",
+    "static/css/main.cda31ed0.css",
     "static/js/main.ae6f0296.js"
   ]
 }
