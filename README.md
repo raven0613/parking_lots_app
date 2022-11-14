@@ -1,70 +1,96 @@
-# Getting Started with Create React App
+# 啾啾停車
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
+## 專案介紹
 
-### `npm start`
+這是一個可以幫你在台北市快速找到適合停車場的 WebApp
+[網站連結](https://raven0613.github.io/parking_lots_app/#)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+\*電腦版
+![PC01](https://user-images.githubusercontent.com/93082842/201565101-401fd4f1-5404-4a55-b43e-e6546b45f580.gif)
+＊手機版
+![MB01](https://user-images.githubusercontent.com/93082842/201565122-06bf9967-6ebf-43f0-8dd6-139cc9aa8687.gif)
+＊搜尋並推薦路線
+![PC02](https://user-images.githubusercontent.com/93082842/201565130-80a7638c-44b4-4247-8013-3d266d48830b.gif)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 在這個網站，你可以——
 
-### `npm test`
+<ul>
+<li>尋找適合的停車場</li>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. 直接使用地圖定位自身，移動時即時顯示附近停車場
+2. 以圖標顏色分辨車位數足夠的停車場
+3. 滑動地圖後即時顯示中心點附近的停車場位置
+4. 一鍵切換顯示機車或汽車停車場
+5. 一鍵切換顯示價格或剩餘車位數
+6. 快速篩選有充電站、身障車位、孕婦優先的停車場
+7. 定位回自身位置
+8. 以更新後秒數來確認畫面上是否為最新資料
 
-### `npm run build`
+<li>確認詳細資訊</li>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. 點選圖標可以看見停車場的詳細資訊（車位數量、名稱、費率、營業時間等）
+2. 電腦版右側欄；手機板點選底部的附近停車場，可以概覽附近所有停車場資料
+3. 從附近停車場可以直接點選停車場卡片，查看詳細資訊並在地圖上顯示
+4. 點選路線按紐，得知推薦的行駛路線、所需時間
+5. 在目標停車場剩餘車位歸零時得到提醒
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<li>搜尋目的地</li>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. 輸入目的地搜尋附近的停車場（支援語音辨識）
+2. 按 X 一鍵刪除搜尋資料與內容
 
-### `npm run eject`
+</ul>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 安裝專案
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 在 terminal 輸入以下文字，複製專案至本機資料夾中
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+git clone https://github.com/raven0613/parking_lots_app
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+※以下步驟請確認 terminal 的目前資料夾位置是在 parking_lots_app※
 
-## Learn More
+### 下載 node_modules
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+npm install
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 啟動專案
 
-### Code Splitting
+```
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 在任一瀏覽器網址列輸入以下網址，開始體驗！
 
-### Analyzing the Bundle Size
+```
+http://localhost:3000/
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+關閉專案請在 terminal 輸入 ctrl / command + C
 
-### Making a Progressive Web App
+## 開發工具
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+<ul dir="auto">
+<li>react 18.2.0</li>
+<li>react-router-dom 1.9.0</li>
+<li>axios 0.19.2</li>
+<li>@react-google-maps/api 2.13.1</li>
+<li>use-places-autocomplete 4.0.0</li>
+<li>proj4 2.8.0</li>
+<li>gh-pages 4.0.0</li>
+<li>Figma</li>
+詳細可參考 package.json
+</ul>
 
-### Advanced Configuration
+## 素材來源
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+[svgrepo](https://www.svgrepo.com/)
 
-### Deployment
+## API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[臺北市停車場資訊、剩餘停車位數](https://data.gov.tw/dataset/128435)
