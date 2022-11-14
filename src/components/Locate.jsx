@@ -1,12 +1,19 @@
 import locate from '../assets/images/locate.svg'
 import { useContext } from 'react';
-import { allContext } from '../pages/Home'
+// import { allContext } from '../pages/Home'
+import { allContext } from '../utils/Provider'
+
+import { useSelector, useDispatch } from 'react-redux'
+import { setMode } from '../reducer/reducer'
 
 export default function Locate () {
-  const { mode, setMode, selfPos, mapInstance, setIsFollow } = useContext(allContext)
+  const selfPos = useSelector((state) => state.map.selfPos)
+  const mode = useSelector((state) => state.map.mode)
+  const dispatch = useDispatch()
+  
+  const { mapInstance, setIsFollow } = useContext(allContext)
 
   
-
   const disabled = mode ? '' : 'disabled'
 
   if (mode !== 'screen-center') {
@@ -15,7 +22,7 @@ export default function Locate () {
         onClick={() => {
           if (!setIsFollow) return
           if (!mapInstance) return
-          if (!selfPos) return
+          if (!selfPos?.lat) return
 
           setIsFollow(true)
           //一旦移動了就不跟隨，按下locate後恢復跟隨
@@ -36,8 +43,7 @@ export default function Locate () {
   return (
     <button 
       onClick={() => {
-        // if (!selfPos) return
-        setMode('self')
+        dispatch(setMode('self'))
       }} 
       className={`locate ${disabled}`}>
       <img src={locate} alt="locate"></img>

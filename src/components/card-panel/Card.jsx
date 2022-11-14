@@ -11,23 +11,29 @@ import serviceTimeImg from '../../assets/images/service-time.svg'
 import telImg from '../../assets/images/tel.svg'
 import { useState } from "react";
 
+import { useDispatch } from 'react-redux'
+// import { setCurrentPark } from '../../utils/Provider'
+import { setCurrentPark } from '../../reducer/reducer'
 
 
 export default function Card (props) {
   const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id, Handicap_First, summary, ChargingStation, Pregnancy_First } = props.park
-  const { currentPark, setCurrentPark } = props
+  const { currentPark } = props
+
+  const dispatch = useDispatch()
+
 
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()
-  const isDisabled = summary.includes('身心') || Handicap_First > 0
+  const isDisabled = summary?.includes('身心') || Handicap_First > 0
   const isPregnancy = Pregnancy_First > 0
 
   const [cardClass, setCardClass] = useState('card')
 
 
   useEffect(() => {
-    if (!currentPark) return
+    if (!currentPark?.id) return
     if (id === currentPark.id) return setCardClass('card current')
     if (id !== currentPark.id) return setCardClass('card')
   }, [currentPark])
@@ -36,14 +42,15 @@ export default function Card (props) {
   return (
     <div 
     onClick={(e) => {
-      if (currentPark && id === currentPark.id) return
+      if (currentPark?.id && id === currentPark.id) return
       e.stopPropagation()
-      //改變網址(先確定有沒有開啟nearby)
+      //改變網址(先確定有沒有querystring)
       const queryStr = location.search
       navigate(`/map/${id}${queryStr}`, {push: true})
 
       //點擊卡片設定為目前點選的停車場
-      setCurrentPark(props.park)
+      // setCurrentPark(props.park)
+      dispatch(setCurrentPark(props.park))
     }}
     className={cardClass}>
 

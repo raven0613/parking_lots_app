@@ -4,9 +4,13 @@ import { getParkingLots, getRemaining } from '../apis/places'
 import { Marker } from '@react-google-maps/api';
 import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks } from '../utils/helpers'
 import { useState, useEffect, useContext, useRef } from 'react';
-import { allContext } from '../pages/Home'
+// import { allContext } from '../pages/Home'
+import { allContext } from '../utils/Provider'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.svg'
+
+import { useSelector, useDispatch } from 'react-redux'
+import { setCurrentPark, setNearParks, setRemainings } from '../reducer/reducer'
 
 
 //從API得到所有停車場資料
@@ -64,7 +68,18 @@ const combinedInitAllParksData = (parks, formattedParksData, coordinatesConvert,
 
 
 export default function ParkingMark () {
-  const { nearParks, setNearParks, allParks, setAllParks, mode, transOption, mapCenter, target, selfPos, setDirections, currentPark, setCurrentPark, setCanFetchDirection, remainings, setRemainings, mapInstance, markerOption, setIsEmptyParkId, filterConditions, userFilteredParks, setUserFilteredParks } = useContext(allContext)
+  const mode = useSelector((state) => state.map.mode)
+  const transOption = useSelector((state) => state.park.transOption)
+  const markerOption = useSelector((state) => state.park.markerOption)
+  const currentPark = useSelector((state) => state.park.currentPark)
+  const nearParks = useSelector((state) => state.park.nearParks)
+  const remainings = useSelector((state) => state.park.remainings)
+  const mapCenter = useSelector((state) => state.map.mapCenter)
+  const target = useSelector((state) => state.map.target)
+  const dispatch = useDispatch()
+
+
+  const { selfPos, setDirections, setIsEmptyParkId, filterConditions} = useContext(allContext)
   
   //fetching狀態
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
@@ -80,6 +95,8 @@ export default function ParkingMark () {
   const parkId = params.parkId
   //記住網址原本的id值
   const parkIdRef = useRef()
+  const [allParks, setAllParks] = useState()
+  const [userFilteredParks, setUserFilteredParks] = useState([])
 
   //一載入就抓所有資料
   useEffect(() => {
@@ -106,7 +123,7 @@ export default function ParkingMark () {
         setIsFetchingRemaining(true)
         const remainings = await remainingData()
         if(!remainings) return
-        setRemainings(remainings) 
+        dispatch(setRemainings(remainings))
         setIsFetchingRemaining(false)       
       } 
       catch (error) {
@@ -125,13 +142,16 @@ export default function ParkingMark () {
     
   }, [])
 
+
+
   //有所有停車場資料(initParkingLots)後 & 網址改變時
   useEffect(() => {
     //偵測網址上有沒有parkId要導航
     if (!allParks) return
     if (!parkId) {
       setDirections(null)
-      setCurrentPark(null)
+      dispatch(setCurrentPark(null))
+      // setCurrentPark(null)
       return
     } 
     //檢查如果沒抓到資料就再抓一次
@@ -158,39 +178,25 @@ export default function ParkingMark () {
     if (!paramsPark) return setIsEmptyParkId(true)
     
     //確保拿到最新的資料
-    setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])
+    // setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])
+    dispatch(setCurrentPark(parksWithRemainings([paramsPark], remainings)[0]))
     
     //網址改變只要不是改到id 就不要推薦路線
     if(parkIdRef.current === parkId) return
     parkIdRef.current = paramsPark.id
   }, [allParks, location])
 
+
+
   //剩餘車位資料成功抓進來後重新丟進 currentPark
   useEffect(() => {
-    if (currentPark) {
+    if (currentPark?.id) {
       const currentParksWithRemainings = parksWithRemainings([currentPark], remainings)[0]
-      setCurrentPark(currentParksWithRemainings)
-    }
-    //檢查如果沒抓到資料就再抓一次
-    if (!allParks) {
-      async function fetchParksData () {
-        try {
-          if (isFetchingParks) return
-          setIsFetchingParks(true)
-          const parks = await parkingLotsData()
-          const allParks = combinedInitAllParksData(parks, formattedParksData, coordinatesConvert, payexFilter)
-          
-          setAllParks(allParks) 
-          setIsFetchingParks(false)       
-        } 
-        catch (error) {
-          setIsFetchingParks(false)
-          console.log(error)
-        }
-      }
-      fetchParksData ()
+      // setCurrentPark(currentParksWithRemainings)
+      dispatch(setCurrentPark(currentParksWithRemainings))
     }
   }, [remainings])
+
 
   //selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
   useEffect(() => {
@@ -202,7 +208,7 @@ export default function ParkingMark () {
     //篩選只顯示>0的
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
 
-    setNearParks(availablePark)
+    dispatch(setNearParks(availablePark))
   }, [selfPos, mode, transOption, remainings, userFilteredParks])
 
   // target的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
@@ -215,7 +221,7 @@ export default function ParkingMark () {
     filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
 
-    setNearParks(availablePark)
+    dispatch(setNearParks(availablePark))
   }, [target, mode, transOption, remainings, userFilteredParks])
 
   // mapCenter的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
@@ -230,7 +236,7 @@ export default function ParkingMark () {
     
     //篩掉0的
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
-    setNearParks(availablePark)
+    dispatch(setNearParks(availablePark))
   }, [mapCenter, mode, transOption, remainings, userFilteredParks])
 
 
@@ -242,9 +248,8 @@ export default function ParkingMark () {
 
 
 
-  //mapCenter, target改變時重新算一次時間
+  //mapCenter, remainings 改變時檢查如果沒抓到資料就再抓一次
   useEffect(() => {
-    //檢查如果沒抓到資料就再抓一次
     if (!allParks) {
       async function fetchParksData () {
         try {
@@ -262,16 +267,11 @@ export default function ParkingMark () {
       } 
       fetchParksData ()
     }
-    //如果是在使用者附近就顯示五分鐘內
-    if (mode === 'self') return
-    // if (!selfPos || !nearParks) return
-    // getNearParksTime(selfPos, nearParks, setNearParks)
-  }, [mapCenter, target, location])
+  }, [mapCenter, remainings])
 
 
   //icon 的設定
   const icon = (transOption, place, isCurr) => {
-    const google = window.google
     if (availableCounts(transOption, place) < 10) {
       return {
         url: isCurr ? '' : parkMarkerSmall,
@@ -303,14 +303,14 @@ export default function ParkingMark () {
   }
 
   const nearParksWithOutCurrent = nearParks?.filter(park => {
-    if (!currentPark) return park
+    if (!currentPark?.id) return park
     return park.id !== currentPark.id
   })
   //因為 state 的值更新後此 component 會重新 render，所以先判斷 state 到底存不存在
   return (
     <>
       {/* <ParkMarker className="marker__current" alt="logo" stroke="#DB7290" /> */}
-      {currentPark && 
+      {currentPark?.id && 
         <Marker 
         position={{lng: currentPark.lng, lat: currentPark.lat}} 
         icon={icon(transOption, currentPark, true)}
@@ -338,12 +338,11 @@ export default function ParkingMark () {
             className="marker"
             position={positon} 
             key={park.id} 
-            // animation={window.google.maps.Animation.DROP}
             onClick={() => {
               //改變網址   如果有query就要包含上去   
               const queryStr = location.search
               navigate(`/map/${park.id}${queryStr}`, {push: true})
-              setCurrentPark(park)
+              dispatch(setCurrentPark(park))
             }} />
         )
       })}

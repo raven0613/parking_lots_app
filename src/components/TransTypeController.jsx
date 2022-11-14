@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import car from '../assets/images/car-.svg'
 import motor from '../assets/images/motorbike.svg'
+// import { allContext } from '../pages/Home'
+import { allContext } from '../utils/Provider'
 
-export default function TransTypeController (props) {
-  const { transOption, setTransOption } = props
+import { useSelector, useDispatch } from 'react-redux'
+import { setTransOption } from '../reducer/reducer'
+
+export default function TransTypeController () {
+  const transOption = useSelector((state) => state.park.transOption)
+  const dispatch = useDispatch()
+  
   const [isCar, setIsCar] = useState(true)
 
   let disabled = transOption? '' : 'disabled'
@@ -13,7 +20,12 @@ export default function TransTypeController (props) {
   let motorClass = `${disabled} control-type__btn control-type__down 
   ${isCar? '' : 'active'}`
   
-
+  //一載入就去抓使用者的上次交通工具設定
+  useEffect(() => {
+    if (!localStorage.getItem('transOption')) return
+    dispatch(setTransOption(localStorage.getItem('transOption')))
+  }, [])
+  
   useEffect(() => {
     if (!transOption) return
     if (transOption === 'car')  {
@@ -28,11 +40,11 @@ export default function TransTypeController (props) {
     <div className='control-type control-type__trans'
       onClick={() => {
         if(transOption === 'car') {
-          setTransOption('motor')
+          dispatch(setTransOption('motor'))
           localStorage.setItem('transOption', 'motor')
         }
         if(transOption === 'motor') { 
-          setTransOption('car') 
+          dispatch(setTransOption('car') )
           localStorage.setItem('transOption', 'car')
         }
       }}

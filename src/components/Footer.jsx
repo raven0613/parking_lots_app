@@ -2,12 +2,21 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import mapSearch from '../assets/images/map-search.svg'
 import selfSearch from '../assets/images/self-search.svg'
 import nearby from '../assets/images/nearby.svg'
-import { allContext } from '../pages/Home'
+// import { allContext } from '../pages/Home'
+import { allContext } from '../utils/Provider'
 import { useContext } from 'react';
 
-export default function Footer (props) {
-  const { isNearActive, setIsNearActive } = props
-  const { mode, setMode, setIsFollow, mapInstance, selfPos } = useContext(allContext)
+
+import { useSelector, useDispatch } from 'react-redux'
+import { setMode } from '../reducer/reducer'
+
+
+export default function Footer () {
+  const selfPos = useSelector((state) => state.map.selfPos)
+  const mode = useSelector((state) => state.map.mode)
+  const dispatch = useDispatch()
+
+  const { setIsFollow, mapInstance, isNearActive, setIsNearActive } = useContext(allContext)
 
   let selfClass = `footer__btn ${mode === 'self' ? '' : ''}`
   let screenClass = `footer__btn ${isNearActive ? '' : 'active'}`
@@ -24,7 +33,6 @@ export default function Footer (props) {
         onClick={() => {
           const currPath = location.pathname
           navigate(`${currPath}`, {push: true})
-          // setMode("screen-center")
           //改成只是把cardPanel關掉，原本有點選卡片的話要保留
           setIsNearActive(false)
         }} 
@@ -49,7 +57,7 @@ export default function Footer (props) {
             mapInstance.map.panTo(selfPos)
           }
           navigate(`${location.pathname}`, {push: true})
-          setMode("self")
+          dispatch(setMode("self"))
         }} 
       className={selfClass}>
         <img src={selfSearch} alt="self-search"></img>

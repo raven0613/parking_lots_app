@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
-export default function SecondsCounter ({remainings}) {
+export default function SecondsCounter () {
+  const remainings = useSelector((state) => state.park.remainings)
+
   const [afterLastFetch, setAfterLastFetch] = useState(0)
   // 距離上次抓到資料隔多久
 

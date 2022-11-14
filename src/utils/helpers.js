@@ -51,7 +51,7 @@ export const formattedParksData = (parks, coordinatesConvert) => {
 }
 
 export const userFilterParks = (conditions, parks) => {
-  if (!parks || !conditions) return console.log('沒有資料可篩選')
+  if (!parks || !conditions) return
   let newArr = []
   conditions.forEach(condition => {
     if (condition === 'disabled') {
@@ -86,10 +86,8 @@ export const userFilterParks = (conditions, parks) => {
 
 //篩選汽車/機車資料
 export const parksTransFilter = (parkings, transOption) => {
-  if(!parkings) {
-    console.log('[trans]no parking data')
-    return []
-  } 
+  if(!parkings) return []
+
   if (transOption === 'car') {
     return parkings.filter(park => park.totalcar !== 0)
   }
@@ -100,14 +98,9 @@ export const parksTransFilter = (parkings, transOption) => {
 
 //把剩餘車位的資料合併進停車場資料(回傳陣列資料)
 export const parksWithRemainings = (parkings, remainings) => {
-  if (!parkings) {
-    console.log('combine remainings - no parkings data')
-    return []
-  }
-  if (!remainings) {
-    console.log('combine remainings - no remainings data')
-    return parkings
-  }
+  if (!parkings) return []
+  if (!remainings) return parkings
+
   return parkings.map(park => {
     //find 找出 id 相符的資料
     const data = remainings.find(rm => rm.id === park.id)
@@ -126,8 +119,8 @@ export const parksWithRemainings = (parkings, remainings) => {
 
 //計算到達時間
 export const getNearParksTime = (origin, destinations, setNearParks) => {
-  console.log(origin, destinations)
-  if (!origin || !destinations.length) return console.log('沒有起始點或目標不能算距離')
+  
+  if (!origin || !destinations.length) return
   const google = window.google;
   const service = new google.maps.DistanceMatrixService()
   service.getDistanceMatrix({
@@ -159,7 +152,7 @@ export const handleFetchDirections = (origin, destination, state, setter) => {
   if (state) {
     setter(null)
   }
-  if (!origin || !destination) return console.log("沒有目標");
+  if (!origin || !destination) return 
   
   const google = window.google;
 
@@ -180,26 +173,25 @@ export const handleFetchDirections = (origin, destination, state, setter) => {
   )
 }
 
+
 //一次性取得使用者的 currentPosition並且設為地圖中央
-export const getUserPos = (setSelfPos, mode, setMapCenter) => {
+export const getUserPos = (dispatch, setSelfPos, mode, setMapCenter) => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         if (setSelfPos) {
-          setSelfPos(() => {
-            return {
+          dispatch(setSelfPos({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             }
-          })
+          ))
           if(mode !== 'self') return
           if(!position) return
-          setMapCenter(() => {
-            return {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-          });
+          
+          dispatch(setMapCenter({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }))
         }
       },
       (error) => {
@@ -213,18 +205,14 @@ export const getUserPos = (setSelfPos, mode, setMapCenter) => {
 }
 
 //監控使用者的 currentPosition
-export const watchUserPos = (setSelfPos) => {
+export const watchUserPos = (dispatch, setSelfPos) => {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
-        if (setSelfPos) {
-          setSelfPos(() => {
-            return {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            }
-          })
-        }
+        dispatch(setSelfPos({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        }))
       },
       (error) => {
         console.log('無法取得您的位置', error)
@@ -235,6 +223,7 @@ export const watchUserPos = (setSelfPos) => {
     alert("你的裝置不支援地理位置功能。");
   }
 }
+
 //目前問題: 中山堂  中山雅樂軒
 //土法煉鋼篩價格
 export const payexFilter = (allParks) => {

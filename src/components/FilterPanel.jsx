@@ -4,7 +4,8 @@ import pregnancy from '../assets/images/pregnancy.svg'
 import filterClear from '../assets/images/filter-clear.svg'
 import filter from '../assets/images/filter.svg'
 import { useState, useContext, useEffect } from "react";
-import { allContext } from '../pages/Home'
+// import { allContext } from '../pages/Home'
+import { allContext } from '../utils/Provider'
 
 
 export default function FilterPanel () {

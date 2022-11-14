@@ -1,17 +1,21 @@
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useState, useContext, useEffect } from "react";
-import { allContext } from '../../pages/Home'
+// import { allContext } from '../../pages/Home'
+import { allContext } from '../../utils/Provider'
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
 
+import { useSelector } from 'react-redux'
 
 
+export default function CardPanel () {
+  const currentPark = useSelector((state) => state.park.currentPark)
+  const nearParks = useSelector((state) => state.park.nearParks)
+  const mode = useSelector((state) => state.map.mode)
 
-export default function CardPanel (props) {
-  const { nearParks, setCurrentPark, currentPark, setCanFetchDirection, selfPos, mode  } = useContext(allContext)
-  const { setIsNearActive, isNearActive } = props
+  const { setIsNearActive, isNearActive  } = useContext(allContext)
   //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
-  const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
+  // const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
 
   //路由相關
   const navigate = useNavigate()
@@ -34,7 +38,7 @@ export default function CardPanel (props) {
 
   const isCurrentCardOnly = () => {
     if (!nearParks) return true
-    if (!currentPark) return false
+    if (!currentPark?.id) return false
     return nearParks.some(park => park.id === currentPark.id)
   }
 
@@ -58,11 +62,9 @@ export default function CardPanel (props) {
         {/* 都沒有的話就顯示提示 */}
         {!currentPark? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
 
-        {!isCurrentCardOnly() && currentPark && <Card 
+        {!isCurrentCardOnly() && currentPark?.id && <Card 
         key={ currentPark.id } 
         park={ currentPark } 
-        currentPark={currentPark}
-        setCurrentPark={setCurrentPark}
         isCurr={true} 
         />}
   
@@ -72,7 +74,6 @@ export default function CardPanel (props) {
             key={ park.id } 
             park={ park } 
             setCurrentPark={setCurrentPark}
-            setCanFetchDirection={setCanFetchDirection}
             mode={mode} />
           )
         })} */}
@@ -82,7 +83,6 @@ export default function CardPanel (props) {
             key={ park.id } 
             park={ park } 
             currentPark={currentPark}
-            setCurrentPark={setCurrentPark}
             mode={mode} />
           )
         })}
