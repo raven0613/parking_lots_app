@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import mapSearch from '../assets/images/map-search.svg'
 import selfSearch from '../assets/images/self-search.svg'
 import nearby from '../assets/images/nearby.svg'
-import { allContext } from '../store/UIDataProvider'
+import { mapContext } from '../store/UIDataProvider'
 
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,7 +15,7 @@ export default function Footer () {
   const mode = useSelector((state) => state.map.mode)
   const dispatch = useDispatch()
   const [isNearActive, setIsNearActive] = useState(false)
-  const { mapInstance } = useContext(allContext)
+  const { mapInstance } = useContext(mapContext)
 
   let selfClass = `footer__btn ${mode === 'self' ? '' : ''}`
   let screenClass = `footer__btn ${isNearActive ? '' : 'active'}`

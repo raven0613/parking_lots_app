@@ -7,10 +7,11 @@ import { GoogleMap, Marker, DirectionsRenderer, useLoadScript, useJsApiLoader } 
 import { useLocation } from 'react-router-dom'
 
 import ParkingMark from "./ParkingMark"
+import ParkMarkerController from "./ParkMarkerController"
 import SelfMarker from "./SelfMarker"
 import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
 
-import { allContext } from '../store/UIDataProvider'
+import { mapContext } from '../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow } from '../reducer/reducer'
@@ -27,7 +28,7 @@ export default function Map({setIsGoogleApiLoaded}) {
   const dispatch = useDispatch()
 
   //定義來源名稱
-  const { mapInstance, setMapInstance, directions, setDirections } = useContext(allContext)
+  const { mapInstance, setMapInstance, directions, setDirections } = useContext(mapContext)
   
   const location = useLocation()
   const [libraries] = useState(["places"])
@@ -193,7 +194,7 @@ export default function Map({setIsGoogleApiLoaded}) {
               className: 'marker'
             }}
             />}
-          <ParkingMark />
+          <ParkMarkerController />
         </GoogleMap>
       </div>}
     </>

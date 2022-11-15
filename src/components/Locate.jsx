@@ -1,6 +1,6 @@
 import locate from '../assets/images/locate.svg'
 import { useContext } from 'react';
-import { allContext } from '../store/UIDataProvider'
+import { mapContext } from '../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setMode, setIsFollow } from '../reducer/reducer'
@@ -10,7 +10,7 @@ export default function Locate () {
   const mode = useSelector((state) => state.map.mode)
   const dispatch = useDispatch()
   
-  const { mapInstance } = useContext(allContext)
+  const { mapInstance } = useContext(mapContext)
 
   
   const disabled = mode ? '' : 'disabled'

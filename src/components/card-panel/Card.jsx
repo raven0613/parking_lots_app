@@ -36,7 +36,7 @@ export default function Card (props) {
     if (id === currentPark.id) return setCardClass('card current')
     if (id !== currentPark.id) return setCardClass('card')
   }, [currentPark])
-
+  
   
   return (
     <div 

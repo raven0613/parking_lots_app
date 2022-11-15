@@ -11,6 +11,7 @@ import FilterPanel from '../components/FilterPanel'
 import Sidebar from '../components/Sidebar'
 import Footer from '../components/Footer'
 import Warning from '../components/Warning'
+import ParkDataManager from '../components/ParkMarkerController'
 
 
 import { useSelector } from 'react-redux'

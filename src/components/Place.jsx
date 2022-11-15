@@ -4,7 +4,7 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 import useOnclickOutside from "react-cool-onclickoutside"
 import "@reach/combobox/styles.css"
 import { useEffect, useState, useRef, useContext } from 'react'
-import { allContext } from '../store/UIDataProvider'
+import { mapContext } from '../store/UIDataProvider'
 
 import { useDispatch } from 'react-redux'
 import { setMode, setMapCenter, setTarget } from '../reducer/reducer'
@@ -13,7 +13,7 @@ import Speech from './Speech'
 export default function Place () {
   const dispatch = useDispatch()
 
-  const { mapInstance } = useContext(allContext)
+  const { mapInstance } = useContext(mapContext)
   const targetAddressRef = useRef(null)
 
   const [ speech, setSpeech ] =  useState()

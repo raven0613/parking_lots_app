@@ -11,7 +11,7 @@ import tel from '../assets/images/tel.svg'
 import back from '../assets/images/back.svg'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState, useContext } from 'react'
-import { allContext } from '../store/UIDataProvider'
+import { mapContext } from '../store/UIDataProvider'
 import { useRef } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -22,7 +22,7 @@ export default function DetailPanel () {
   const currentPark = useSelector((state) => state.park.currentPark)
   const dispatch = useDispatch()
   
-  const { directions, setDirections } = useContext(allContext)
+  const { directions, setDirections } = useContext(mapContext)
   const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
