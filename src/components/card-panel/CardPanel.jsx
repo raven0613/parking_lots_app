@@ -68,16 +68,6 @@ export default function CardPanel () {
         park={ currentPark } 
         isCurr={true} 
         />}
-  
-        {/* {parksWithoutCurrentPark && parksWithoutCurrentPark.map(park => {
-          return (
-            <Card 
-            key={ park.id } 
-            park={ park } 
-            setCurrentPark={setCurrentPark}
-            mode={mode} />
-          )
-        })} */}
         {nearParks && nearParks.map(park => {
           return (
             <Card 

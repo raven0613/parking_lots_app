@@ -49,14 +49,18 @@ export const parkReducer = parkSlice.reducer
 export const mapSlice = createSlice({
   name: 'map',
   initialState: { 
+    isLocateDenied: false,
     mode: 'self',
-    selfPos: { lat: '', lng: '' },
+    selfPos: '',
     mapCenter: { lng: 121.51763286051023, lat: 25.04194409222794 },
     target: { lat: '', lng: '' },
     canFetchDirection: false,
     isFollow: true
    },
   reducers: {
+    setIsLocateDenied: (state, action) => {
+      state.isLocateDenied = action.payload
+    },
     //決定地圖中心在哪裡：self, target, screen-center
     setMode: (state, action) => {
       state.mode = action.payload
@@ -80,5 +84,5 @@ export const mapSlice = createSlice({
   }
 })
 
-export const { setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection, setIsFollow } = mapSlice.actions
+export const { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection, setIsFollow } = mapSlice.actions
 export const mapReducer = mapSlice.reducer

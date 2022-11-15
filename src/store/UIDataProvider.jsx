@@ -16,22 +16,12 @@ export default function Provider () {
 
   const [isGoogleApiLoaded, setIsGoogleApiLoaded] = useState(false)
 
-
-  const [nearParksWithOutCurrent, setNearParksWithOutCurrent] = useState()
-  const [parkIcon, setParkIcon] = useState()
-  const [parkLabel, setParkLabel] = useState()
-  const [onParkMarkClicked, setOnParkMarkClicked] = useState(false, {})
-
   
   const mapUIcontextValue = {
     mapInstance, setMapInstance, 
     directions, setDirections
   }
   const parkUIContextValue = {
-    nearParksWithOutCurrent, setNearParksWithOutCurrent,
-    parkIcon, setParkIcon,
-    parkLabel, setParkLabel,
-    onParkMarkClicked, setOnParkMarkClicked
   }
 
   return (

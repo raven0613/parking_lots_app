@@ -76,7 +76,8 @@ export const userFilterParks = (conditions, parks) => {
       newArr = parks.filter(park => Number(park.ChargingStation) > 0)
     }
     if (condition === 'all') {
-      newArr = [...parks]
+      // newArr = [...parks]
+      newArr = []
     }
   })
   
@@ -175,7 +176,7 @@ export const handleFetchDirections = (origin, destination, state, setter) => {
 
 
 //一次性取得使用者的 currentPosition並且設為地圖中央
-export const getUserPos = (dispatch, setSelfPos, mode, setMapCenter) => {
+export const getUserPos = (dispatch, setSelfPos, mode, setMapCenter, setMode, setIsLocateDenied) => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -195,6 +196,14 @@ export const getUserPos = (dispatch, setSelfPos, mode, setMapCenter) => {
         }
       },
       (error) => {
+        if (error.code === 1) {
+          dispatch(setIsLocateDenied(true))
+          //不給的話就定居台北市
+          dispatch(setMapCenter({lat: 25.0408065, lng: 121.5397976}))
+          dispatch(setMode('screen-center'))
+          console.log('您拒絕了')
+          return
+        }
         console.log('無法取得您的位置', error)
       }
     );
@@ -205,7 +214,7 @@ export const getUserPos = (dispatch, setSelfPos, mode, setMapCenter) => {
 }
 
 //監控使用者的 currentPosition
-export const watchUserPos = (dispatch, setSelfPos) => {
+export const watchUserPos = (dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied) => {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
@@ -215,6 +224,13 @@ export const watchUserPos = (dispatch, setSelfPos) => {
         }))
       },
       (error) => {
+        if (error.code === 1) {
+          dispatch(setIsLocateDenied(true))
+          dispatch(setMapCenter({lat: 25.0408065, lng: 121.5397976}))
+          dispatch(setMode('screen-center'))
+          console.log('您拒絕了')
+          return
+        }
         console.log('無法取得您的位置', error)
       }
     );

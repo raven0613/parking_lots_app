@@ -6,7 +6,6 @@ import React, { useMemo, useCallback, useEffect, useContext, useState } from "re
 import { GoogleMap, Marker, DirectionsRenderer, useLoadScript, useJsApiLoader } from "@react-google-maps/api"
 import { useLocation } from 'react-router-dom'
 
-import ParkingMark from "./ParkingMark"
 import ParkMarkerController from "./ParkMarkerController"
 import SelfMarker from "./SelfMarker"
 import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
@@ -14,7 +13,7 @@ import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helper
 import { mapContext } from '../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow } from '../reducer/reducer'
+import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow } from '../reducer/reducer'
 
 export default function Map({setIsGoogleApiLoaded}) {
   const currentPark = useSelector((state) => state.park.currentPark)
@@ -24,6 +23,7 @@ export default function Map({setIsGoogleApiLoaded}) {
   const target = useSelector((state) => state.map.target)
   const canFetchDirection = useSelector((state) => state.map.canFetchDirection)
   const isFollow = useSelector((state) => state.map.isFollow)
+  const isLocateDenied = useSelector((state) => state.map.isLocateDenied)
   
   const dispatch = useDispatch()
 
@@ -49,12 +49,12 @@ export default function Map({setIsGoogleApiLoaded}) {
 
   //網址改變就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
-    if (selfPos?.lat) return
+    if (isLocateDenied) return
 
-    watchUserPos(dispatch, setSelfPos)
+    watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied)
     if (location.search) return
 
-    getUserPos(dispatch, setSelfPos, mode, setMapCenter)
+    getUserPos(dispatch, setSelfPos, mode, setMapCenter, setMode, setIsLocateDenied)
     //setMapCenter({lat: 25.0408065, lng: 121.5397976})   //北車的點
   }, [location]);
 
@@ -101,7 +101,7 @@ export default function Map({setIsGoogleApiLoaded}) {
         //mode回到self後恢復跟隨
         dispatch(setIsFollow(true))
       }
-      if (!selfPos?.lat) watchUserPos(dispatch, setSelfPos)  //沒抓到就再抓
+      if (!selfPos?.lat) watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied)  //沒抓到就再抓
     
       dispatch(setMapCenter(selfPos))
       return
@@ -116,6 +116,7 @@ export default function Map({setIsGoogleApiLoaded}) {
 
   //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
   useEffect(() => {
+    if (isLocateDenied) return
     if (!canFetchDirection) return
     if (!currentPark?.id) return
     const positon = {lng: currentPark.lng, lat: currentPark.lat}

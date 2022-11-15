@@ -51,9 +51,15 @@ export default function DetailPanel () {
       })
   },[]);
 
+  //網址變化時偵測網址來改變 isActive
+   useEffect(() => {
+
+   },[location]) 
+
   //currentRef用來記錄原值以免造成空版
   useEffect(()=>{ 
     if (!currentPark?.id) return
+    setIsDetailActive(true)
     currentRef.current = currentPark
   },[currentPark]);
 
@@ -89,6 +95,7 @@ export default function DetailPanel () {
             {!directions && <button onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
+              
               dispatch(setCanFetchDirection(true))
             }} className="detail__title--navi">
               <img src={navigateIcon} alt='navigate'></img>

@@ -152,7 +152,7 @@ export default function ParkMarkerController () {
     }
     //確保拿到最新的資料
     dispatch(setCurrentPark(parksWithRemainings([paramsPark], remainings)[0]))
-  }, [location])
+  }, [location, allParks])
 
 
 
@@ -169,7 +169,7 @@ export default function ParkMarkerController () {
   //selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
   useEffect(() => {
     if (mode !== 'self') return
-    const basedParks = userFilteredParks? userFilteredParks : allParks
+    const basedParks = userFilteredParks?.length? userFilteredParks : allParks
     const filteredParks = filteredNearParks(basedParks, remainings, selfPos, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts)
 
     dispatch(setNearParks(filteredParks))
@@ -178,7 +178,7 @@ export default function ParkMarkerController () {
   // target的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'target') return
-    const basedParks = userFilteredParks? userFilteredParks : allParks
+    const basedParks = userFilteredParks?.length? userFilteredParks : allParks
     const filteredParks = filteredNearParks(basedParks, remainings, target, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts)
 
     dispatch(setNearParks(filteredParks))
@@ -188,7 +188,7 @@ export default function ParkMarkerController () {
   useEffect(() => {
     if (mode !== 'screen-center') return
     //決定以誰為基準
-    const basedParks = userFilteredParks? userFilteredParks : allParks
+    const basedParks = userFilteredParks?.length? userFilteredParks : allParks
     const filteredParks = filteredNearParks(basedParks, remainings, mapCenter, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts)
 
     dispatch(setNearParks(filteredParks))

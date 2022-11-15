@@ -8,6 +8,7 @@ import { setMode, setIsFollow } from '../reducer/reducer'
 export default function Locate () {
   const selfPos = useSelector((state) => state.map.selfPos)
   const mode = useSelector((state) => state.map.mode)
+  const isLocateDenied = useSelector((state) => state.map.isLocateDenied)
   const dispatch = useDispatch()
   
   const { mapInstance } = useContext(mapContext)
@@ -19,9 +20,10 @@ export default function Locate () {
     return (
       <button 
         onClick={() => {
+          if (!selfPos?.lat) return
           if (!setIsFollow) return
           if (!mapInstance) return
-          if (!selfPos?.lat) return
+          
 
           dispatch(setIsFollow(true))
           //一旦移動了就不跟隨，按下locate後恢復跟隨
@@ -42,6 +44,7 @@ export default function Locate () {
   return (
     <button 
       onClick={() => {
+        if (isLocateDenied) return
         dispatch(setMode('self'))
       }} 
       className={`locate ${disabled}`}>
