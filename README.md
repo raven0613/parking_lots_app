@@ -6,11 +6,11 @@
 [網站連結](https://raven0613.github.io/parking_lots_app/#)
 
 \*電腦版
-![image](./src/assets/images/README/PC01.gif)
+![PC01](https://user-images.githubusercontent.com/93082842/201565101-401fd4f1-5404-4a55-b43e-e6546b45f580.gif)
 ＊手機版
-![image](./src/assets/images/README/MB01.gif)
+![MB01](https://user-images.githubusercontent.com/93082842/201565122-06bf9967-6ebf-43f0-8dd6-139cc9aa8687.gif)
 ＊搜尋並推薦路線
-![image](./src/assets/images/README/PC02.gif)
+![PC02](https://user-images.githubusercontent.com/93082842/201565130-80a7638c-44b4-4247-8013-3d266d48830b.gif)
 
 ### 在這個網站，你可以——
 
