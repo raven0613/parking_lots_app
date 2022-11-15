@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react'
 import price from '../assets/images/price.svg'
 import parks from '../assets/images/parks.svg'
 
-export default function MarkerController (props) {
-  const { markerOption, setMarkerOption } = props
+
+import { useSelector, useDispatch } from 'react-redux'
+import { setMarkerOption } from '../reducer/reducer'
+
+export default function MarkerController () {
+  const markerOption = useSelector((state) => state.park.markerOption)
+  const dispatch = useDispatch()
 
   let disabled = markerOption? '' : 'disabled'
   let payClass = `${disabled} control-type__btn control-type__up
@@ -16,8 +20,8 @@ export default function MarkerController (props) {
   return (
     <div className='control-type control-type__marker'
       onClick={() => {
-        if(markerOption === 'pay') return setMarkerOption('counts')
-        if(markerOption === 'counts') return setMarkerOption('pay')
+        if(markerOption === 'pay') return dispatch(setMarkerOption('counts'))
+        if(markerOption === 'counts') return dispatch(setMarkerOption('pay'))
       }}
     >
       <button className={payClass} >

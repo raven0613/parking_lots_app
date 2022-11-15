@@ -1,9 +1,11 @@
 import speech from '../assets/images/speech.svg'
 import { useState } from "react"
 
-export default function Speech (props) {
+
+
+export default function Speech ({setSpeech}) {
+
   const [isProcessing, setIsProcessing] = useState(false)
-  const { setSpeech } = props
 
   //先判斷瀏覽器是否有語音辨識物件
   if (!('webkitSpeechRecognition' in window)) {

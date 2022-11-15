@@ -1,9 +1,18 @@
 import warning from '../assets/images/warning.svg'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useRef } from 'react'
 
-export default function Warning ({ currentPark, transOption, setCurrentPark, isEmptyParkId, setIsEmptyParkId }) {
+import { useSelector, useDispatch } from 'react-redux'
+import { setCurrentPark, setIsEmptyId } from '../reducer/reducer'
+
+
+export default function Warning () {
+  const currentPark = useSelector((state) => state.park.currentPark)
+  const transOption = useSelector((state) => state.park.transOption)
+  const isEmptyId = useSelector((state) => state.park.isEmptyId)
+  const dispatch = useDispatch()
+  
   const [isCarEnough, setIsCarEnough] = useState(true)
   const [isMotorEnough, setIsMotorEnough] = useState(true)
   
@@ -15,26 +24,27 @@ export default function Warning ({ currentPark, transOption, setCurrentPark, isE
   const contentRef = useRef('您的目標停車場無機車停車格')
 
   let buttonContent = '重新尋找'
-  if (currentPark && currentPark.availablecar < 1) {
+  if (currentPark?.availablecar < 1) {
     contentRef.current = '您的目標停車場已無剩餘車位'
   }
 
   if (transOption === 'car') {
-    if (currentPark && currentPark.totalcar < 1) {
+    if (currentPark?.totalcar < 1) {
       contentRef.current = '您的目標停車場無汽車停車格'
     }
   } 
   else if (transOption === 'motor') {
-    if (currentPark && currentPark.totalmotor < 1) {
+    if (currentPark?.totalmotor < 1) {
       contentRef.current = '您的目標停車場無機車停車格'
     }
   }
-  if (isEmptyParkId) {
+  if (isEmptyId) {
     contentRef.current = '查無此停車場'
   }
 
   useEffect(() => {
-    if (!currentPark) return
+    if (!currentPark?.id) return
+
     if (transOption === 'car') {
       if (currentPark.availablecar < 1) {
         return setIsCarEnough(false)
@@ -53,7 +63,7 @@ export default function Warning ({ currentPark, transOption, setCurrentPark, isE
   const warningClass = () => {
     if (!warning) return 'warning'
     if (!isCarEnough || !isMotorEnough) return 'warning active'
-    if (isEmptyParkId) return 'warning active'
+    if (isEmptyId) return 'warning active'
     return 'warning'
   }
 
@@ -70,7 +80,7 @@ export default function Warning ({ currentPark, transOption, setCurrentPark, isE
           //關掉視窗
           setIsMotorEnough(true)
           setIsCarEnough(true)
-          setIsEmptyParkId(false)
+          dispatch(setIsEmptyId(false))
           //關掉導航
           //是target模式的話重新就目標找一次
           //是screen模式的話就重進screen模式
@@ -79,7 +89,8 @@ export default function Warning ({ currentPark, transOption, setCurrentPark, isE
           // const path = location.pathname
           const queryStr = location.search
           navigate(`.${queryStr}`, {push: true})  //這邊網址要注意
-          setCurrentPark(null)
+          // setCurrentPark(null)
+          dispatch(setCurrentPark(null))
         }}
         className="warning__btn">{buttonContent}</button>
     </div>

@@ -2,8 +2,8 @@
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 import React, { lazy, Suspense } from 'react';
-import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import UIDataProvider from './store/UIDataProvider';
 
 const Card = lazy(() => import('./components/card-panel/Card'))
 
@@ -12,13 +12,14 @@ function App() {
   return (
     <div className="App">
       <Router>
+
           <Suspense fallback={<h1> Loading </h1>}>
             <Routes>
               <Route path="/" element={<Navigate replace to="map"/>}
               />
-              <Route path="/map" element={<Home />}>
+              <Route path="/map" element={<UIDataProvider />}>
                 {/* 點選了停車場：/map/:parkId */}
-                <Route path=":parkId" element={<Home />}>
+                <Route path=":parkId" element={<UIDataProvider />}>
                   {/* 右側欄：/map?nearby=true */}
                   {/* /map/:parkId?nearby=true */}
                   <Route path="?nearby=true" element={<Card />}></Route>

@@ -1,13 +1,23 @@
 import cancel from '../assets/images/cancel.svg'
 import { useFetcher, useLocation, useNavigate } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
-import useOnclickOutside from "react-cool-onclickoutside";
-import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
+import useOnclickOutside from "react-cool-onclickoutside"
 import "@reach/combobox/styles.css"
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useContext } from 'react'
+import { mapContext } from '../store/UIDataProvider'
 
+import { useDispatch } from 'react-redux'
+import { setMode, setMapCenter, setTarget } from '../reducer/reducer'
+import Speech from './Speech'
 
-export default function Place ({ setTarget, speech, getPlaceResult, targetAddressRef, setMode, inputingVal, setInputingVal }) {
+export default function Place () {
+  const dispatch = useDispatch()
+
+  const { mapInstance } = useContext(mapContext)
+  const targetAddressRef = useRef(null)
+
+  const [ speech, setSpeech ] =  useState()
+
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete({
     requestOptions: {
       /* Define search scope here */
@@ -15,8 +25,11 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     },
     debounce: 300,
   })
-  const location = useLocation()
+
+
   const navigate = useNavigate()
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
 
   const [isOnComposition, setIsOnComposition] = useState(false)
 
@@ -24,16 +37,21 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
   useEffect(() => {
     const text = speech? speech : ''
     setV(text)
-    setInputingVal(text)
     setValue(text)
   }, [speech])
 
-
-
-  //網址上有地址進來的時候設定target，並且寫入inputValue
+  //網址改變時
   useEffect(() => {
-    if (!targetAddressRef.current) return
-    setInputingVal(targetAddressRef.current)
+    if (!queryParams.has('target')) return
+    if (targetAddressRef.current === queryParams.get('target')) return
+    dispatch(setMode('target'))
+
+      targetAddressRef.current = queryParams.get('target')
+  }, [location])
+
+  // 網址上有地址進來的時候設定target，並且寫入inputValue
+  useEffect(() => {
+    if (!targetAddressRef.current) return 
     setV(targetAddressRef.current)
 
     const handleSearch = async () => {
@@ -42,10 +60,12 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
       //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
       const { lat, lng } = await getLatLng(results[0])
       //把點選結果的座標存進 target
-      setTarget({ lat, lng })
+      dispatch(setTarget({ lat, lng }))
+      mapInstance.panTo({ lat, lng })
     }
     handleSearch()
   }, [targetAddressRef.current])
+
 
   const onChange = (e) => {
     setV(e.target.value)
@@ -59,7 +79,6 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
       setIsOnComposition(isOnComposition)
       setValue(e.target.value)
       setV(value)
-      // setInputingVal(e.target.value)
 
       if (!isOnComposition && e.target.value) {
         // console.log("compositionend", e.target.value);
@@ -87,26 +106,34 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
     ({ description }) =>
     () => {
       //傳入的 description 為地址
-      setInputingVal(description)
       //這邊要傳入 false，不然建議框不會消失
       setValue(description, false);
       //把地址回傳給Home以更新網址
-      getPlaceResult(description)
+      targetAddressRef.current = description
+      
+      // getPlaceResult(description)
       //關掉建議窗
       clearSuggestions();
       //把地址傳進 getGeocode 
       getGeocode({ address: description }).then((results) => {
         //results[0]裡面不會有真的座標資料，要用 getLatLng() 才能取出來
         const { lat, lng } = getLatLng(results[0]);
+
         //把點選結果的座標存進 target
-        setTarget({ lat, lng })
+        dispatch(setMode("target"))
+        dispatch(setTarget({ lat, lng }))
+        //移動地圖中心至 target
+        dispatch(setMapCenter({ lat, lng }))
       })
+      navigate(`/map?target=${targetAddressRef.current}`, {push: true})
     }
 
     const ref = useOnclickOutside(() => {
       clearSuggestions()
     })
     const [v, setV] = useState('')
+
+    
 
   return (
     <>
@@ -129,18 +156,16 @@ export default function Place ({ setTarget, speech, getPlaceResult, targetAddres
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          setInputingVal('')
           setValue('')
           setV('')
-          setTarget(null)
-          setMode('screen-mode')
+          dispatch(setTarget(null))
+          dispatch(setMode('screen-mode'))
 
           navigate(`${location.pathname}`, {push: true})
         }}>
         <img src={cancel} alt='cancel'></img>
       </button>
+      <Speech setSpeech={setSpeech}/>
     </>
-
-
   )
 }

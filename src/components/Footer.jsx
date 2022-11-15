@@ -1,13 +1,21 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useState, useContext, useEffect } from "react";
 import mapSearch from '../assets/images/map-search.svg'
 import selfSearch from '../assets/images/self-search.svg'
 import nearby from '../assets/images/nearby.svg'
-import { allContext } from '../pages/Home'
-import { useContext } from 'react';
+import { mapContext } from '../store/UIDataProvider'
 
-export default function Footer (props) {
-  const { isNearActive, setIsNearActive } = props
-  const { mode, setMode, setIsFollow, mapInstance, selfPos } = useContext(allContext)
+
+import { useSelector, useDispatch } from 'react-redux'
+import { setMode, setIsFollow } from '../reducer/reducer'
+
+
+export default function Footer () {
+  const selfPos = useSelector((state) => state.map.selfPos)
+  const mode = useSelector((state) => state.map.mode)
+  const dispatch = useDispatch()
+  const [isNearActive, setIsNearActive] = useState(false)
+  const { mapInstance } = useContext(mapContext)
 
   let selfClass = `footer__btn ${mode === 'self' ? '' : ''}`
   let screenClass = `footer__btn ${isNearActive ? '' : 'active'}`
@@ -18,13 +26,20 @@ export default function Footer (props) {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
 
+  //網址變化時偵測網址來改變 isActive
+   useEffect(() => {
+    if (queryParams.get('nearby') === 'true') {
+      return setIsNearActive(true)
+    } 
+   },[location]) 
+
+
   return (
     <footer className='footer'>
       <div 
         onClick={() => {
           const currPath = location.pathname
           navigate(`${currPath}`, {push: true})
-          // setMode("screen-center")
           //改成只是把cardPanel關掉，原本有點選卡片的話要保留
           setIsNearActive(false)
         }} 
@@ -35,10 +50,9 @@ export default function Footer (props) {
       <div         
         onClick={() => {
           if(mode !== 'screen-center') {
-            if (!setIsFollow) return
             if (!mapInstance) return
 
-            setIsFollow(true)
+            dispatch(setIsFollow(true))
             //一旦移動了就不跟隨，按下locate後恢復跟隨
             //定位到user身上
             if (!mapInstance.map) {
@@ -49,7 +63,7 @@ export default function Footer (props) {
             mapInstance.map.panTo(selfPos)
           }
           navigate(`${location.pathname}`, {push: true})
-          setMode("self")
+          dispatch(setMode("self"))
         }} 
       className={selfClass}>
         <img src={selfSearch} alt="self-search"></img>

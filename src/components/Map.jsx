@@ -1,49 +1,75 @@
 // import vector from '../assets/images/cancel-orange.svg'
 import centerMarker from '../assets/images/map-center.svg'
-import selfMarker from '../assets/images/marker-self.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
 
-import React, { useMemo, useCallback, useEffect, useContext } from "react"
-import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
+import React, { useMemo, useCallback, useEffect, useContext, useState } from "react"
+import { GoogleMap, Marker, DirectionsRenderer, useLoadScript, useJsApiLoader } from "@react-google-maps/api"
 import { useLocation } from 'react-router-dom'
 
-import ParkingMark from "./ParkingMark"
+import ParkMarkerController from "./ParkMarkerController"
 import SelfMarker from "./SelfMarker"
 import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
 
-import { allContext } from '../pages/Home'
+import { mapContext } from '../store/UIDataProvider'
 
+import { useSelector, useDispatch } from 'react-redux'
+import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow } from '../reducer/reducer'
 
+export default function Map({setIsGoogleApiLoaded}) {
+  const currentPark = useSelector((state) => state.park.currentPark)
+  const selfPos = useSelector((state) => state.map.selfPos)
+  const mode = useSelector((state) => state.map.mode)
+  const mapCenter = useSelector((state) => state.map.mapCenter)
+  const target = useSelector((state) => state.map.target)
+  const canFetchDirection = useSelector((state) => state.map.canFetchDirection)
+  const isFollow = useSelector((state) => state.map.isFollow)
+  const isLocateDenied = useSelector((state) => state.map.isLocateDenied)
+  
+  const dispatch = useDispatch()
 
-
-export default function Map() {
-
-  const { mapCenter, setMapCenter, mode, setMode, mapInstance, setMapInstance, target, setTarget, setSpeech, setSelfPos, directions, setDirections, transOption, mapRef, selfPos, currentPark, setCurrentPark,  canFetchDirection, setCanFetchDirection, remainings, setRemainings, isFollow, setIsFollow, setInputingVal } = useContext(allContext)
-
+  //定義來源名稱
+  const { mapInstance, setMapInstance, directions, setDirections } = useContext(mapContext)
+  
   const location = useLocation()
+  const [libraries] = useState(["places"])
+
+  const { isLoaded } = useLoadScript({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+    libraries: libraries,
+    optimized: false
+  })
+  useEffect(() => {
+    if(!isLoaded || !setIsGoogleApiLoaded) return
+    setIsGoogleApiLoaded(true)
+  }, [isLoaded, setIsGoogleApiLoaded])
+
+
 
 
   //網址改變就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
   useEffect(() => {
-    if (selfPos) return
-    watchUserPos(setSelfPos)
+    if (isLocateDenied) return
+
+    watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied)
     if (location.search) return
-    getUserPos(setSelfPos, mode, setMapCenter)
-    // setMapCenter({lat: 25.0408065, lng: 121.5397976})   //北車的點
+
+    getUserPos(dispatch, setSelfPos, mode, setMapCenter, setMode, setIsLocateDenied)
+    //setMapCenter({lat: 25.0408065, lng: 121.5397976})   //北車的點
   }, [location]);
 
   //selfPos改變的話要讓地圖中心跟隨
   useEffect(() => {
     if (mode !== 'self') return
     if (!isFollow) return
-    if (!selfPos) return
+    if (!selfPos?.lat) return
     if (!mapInstance) return
-    if (isFollow) {
-      if (!mapInstance.map) {
-        return mapInstance.panTo(selfPos)
-      }
-      mapInstance.map.panTo(selfPos)
+
+    if (!mapInstance.map) {
+      return mapInstance.panTo(selfPos)
     }
+    mapInstance.map.panTo(selfPos)
+    
   }, [selfPos, isFollow, mapInstance])
 
   //如果移動地圖就改變 center 位置
@@ -51,11 +77,11 @@ export default function Map() {
     if (mode !== "screen-center") return
     
     if (mapInstance.map) {
-      setMapCenter(mapInstance.map.center.toJSON())
+      dispatch(setMapCenter(mapInstance.map.center.toJSON()))
       // mapInstance.map.panTo(mapInstance.map.center.toJSON())
     } else {
       // mapInstance.panTo(mapInstance.center.toJSON())
-      setMapCenter(mapInstance.center.toJSON())
+      dispatch(setMapCenter(mapInstance.center.toJSON()))
     }
   }
 
@@ -64,7 +90,6 @@ export default function Map() {
     if (map.map) {
       return setMapInstance(map.map)
     }
-    mapRef.current = map
     return setMapInstance(map)
   }, [])
 
@@ -74,11 +99,11 @@ export default function Map() {
 
       if (!isFollow) {
         //mode回到self後恢復跟隨
-        setIsFollow(true)
+        dispatch(setIsFollow(true))
       }
-      if (!selfPos) watchUserPos(setSelfPos)  //沒抓到就再抓
-      setMapCenter(selfPos)
-      setSelfPos(selfPos)
+      if (!selfPos?.lat) watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied)  //沒抓到就再抓
+    
+      dispatch(setMapCenter(selfPos))
       return
     }
     if (mode === 'target') {
@@ -91,12 +116,13 @@ export default function Map() {
 
   //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
   useEffect(() => {
+    if (isLocateDenied) return
     if (!canFetchDirection) return
-    if (!currentPark) return
+    if (!currentPark?.id) return
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
     handleFetchDirections(selfPos, positon , directions, setDirections)
     //推薦完路線就改回false
-    setCanFetchDirection(false)
+    dispatch(setCanFetchDirection(false))
   }, [canFetchDirection])
 
 
@@ -115,75 +141,64 @@ export default function Map() {
     []
   )
   return(
-    <div className="map">
-      <GoogleMap
-        zoom={15}
-        center={mapCenter}
-        mapContainerClassName="map"
-        onDragEnd={() => {
-          handleCenterChanged()
-        }}
-        onDragStart={() => {
-          setIsFollow(false)
-          setMode('screen-center')
-        }}
-        options={options}
-        onLoad={onLoad}
-      >
-        {directions && (
-          <DirectionsRenderer
-            directions={directions}
-            options={{
-              polylineOptions: {
-                zIndex: 10,
-                strokeColor: "#33CC99",
-                strokeWeight: 7,
-              },
-            }}
-          />
-        )}
-        {/* {selfPos && (
-          <Marker 
-            position={selfPos} 
-            className="self-point marker" 
-            animation={window.google.maps.Animation.DROP}
-            icon={{
-              url: selfMarker,
-              scaledSize: { width: 32, height: 32 },
-              className: 'marker'
-            }}
-            />
-        )} */}
-        {selfPos && (
-          <SelfMarker  selfPos={selfPos}/>
-        )}
-        {mapCenter && mode === "screen-center" && (
-          <Marker
-            className="marker"
-            onLoad={onLoad}
-            position={mapCenter}
-            icon={{
-              url: centerMarker,
-              scaledSize: { width: 28, height: 28 },
-              className: 'marker'
-            }}
-            zIndex={999}
-          />
-        )}
-
-        {target && <Marker 
-
-          position={target} 
-          zIndex={998}
-          icon={{
-            url: targetMarker,
-            scaledSize: { width: 48, height: 48 },
-            className: 'marker'
+    <>
+      {isLoaded && <div className="map">
+        <GoogleMap
+          zoom={15}
+          center={mapCenter}
+          mapContainerClassName="map"
+          onDragEnd={() => {
+            handleCenterChanged()
           }}
-          />}
-        <ParkingMark />
-      </GoogleMap>
-    </div>
+          onDragStart={() => {
+            dispatch(setIsFollow(false))
+            dispatch(setMode('screen-center'))
+          }}
+          options={options}
+          onLoad={onLoad}
+        >
+          {directions && (
+            <DirectionsRenderer
+              directions={directions}
+              options={{
+                polylineOptions: {
+                  zIndex: 10,
+                  strokeColor: "#33CC99",
+                  strokeWeight: 7,
+                },
+              }}
+            />
+          )}
+          {selfPos?.lat && (
+            <SelfMarker  selfPos={selfPos}/>
+          )}
+          {mapCenter && mode === "screen-center" && (
+            <Marker
+              className="marker"
+              onLoad={onLoad}
+              position={mapCenter}
+              icon={{
+                url: centerMarker,
+                scaledSize: { width: 28, height: 28 },
+                className: 'marker'
+              }}
+              zIndex={999}
+            />
+          )}
+
+          {target?.lat && <Marker 
+            position={target} 
+            zIndex={998}
+            icon={{
+              url: targetMarker,
+              scaledSize: { width: 48, height: 48 },
+              className: 'marker'
+            }}
+            />}
+          <ParkMarkerController />
+        </GoogleMap>
+      </div>}
+    </>
   )
 
 }
