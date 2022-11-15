@@ -6,9 +6,11 @@ export const parkSlice = createSlice({
   initialState: { 
     transOption: 'car',
     markerOption: 'pay',
+    filterConditions: [], 
     currentPark: {},
     nearParks: [],
-    remainings: []
+    remainings: [],
+    isEmptyId: false
   },
   reducers: {
     setTransOption: (state, action) => {
@@ -16,6 +18,9 @@ export const parkSlice = createSlice({
     },
     setMarkerOption: (state, action) => {
       state.markerOption = action.payload //pay, counts
+    },
+    setFilterConditions: (state, action) => {
+      state.filterConditions = [ ...action.payload ] //disabled, pregnancy, charging
     },
     setCurrentPark: (state, action) => {
       state.currentPark = { ...action.payload }
@@ -25,11 +30,14 @@ export const parkSlice = createSlice({
     },
     setRemainings: (state, action) => {
       state.remainings = [ ...action.payload ]
-    }
+    },
+    setIsEmptyId: (state, action) => {
+      state.isEmptyId = action.payload //pay, counts
+    },
   }
 })
 
-export const { setTransOption, setMarkerOption, setCurrentPark, setNearParks, setRemainings } = parkSlice.actions
+export const { setTransOption, setMarkerOption, setFilterConditions, setCurrentPark, setNearParks, setRemainings, setIsEmptyId } = parkSlice.actions
 export const parkReducer = parkSlice.reducer
 
 
@@ -44,7 +52,8 @@ export const mapSlice = createSlice({
     selfPos: { lat: '', lng: '' },
     mapCenter: { lng: 121.51763286051023, lat: 25.04194409222794 },
     target: { lat: '', lng: '' },
-    canFetchDirection: false
+    canFetchDirection: false,
+    isFollow: true
    },
   reducers: {
     //決定地圖中心在哪裡：self, target, screen-center
@@ -61,10 +70,14 @@ export const mapSlice = createSlice({
       state.target = { ...action.payload }
     },
     setCanFetchDirection: (state, action) => {
-      state.canFetchDirection = action
+      state.canFetchDirection = action.payload
+    },
+    //要不要跟隨user位置
+    setIsFollow: (state, action) => {
+      state.isFollow = action.payload
     },
   }
 })
 
-export const { setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection } = mapSlice.actions
+export const { setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection, setIsFollow } = mapSlice.actions
 export const mapReducer = mapSlice.reducer

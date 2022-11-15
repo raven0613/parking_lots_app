@@ -15,20 +15,21 @@ import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helper
 import { allContext } from '../utils/Provider'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMode, setSelfPos, setMapCenter, setCanFetchDirection } from '../reducer/reducer'
+import { setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow } from '../reducer/reducer'
 
-export default function Map() {
+export default function Map({setIsGoogleApiLoaded}) {
   const currentPark = useSelector((state) => state.park.currentPark)
   const selfPos = useSelector((state) => state.map.selfPos)
   const mode = useSelector((state) => state.map.mode)
   const mapCenter = useSelector((state) => state.map.mapCenter)
   const target = useSelector((state) => state.map.target)
   const canFetchDirection = useSelector((state) => state.map.canFetchDirection)
+  const isFollow = useSelector((state) => state.map.isFollow)
   
   const dispatch = useDispatch()
 
   //定義來源名稱
-  const { mapInstance, setMapInstance, isFollow, setIsFollow, isGoogleApiLoaded, setIsGoogleApiLoaded, directions, setDirections } = useContext(allContext)
+  const { mapInstance, setMapInstance, directions, setDirections } = useContext(allContext)
   
   const location = useLocation()
   const [libraries] = useState(["places"])
@@ -64,12 +65,12 @@ export default function Map() {
     if (!isFollow) return
     if (!selfPos?.lat) return
     if (!mapInstance) return
-    if (isFollow) {
-      if (!mapInstance.map) {
-        return mapInstance.panTo(selfPos)
-      }
-      mapInstance.map.panTo(selfPos)
+
+    if (!mapInstance.map) {
+      return mapInstance.panTo(selfPos)
     }
+    mapInstance.map.panTo(selfPos)
+    
   }, [selfPos, isFollow, mapInstance])
 
   //如果移動地圖就改變 center 位置
@@ -99,7 +100,7 @@ export default function Map() {
 
       if (!isFollow) {
         //mode回到self後恢復跟隨
-        setIsFollow(true)
+        dispatch(setIsFollow(true))
       }
       if (!selfPos?.lat) watchUserPos(dispatch, setSelfPos)  //沒抓到就再抓
     
@@ -116,7 +117,7 @@ export default function Map() {
 
   //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
   useEffect(() => {
-    if (!canFetchDirection.payload) return
+    if (!canFetchDirection) return
     if (!currentPark?.id) return
     const positon = {lng: currentPark.lng, lat: currentPark.lat}
     handleFetchDirections(selfPos, positon , directions, setDirections)
@@ -150,7 +151,7 @@ export default function Map() {
             handleCenterChanged()
           }}
           onDragStart={() => {
-            setIsFollow(false)
+            dispatch(setIsFollow(false))
             dispatch(setMode('screen-center'))
           }}
           options={options}

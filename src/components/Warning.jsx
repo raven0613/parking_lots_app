@@ -7,15 +7,15 @@ import { allContext } from '../utils/Provider'
 
 import { useSelector, useDispatch } from 'react-redux'
 // import { setCurrentPark } from '../utils/Provider'
-import { setCurrentPark } from '../reducer/reducer'
+import { setCurrentPark, setIsEmptyId } from '../reducer/reducer'
 
 
 export default function Warning () {
   const currentPark = useSelector((state) => state.park.currentPark)
   const transOption = useSelector((state) => state.park.transOption)
+  const isEmptyId = useSelector((state) => state.park.isEmptyId)
   const dispatch = useDispatch()
-
-  const { isEmptyParkId, setIsEmptyParkId } = useContext(allContext)
+  
   const [isCarEnough, setIsCarEnough] = useState(true)
   const [isMotorEnough, setIsMotorEnough] = useState(true)
   
@@ -41,7 +41,7 @@ export default function Warning () {
       contentRef.current = '您的目標停車場無機車停車格'
     }
   }
-  if (isEmptyParkId) {
+  if (isEmptyId) {
     contentRef.current = '查無此停車場'
   }
 
@@ -66,7 +66,7 @@ export default function Warning () {
   const warningClass = () => {
     if (!warning) return 'warning'
     if (!isCarEnough || !isMotorEnough) return 'warning active'
-    if (isEmptyParkId) return 'warning active'
+    if (isEmptyId) return 'warning active'
     return 'warning'
   }
 
@@ -83,7 +83,7 @@ export default function Warning () {
           //關掉視窗
           setIsMotorEnough(true)
           setIsCarEnough(true)
-          setIsEmptyParkId(false)
+          dispatch(setIsEmptyId(false))
           //關掉導航
           //是target模式的話重新就目標找一次
           //是screen模式的話就重進screen模式

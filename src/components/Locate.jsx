@@ -4,14 +4,14 @@ import { useContext } from 'react';
 import { allContext } from '../utils/Provider'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMode } from '../reducer/reducer'
+import { setMode, setIsFollow } from '../reducer/reducer'
 
 export default function Locate () {
   const selfPos = useSelector((state) => state.map.selfPos)
   const mode = useSelector((state) => state.map.mode)
   const dispatch = useDispatch()
   
-  const { mapInstance, setIsFollow } = useContext(allContext)
+  const { mapInstance } = useContext(allContext)
 
   
   const disabled = mode ? '' : 'disabled'
@@ -24,7 +24,7 @@ export default function Locate () {
           if (!mapInstance) return
           if (!selfPos?.lat) return
 
-          setIsFollow(true)
+          dispatch(setIsFollow(true))
           //一旦移動了就不跟隨，按下locate後恢復跟隨
           //定位到user身上
           if (!mapInstance.map) {

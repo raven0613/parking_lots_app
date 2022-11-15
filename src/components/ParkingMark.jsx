@@ -10,7 +10,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setCurrentPark, setNearParks, setRemainings } from '../reducer/reducer'
+import { setCurrentPark, setNearParks, setRemainings, setIsEmptyId } from '../reducer/reducer'
 
 
 //從API得到所有停車場資料
@@ -74,12 +74,15 @@ export default function ParkingMark () {
   const currentPark = useSelector((state) => state.park.currentPark)
   const nearParks = useSelector((state) => state.park.nearParks)
   const remainings = useSelector((state) => state.park.remainings)
+  const filterConditions = useSelector((state) => state.park.filterConditions)
+  const isEmptyId = useSelector((state) => state.park.isEmptyId)
   const mapCenter = useSelector((state) => state.map.mapCenter)
   const target = useSelector((state) => state.map.target)
+  
   const dispatch = useDispatch()
 
 
-  const { selfPos, setDirections, setIsEmptyParkId, filterConditions} = useContext(allContext)
+  const { selfPos, setDirections} = useContext(allContext)
   
   //fetching狀態
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
@@ -174,16 +177,16 @@ export default function ParkingMark () {
       fetchParksData ()
     }
 
+    //網址上的park id 沒找到就彈提醒窗
     const paramsPark = allParks.find(park => park.id === parkId)
-    if (!paramsPark) return setIsEmptyParkId(true)
+    console.log(paramsPark)
+    if (!paramsPark) {
+      dispatch(setIsEmptyId(true))
+      return
+    }
     
     //確保拿到最新的資料
-    // setCurrentPark(parksWithRemainings([paramsPark], remainings)[0])
     dispatch(setCurrentPark(parksWithRemainings([paramsPark], remainings)[0]))
-    
-    //網址改變只要不是改到id 就不要推薦路線
-    if(parkIdRef.current === parkId) return
-    parkIdRef.current = paramsPark.id
   }, [allParks, location])
 
 

@@ -1,22 +1,22 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useState, useContext, useEffect } from "react";
 import mapSearch from '../assets/images/map-search.svg'
 import selfSearch from '../assets/images/self-search.svg'
 import nearby from '../assets/images/nearby.svg'
 // import { allContext } from '../pages/Home'
 import { allContext } from '../utils/Provider'
-import { useContext } from 'react';
 
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMode } from '../reducer/reducer'
+import { setMode, setIsFollow } from '../reducer/reducer'
 
 
 export default function Footer () {
   const selfPos = useSelector((state) => state.map.selfPos)
   const mode = useSelector((state) => state.map.mode)
   const dispatch = useDispatch()
-
-  const { setIsFollow, mapInstance, isNearActive, setIsNearActive } = useContext(allContext)
+  const [isNearActive, setIsNearActive] = useState(false)
+  const { mapInstance } = useContext(allContext)
 
   let selfClass = `footer__btn ${mode === 'self' ? '' : ''}`
   let screenClass = `footer__btn ${isNearActive ? '' : 'active'}`
@@ -26,6 +26,14 @@ export default function Footer () {
   const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
+
+  //網址變化時偵測網址來改變 isActive
+   useEffect(() => {
+    if (queryParams.get('nearby') === 'true') {
+      return setIsNearActive(true)
+    } 
+   },[location]) 
+
 
   return (
     <footer className='footer'>
@@ -43,10 +51,9 @@ export default function Footer () {
       <div         
         onClick={() => {
           if(mode !== 'screen-center') {
-            if (!setIsFollow) return
             if (!mapInstance) return
 
-            setIsFollow(true)
+            dispatch(setIsFollow(true))
             //一旦移動了就不跟隨，按下locate後恢復跟隨
             //定位到user身上
             if (!mapInstance.map) {

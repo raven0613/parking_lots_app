@@ -9,7 +9,6 @@ import CardPanel from '../components/card-panel/CardPanel'
 import TransTypeController from '../components/TransTypeController'
 import MarkerController from '../components/MarkerController'
 import DetailPanel from '../components/DetailPanel'
-import Speech from '../components/Speech'
 import SecondsCounter from '../components/SecondsCounter'
 import Locate from '../components/Locate'
 import FilterPanel from '../components/FilterPanel'
@@ -24,32 +23,19 @@ export const allContext = React.createContext('')
 
 
 export default function Provider () {
-  
+
   //因為 redux不接受 unserialized object 所以用 hook state 存
   const [mapInstance, setMapInstance] = useState()
   //導航路線
   const [directions, setDirections] = useState()
-
-
-  const [isFollow, setIsFollow] = useState(true)
-  //看是否要啟動cardPanel
-  const [isNearActive, setIsNearActive] = useState(false)
-
-
-  const [isEmptyParkId, setIsEmptyParkId] = useState(false)
-  const [filterConditions, setFilterConditions] = useState([])
-  
   const [isGoogleApiLoaded, setIsGoogleApiLoaded] = useState(false)
+  
+  
   
 
   const contextValue = {
     mapInstance, setMapInstance, 
     directions, setDirections,
-    isFollow, setIsFollow,
-    isEmptyParkId, setIsEmptyParkId,
-    filterConditions, setFilterConditions,
-    isNearActive, setIsNearActive,
-    isGoogleApiLoaded, setIsGoogleApiLoaded
   }
   const currentPark2 = useSelector((state) => state.park.currentPark)
   return (
@@ -58,7 +44,7 @@ export default function Provider () {
 
         <div className="map__container">
           {/* {!isLoaded && <div className="map__loading"></div>} */}
-          <Map />
+          <Map setIsGoogleApiLoaded={setIsGoogleApiLoaded}/>
 
           <div className="map__ui">
             <Sidebar />

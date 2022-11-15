@@ -15,7 +15,7 @@ import Speech from './Speech'
 export default function Place () {
   const dispatch = useDispatch()
 
-  const { getPlaceResult, isGoogleApiLoaded, mapInstance } = useContext(allContext)
+  const { getPlaceResult, mapInstance } = useContext(allContext)
   const targetAddressRef = useRef(null)
 
   const [ speech, setSpeech ] =  useState()

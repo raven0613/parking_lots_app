@@ -7,9 +7,12 @@ import { useState, useContext, useEffect } from "react";
 // import { allContext } from '../pages/Home'
 import { allContext } from '../utils/Provider'
 
+import { useSelector, useDispatch } from 'react-redux'
+import { setFilterConditions } from '../reducer/reducer'
 
 export default function FilterPanel () {
-  const { setFilterConditions, filterConditions } = useContext(allContext)
+  const filterConditions = useSelector((state) => state.park.filterConditions)
+  const dispatch = useDispatch()
 
   const [isActive, setIsActive] = useState(false)
   const [isDisabledActive, setIsDisabledActive] = useState(false)
@@ -17,7 +20,7 @@ export default function FilterPanel () {
   const [isChargingActive, setIsChargingActive] = useState(false)
 
   useEffect(() => {
-    setFilterConditions(['all'])
+    dispatch(setFilterConditions(['all']))
   },[])
 
   const panelClassName = () => {
@@ -40,7 +43,7 @@ export default function FilterPanel () {
 
         <button 
           onClick={() => {
-            setFilterConditions(['all'])
+            dispatch(setFilterConditions(['all']))
             setIsDisabledActive(false)
             setIsPregnancyActive(false)
             setIsChargingActive(false)
@@ -54,15 +57,15 @@ export default function FilterPanel () {
           onClick={() => {
              setIsDisabledActive(!isDisabledActive)
             //如果是空的就加進去
-            if (!filterConditions) return setFilterConditions(['disabled'])
+            if (!filterConditions) return dispatch(setFilterConditions(['disabled']))
 
             //如果有找到就刪掉
             if (filterConditions.find(con => con === 'disabled')) {
               const conditions = filterConditions.filter(con => con !== 'disabled')
-              return setFilterConditions(conditions)
+              return dispatch(setFilterConditions(conditions))
             }
             //沒找到就加進去
-            return setFilterConditions([...filterConditions, 'disabled'])
+            return dispatch(setFilterConditions([...filterConditions, 'disabled']))
           }} 
         className={`filter__btn disabled ${isDisabledActive? 'active' : ''}`}>
           <img className="filter__img" src={disabled} alt="disabled" />
@@ -72,13 +75,13 @@ export default function FilterPanel () {
         <button
           onClick={() => {
             setIsPregnancyActive(!isPregnancyActive)
-            if (!filterConditions) return setFilterConditions(['pregnancy'])
+            if (!filterConditions) return dispatch(setFilterConditions(['pregnancy']))
             
             if (filterConditions.find(con => con === 'pregnancy')) {
               const conditions = filterConditions.filter(con => con !== 'pregnancy')
-              return setFilterConditions(conditions)
+              return dispatch(setFilterConditions(conditions))
             }
-            return setFilterConditions([...filterConditions, 'pregnancy'])
+            return dispatch(setFilterConditions([...filterConditions, 'pregnancy']))
           }} 
         className={`filter__btn pregnancy ${isPregnancyActive? 'active' : ''}`}>
           <img className="filter__img" src={pregnancy} alt="pregnancy" />
@@ -88,12 +91,13 @@ export default function FilterPanel () {
         <button
           onClick={() => {
             setIsChargingActive(!isChargingActive)
-            if (!filterConditions) return setFilterConditions(['charging'])
+            if (!filterConditions) return dispatch(setFilterConditions(['charging']))
+
             if (filterConditions.find(con => con === 'charging')) {
               const conditions = filterConditions.filter(con => con !== 'charging')
-              return setFilterConditions(conditions)
+              return dispatch(setFilterConditions(conditions))
             }
-            return setFilterConditions([...filterConditions, 'charging'])
+            return dispatch(setFilterConditions([...filterConditions, 'charging']))
           }} 
          className={`filter__btn charging ${isChargingActive? 'active' : ''}`}>
 

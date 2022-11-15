@@ -13,9 +13,11 @@ export default function CardPanel () {
   const nearParks = useSelector((state) => state.park.nearParks)
   const mode = useSelector((state) => state.map.mode)
 
-  const { setIsNearActive, isNearActive  } = useContext(allContext)
+  // const { setIsNearActive, isNearActive  } = useContext(allContext)
   //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
   // const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
+  
+  const [isNearActive, setIsNearActive] = useState(false)
 
   //路由相關
   const navigate = useNavigate()
