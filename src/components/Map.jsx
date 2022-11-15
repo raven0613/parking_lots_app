@@ -1,6 +1,5 @@
 // import vector from '../assets/images/cancel-orange.svg'
 import centerMarker from '../assets/images/map-center.svg'
-import selfMarker from '../assets/images/marker-self.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
 
 import React, { useMemo, useCallback, useEffect, useContext, useState } from "react"
@@ -11,8 +10,7 @@ import ParkingMark from "./ParkingMark"
 import SelfMarker from "./SelfMarker"
 import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
 
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
+import { allContext } from '../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow } from '../reducer/reducer'

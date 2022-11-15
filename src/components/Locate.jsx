@@ -1,7 +1,6 @@
 import locate from '../assets/images/locate.svg'
 import { useContext } from 'react';
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
+import { allContext } from '../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setMode, setIsFollow } from '../reducer/reducer'

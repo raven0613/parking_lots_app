@@ -1,21 +1,19 @@
 import cancel from '../assets/images/cancel.svg'
 import { useFetcher, useLocation, useNavigate } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
-import useOnclickOutside from "react-cool-onclickoutside";
-import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from "@reach/combobox"
+import useOnclickOutside from "react-cool-onclickoutside"
 import "@reach/combobox/styles.css"
 import { useEffect, useState, useRef, useContext } from 'react'
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
+import { allContext } from '../store/UIDataProvider'
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setMode, setMapCenter, setTarget } from '../reducer/reducer'
 import Speech from './Speech'
 
 export default function Place () {
   const dispatch = useDispatch()
 
-  const { getPlaceResult, mapInstance } = useContext(allContext)
+  const { mapInstance } = useContext(allContext)
   const targetAddressRef = useRef(null)
 
   const [ speech, setSpeech ] =  useState()

@@ -1,9 +1,6 @@
-import { useEffect, useState, useContext } from 'react'
 import price from '../assets/images/price.svg'
 import parks from '../assets/images/parks.svg'
 
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setMarkerOption } from '../reducer/reducer'

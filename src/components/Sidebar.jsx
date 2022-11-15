@@ -3,9 +3,6 @@ import name from '../assets/images/name.svg'
 import Locate from './Locate'
 import TransTypeController from './TransTypeController'
 import MarkerController from './MarkerController'
-import { useContext } from 'react'
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
 
 
 export default function Sidebar () {

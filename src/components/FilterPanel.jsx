@@ -3,9 +3,7 @@ import charging from '../assets/images/charging.svg'
 import pregnancy from '../assets/images/pregnancy.svg'
 import filterClear from '../assets/images/filter-clear.svg'
 import filter from '../assets/images/filter.svg'
-import { useState, useContext, useEffect } from "react";
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
+import { useState, useEffect } from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setFilterConditions } from '../reducer/reducer'

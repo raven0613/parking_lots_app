@@ -31,6 +31,7 @@ export const parkSlice = createSlice({
     setRemainings: (state, action) => {
       state.remainings = [ ...action.payload ]
     },
+    //網址上的id是否為空
     setIsEmptyId: (state, action) => {
       state.isEmptyId = action.payload //pay, counts
     },

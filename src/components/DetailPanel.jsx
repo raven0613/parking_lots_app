@@ -11,13 +11,10 @@ import tel from '../assets/images/tel.svg'
 import back from '../assets/images/back.svg'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState, useContext } from 'react'
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
+import { allContext } from '../store/UIDataProvider'
 import { useRef } from 'react'
 
-
 import { useSelector, useDispatch } from 'react-redux'
-// import { setCurrentPark } from '../utils/Provider'
 import { setCurrentPark, setCanFetchDirection } from '../reducer/reducer'
 
 

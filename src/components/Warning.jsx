@@ -2,11 +2,8 @@ import warning from '../assets/images/warning.svg'
 import { useEffect, useState, useContext } from "react"
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useRef } from 'react'
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
 
 import { useSelector, useDispatch } from 'react-redux'
-// import { setCurrentPark } from '../utils/Provider'
 import { setCurrentPark, setIsEmptyId } from '../reducer/reducer'
 
 

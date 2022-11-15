@@ -1,7 +1,6 @@
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
-import { useState, useContext, useEffect } from "react";
-// import { allContext } from '../../pages/Home'
-import { allContext } from '../../utils/Provider'
+import { useState, useEffect } from "react";
+
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
 

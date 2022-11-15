@@ -12,7 +12,6 @@ import telImg from '../../assets/images/tel.svg'
 import { useState } from "react";
 
 import { useDispatch } from 'react-redux'
-// import { setCurrentPark } from '../../utils/Provider'
 import { setCurrentPark } from '../../reducer/reducer'
 
 

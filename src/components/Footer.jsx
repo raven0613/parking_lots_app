@@ -3,8 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import mapSearch from '../assets/images/map-search.svg'
 import selfSearch from '../assets/images/self-search.svg'
 import nearby from '../assets/images/nearby.svg'
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
+import { allContext } from '../store/UIDataProvider'
 
 
 import { useSelector, useDispatch } from 'react-redux'

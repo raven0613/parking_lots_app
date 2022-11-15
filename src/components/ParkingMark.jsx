@@ -5,7 +5,7 @@ import { Marker } from '@react-google-maps/api';
 import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks } from '../utils/helpers'
 import { useState, useEffect, useContext, useRef } from 'react';
 // import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
+import { allContext } from '../store/UIDataProvider'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.svg'
 
@@ -179,12 +179,10 @@ export default function ParkingMark () {
 
     //網址上的park id 沒找到就彈提醒窗
     const paramsPark = allParks.find(park => park.id === parkId)
-    console.log(paramsPark)
     if (!paramsPark) {
       dispatch(setIsEmptyId(true))
       return
     }
-    
     //確保拿到最新的資料
     dispatch(setCurrentPark(parksWithRemainings([paramsPark], remainings)[0]))
   }, [allParks, location])

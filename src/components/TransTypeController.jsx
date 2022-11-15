@@ -1,8 +1,6 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import car from '../assets/images/car-.svg'
 import motor from '../assets/images/motorbike.svg'
-// import { allContext } from '../pages/Home'
-import { allContext } from '../utils/Provider'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setTransOption } from '../reducer/reducer'
