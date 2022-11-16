@@ -61,7 +61,7 @@ export default function CardPanel () {
         onClick={(e) => e.stopPropagation()}>
         
         {/* 都沒有的話就顯示提示 */}
-        {!currentPark? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
+        {!currentPark?.id? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
 
         {!isCurrentCardOnly() && currentPark?.id && <Card 
         key={ currentPark.id } 

@@ -16,21 +16,24 @@
 
     transition: 0.2s ease-out;
     &.active {
-      width: 14.5rem;
+      width: 17.5rem;
       .filter__btn {
         transition: 0.2s ease-out;
         opacity: 1;
-        &.clear {
+        &.zero {
           right: 3rem;
         }
-        &.disabled {
+        &.clear {
           right: 6rem;
         }
-        &.pregnancy {
+        &.disabled {
           right: 9rem;
         }
-        &.charging {
+        &.pregnancy {
           right: 12rem;
+        }
+        &.charging {
+          right: 15rem;
         }
       }
     }
@@ -83,24 +86,26 @@
       width: 3rem;
       left: 0;
       &.active {
-        width: 15.9rem;
+        width: 19.1rem;
     
         .filter__btn {
-    
-          &.clear {
+          &.zero {
             left: 3.5rem;
           }
-    
-          &.disabled {
+          &.clear {
             left: 6.7rem;
           }
     
-          &.pregnancy {
+          &.disabled {
             left: 9.9rem;
           }
     
-          &.charging {
+          &.pregnancy {
             left: 13.1rem;
+          }
+    
+          &.charging {
+            left: 16.3rem;
           }
         }
       }

@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { mapContext } from '../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMode, setIsFollow } from '../reducer/reducer'
+import { setMode, setIsFollow, setWarningMsg } from '../reducer/reducer'
 
 export default function Locate () {
   const selfPos = useSelector((state) => state.map.selfPos)
@@ -44,7 +44,11 @@ export default function Locate () {
   return (
     <button 
       onClick={() => {
-        if (isLocateDenied) return
+        if (isLocateDenied) {
+          dispatch(setWarningMsg('您無法使用定位及路線功能，可於瀏覽器設定開啟權限。'))
+          return
+        }
+        
         dispatch(setMode('self'))
       }} 
       className={`locate ${disabled}`}>

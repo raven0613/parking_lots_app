@@ -31,7 +31,7 @@ export default function ParkingMark ({ nearParksWithOutCurrent, label, icon, ava
       {nearParksWithOutCurrent && nearParksWithOutCurrent.map(park => {
         const positon = {lng: park.lng, lat: park.lat}
         // 切換這邊就可以切換要不要顯示0
-        if (availableCounts(transOption, park) < 1) return <p key={park.id}></p>
+        // if (availableCounts(transOption, park) < 1) return <p key={park.id}></p>
         return (
           <Marker 
             icon={icon(transOption, park, false)}

@@ -95,7 +95,44 @@
     }
   }
 }
+.marker__current--zero {
+  // animation: App-logo-spin alternate infinite 0.5s ease-in;
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  bottom: 0;
+  left: -2.5rem;
+  color: black;
 
+  &::before {
+    content: url('');
+    background-image: url('../images/marker-parking-zero.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 4rem;
+    height: 4rem;
+    position: absolute;
+    top: -1.05rem;
+    left: 0.5rem;
+    z-index: -1;
+  }
+
+  &::after {
+    content: ' ';
+    font-size: 0.5rem;
+    width: 100%;
+    height: 100%;
+  }
+
+  &--pay {
+    &::after {
+      content: '$';
+      font-size: 0.5rem;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
 
 .map__ui {
   position: absolute;
@@ -128,6 +165,9 @@
     animation: App-logo-spin alternate infinite 0.5s ease-in;
   }
   .marker__current--sm {
+    animation: App-logo-spin alternate infinite 0.5s ease-in;
+  }
+  .marker__current--zero {
     animation: App-logo-spin alternate infinite 0.5s ease-in;
   }
 }

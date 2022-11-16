@@ -15,11 +15,12 @@ import { mapContext } from '../store/UIDataProvider'
 import { useRef } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setCurrentPark, setCanFetchDirection } from '../reducer/reducer'
+import { setCurrentPark, setCanFetchDirection, setWarningMsg } from '../reducer/reducer'
 
 
 export default function DetailPanel () {
   const currentPark = useSelector((state) => state.park.currentPark)
+  const isLocateDenied = useSelector((state) => state.map.isLocateDenied)
   const dispatch = useDispatch()
   
   const { directions, setDirections } = useContext(mapContext)
@@ -95,7 +96,11 @@ export default function DetailPanel () {
             {!directions && <button onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              
+
+              if (isLocateDenied) {
+                dispatch(setWarningMsg('您無法使用定位及路線功能，可於瀏覽器設定開啟權限。'))
+                return
+              }
               dispatch(setCanFetchDirection(true))
             }} className="detail__title--navi">
               <img src={navigateIcon} alt='navigate'></img>

@@ -1,8 +1,9 @@
 import parkMarker from '../assets/images/marker-parking.svg'
 import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
+import parkMarkerZero from '../assets/images/marker-parking-zero.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 
-import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks } from '../utils/helpers'
+import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks } from '../utils/parkHelpers'
 import ParkingMark from './ParkingMark'
 import { useState, useEffect, useContext, useRef } from 'react'
 import { parkContext, mapContext } from '../store/UIDataProvider'
@@ -10,7 +11,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setCurrentPark, setNearParks, setRemainings, setIsEmptyId } from '../reducer/reducer'
+import { setCurrentPark, setNearParks, setRemainings, setIsEmptyId, setWarningMsg } from '../reducer/reducer'
 
 //得到距離(這邊是經緯度)少於某數的所有停車場資料
 const getPointsInDistance = (datas, targetPoint, distance) => {
@@ -41,7 +42,8 @@ const combinedInitAllParksData = (parks, formattedParksData, coordinatesConvert,
     return formattedParksWithPay
 }
 
-const filteredNearParks = (basedParks, remainings, center, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts) => {
+//每次更新身邊停車場時要跑的篩選
+const filteredNearParks = (basedParks, remainings, center, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts, isShowZero) => {
     //算出與自身位置一定距離內的點
     let filteredParkingLots = getPointsInDistance(basedParks, center, 0.01)
     //將停車場資料與 remainings 資料合併
@@ -49,8 +51,10 @@ const filteredNearParks = (basedParks, remainings, center, transOption, getPoint
     //將帶有最新 remainings 資料的停車場以機車or汽車篩選
     filteredParkingLots = parksTransFilter(filteredParkingLots, transOption)
     //篩選只顯示>0的
+    //這邊會害cardPanel顯示全部
     const availablePark = filteredParkingLots.filter(park => availableCounts(transOption, park) > 0 )
 
+    if (!isShowZero) return availablePark
     return filteredParkingLots
 }
 
@@ -65,12 +69,10 @@ export default function ParkMarkerController () {
   const filterConditions = useSelector((state) => state.park.filterConditions)
   const mapCenter = useSelector((state) => state.map.mapCenter)
   const target = useSelector((state) => state.map.target)
-  
+  const isShowZero = useSelector((state) => state.park.isShowZero)
   const dispatch = useDispatch()
 
-
   const { setDirections } = useContext(mapContext)
-  
   //fetching狀態
   const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
   const [isFetchingParks, setIsFetchingParks] = useState(false)
@@ -83,6 +85,7 @@ export default function ParkMarkerController () {
   const parkId = params.parkId
   const [allParks, setAllParks] = useState()
   const [userFilteredParks, setUserFilteredParks] = useState([])
+  const currentRemainingsRef = useRef()
 
   //一載入就抓所有資料
   useEffect(() => {
@@ -147,7 +150,8 @@ export default function ParkMarkerController () {
     //網址上的park id 沒找到就彈提醒窗
     const paramsPark = allParks.find(park => park.id === parkId)
     if (!paramsPark) {
-      dispatch(setIsEmptyId(true))
+      dispatch(setWarningMsg('查無此停車場'))
+      // dispatch(setIsEmptyId(true))
       return
     }
     //確保拿到最新的資料
@@ -170,29 +174,29 @@ export default function ParkMarkerController () {
   useEffect(() => {
     if (mode !== 'self') return
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
-    const filteredParks = filteredNearParks(basedParks, remainings, selfPos, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts)
+    const filteredParks = filteredNearParks(basedParks, remainings, selfPos, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts, isShowZero)
 
     dispatch(setNearParks(filteredParks))
-  }, [selfPos, mode, transOption, remainings, userFilteredParks])
+  }, [selfPos, mode, transOption, remainings, userFilteredParks, isShowZero])
 
   // target的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'target') return
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
-    const filteredParks = filteredNearParks(basedParks, remainings, target, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts)
+    const filteredParks = filteredNearParks(basedParks, remainings, target, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts, isShowZero)
 
     dispatch(setNearParks(filteredParks))
-  }, [target, mode, transOption, remainings, userFilteredParks])
+  }, [target, mode, transOption, remainings, userFilteredParks, isShowZero])
 
   // mapCenter的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'screen-center') return
     //決定以誰為基準
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
-    const filteredParks = filteredNearParks(basedParks, remainings, mapCenter, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts)
+    const filteredParks = filteredNearParks(basedParks, remainings, mapCenter, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts, isShowZero)
 
     dispatch(setNearParks(filteredParks))
-  }, [mapCenter, mode, transOption, remainings, userFilteredParks])
+  }, [mapCenter, mode, transOption, remainings, userFilteredParks, isShowZero])
 
 
   // filter 條件切換
@@ -226,8 +230,29 @@ export default function ParkMarkerController () {
   }, [mapCenter, remainings, location])
 
 
+
+  
+  useEffect(() => {
+    if (!currentPark?.id) return
+    //如果是一開始就>0的，再進行車位數量追蹤（為了避免點開0的也跳視窗）
+    if (currentRemainingsRef.current > 0) {
+      if (availableCounts(transOption, currentPark) < 1) {
+        dispatch(setWarningMsg('您的目標停車場無剩餘車位'))
+      }
+    }
+    //每次都記錄車位數量
+    currentRemainingsRef.current = availableCounts(transOption, currentPark)
+    console.log(currentRemainingsRef.current)
+  }, [currentPark, transOption])
+
   //icon 的設定
   const icon = (transOption, place, isCurr) => {
+    if (availableCounts(transOption, place) === '0') {
+      return {
+        url: isCurr ? '' : parkMarkerZero,
+        scaledSize: isCurr? { width: 48, height: 48 } : { width: 38, height: 38 }
+      }
+    }
     if (availableCounts(transOption, place) < 10) {
       return {
         url: isCurr ? '' : parkMarkerSmall,
@@ -241,6 +266,14 @@ export default function ParkMarkerController () {
   }
 
   const label = (transOption, place, isCurr) => {
+    if (availableCounts(transOption, place) === '0') {
+      return {
+        text: markerOption === 'pay' ? payment(transOption, place) : availableCounts(transOption, place),
+        className: isCurr? markerOption === 'pay' ? 'marker__current--zero marker__current--zero--pay' : 'marker__current--zero' : 'marker',
+        color: '#dbe1e6',
+        fontSize: isCurr? '18px' : '10px'
+      }
+    }
     //車位不夠
     if (availableCounts(transOption, place) < 10) {
       return {

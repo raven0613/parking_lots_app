@@ -8,12 +8,12 @@ import { useLocation } from 'react-router-dom'
 
 import ParkMarkerController from "./ParkMarkerController"
 import SelfMarker from "./SelfMarker"
-import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/helpers'
+import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/mapHelpers'
 
 import { mapContext } from '../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow } from '../reducer/reducer'
+import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow, setWarningMsg } from '../reducer/reducer'
 
 export default function Map({setIsGoogleApiLoaded}) {
   const currentPark = useSelector((state) => state.park.currentPark)
@@ -51,10 +51,10 @@ export default function Map({setIsGoogleApiLoaded}) {
   useEffect(() => {
     if (isLocateDenied) return
 
-    watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied)
+    watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied, setWarningMsg)
     if (location.search) return
 
-    getUserPos(dispatch, setSelfPos, mode, setMapCenter, setMode, setIsLocateDenied)
+    getUserPos(dispatch, setSelfPos, mode, setMapCenter, setMode, setIsLocateDenied, setWarningMsg)
     //setMapCenter({lat: 25.0408065, lng: 121.5397976})   //北車的點
   }, [location]);
 
@@ -101,7 +101,7 @@ export default function Map({setIsGoogleApiLoaded}) {
         //mode回到self後恢復跟隨
         dispatch(setIsFollow(true))
       }
-      if (!selfPos?.lat) watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied)  //沒抓到就再抓
+      if (!selfPos?.lat) watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied, setWarningMsg)  //沒抓到就再抓
     
       dispatch(setMapCenter(selfPos))
       return
@@ -116,7 +116,6 @@ export default function Map({setIsGoogleApiLoaded}) {
 
   //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
   useEffect(() => {
-    if (isLocateDenied) return
     if (!canFetchDirection) return
     if (!currentPark?.id) return
     const positon = {lng: currentPark.lng, lat: currentPark.lat}

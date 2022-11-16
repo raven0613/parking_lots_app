@@ -3,13 +3,15 @@ import charging from '../assets/images/charging.svg'
 import pregnancy from '../assets/images/pregnancy.svg'
 import filterClear from '../assets/images/filter-clear.svg'
 import filter from '../assets/images/filter.svg'
+import filterAll from '../assets/images/filter-all.svg'
 import { useState, useEffect } from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setFilterConditions } from '../reducer/reducer'
+import { setFilterConditions, setIsShowZero } from '../reducer/reducer'
 
 export default function FilterPanel () {
   const filterConditions = useSelector((state) => state.park.filterConditions)
+  const isShowZero = useSelector((state) => state.park.isShowZero)
   const dispatch = useDispatch()
 
   const [isActive, setIsActive] = useState(false)
@@ -38,6 +40,14 @@ export default function FilterPanel () {
       </button>
 
       <div className={panelClassName()}>
+        <button 
+          onClick={() => {
+            //是否顯示車位為0的停車場
+            dispatch(setIsShowZero(!isShowZero))
+          }} 
+        className={`filter__btn zero ${isShowZero? 'active' : ''}`}>
+          <img className="filter__img" src={filterAll} alt="filterZero" />
+        </button>
 
         <button 
           onClick={() => {
