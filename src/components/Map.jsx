@@ -11,6 +11,7 @@ import SelfMarker from "./SelfMarker"
 import { handleFetchDirections, getUserPos, watchUserPos } from '../utils/mapHelpers'
 
 import { mapContext } from '../store/UIDataProvider'
+import { darkStyle, lightStyle } from '../assets/styles/mapStyles'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow, setWarningMsg } from '../reducer/reducer'
@@ -24,7 +25,7 @@ export default function Map({setIsGoogleApiLoaded}) {
   const canFetchDirection = useSelector((state) => state.map.canFetchDirection)
   const isFollow = useSelector((state) => state.map.isFollow)
   const isLocateDenied = useSelector((state) => state.map.isLocateDenied)
-  
+  const mapStyleChange = useSelector((state) => state.map.mapStyleChange)
   const dispatch = useDispatch()
 
   //定義來源名稱
@@ -32,6 +33,7 @@ export default function Map({setIsGoogleApiLoaded}) {
   
   const location = useLocation()
   const [libraries] = useState(["places"])
+  const [mapStyle, setMapStyle] = useState(lightStyle)
 
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
@@ -44,7 +46,14 @@ export default function Map({setIsGoogleApiLoaded}) {
     setIsGoogleApiLoaded(true)
   }, [isLoaded, setIsGoogleApiLoaded])
 
-
+  useEffect(() => {
+    if (mapStyleChange === 'light') {
+      setMapStyle(lightStyle)
+    }
+    else if (mapStyleChange === 'dark') {
+      setMapStyle(darkStyle)
+    }
+  }, [mapStyleChange])
 
 
   //網址改變就去抓使用者的 currentPosition，並且要把地圖中心設在使用者位置
@@ -84,6 +93,7 @@ export default function Map({setIsGoogleApiLoaded}) {
       dispatch(setMapCenter(mapInstance.center.toJSON()))
     }
   }
+  
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
@@ -124,21 +134,22 @@ export default function Map({setIsGoogleApiLoaded}) {
     dispatch(setCanFetchDirection(false))
   }, [canFetchDirection])
 
-
   //map設定
   const options = useMemo(
     () => ({
-      //在google map後台設定，不須保密
-      mapId: 'feb728f5023695e4',
+      //在google map後台設定，不須保密（要自訂樣式的話不可以有id）
+      // mapId: 'feb728f5023695e4',
       //地圖上的UI不顯示
       disableDefaultUI: true,
       //地圖上的標記不能點
       clickableIcons: false,
       //任何操作都可以滑動螢幕
-      gestureHandling: 'greedy'
+      gestureHandling: 'greedy',
+      styles: mapStyle
     }),
-    []
+    [mapStyle]
   )
+
   return(
     <>
       {isLoaded && <div className="map">

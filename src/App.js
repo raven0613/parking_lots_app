@@ -4,13 +4,15 @@ import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import React, { lazy, Suspense } from 'react';
 import NotFound from './pages/NotFound';
 import UIDataProvider from './store/UIDataProvider';
+import { useSelector } from 'react-redux'
 
 const Card = lazy(() => import('./components/card-panel/Card'))
 
 function App() {
+  const theme = useSelector((state) => state.UI.theme)
   //寫下所有路由設定
   return (
-    <div className="App">
+    <div className="App" data-theme={theme}>
       <Router>
 
           <Suspense fallback={<h1> Loading </h1>}>

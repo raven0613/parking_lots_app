@@ -56,7 +56,8 @@ export const mapSlice = createSlice({
     mapCenter: { lng: 121.51763286051023, lat: 25.04194409222794 },
     target: { lat: '', lng: '' },
     canFetchDirection: false,
-    isFollow: true
+    isFollow: true,
+    mapStyleChange: 'light'
    },
   reducers: {
     setIsLocateDenied: (state, action) => {
@@ -82,10 +83,14 @@ export const mapSlice = createSlice({
     setIsFollow: (state, action) => {
       state.isFollow = action.payload
     },
+    //發出更換mapStyle的內容
+    setMapStyleChange: (state, action) => {
+      state.mapStyleChange = action.payload
+    },
   }
 })
 
-export const { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection, setIsFollow } = mapSlice.actions
+export const { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection, setIsFollow, setMapStyleChange } = mapSlice.actions
 export const mapReducer = mapSlice.reducer
 
 
@@ -93,14 +98,18 @@ export const mapReducer = mapSlice.reducer
 export const UISlice = createSlice({
   name: 'UI',
   initialState: { 
-    warningMsg: ''
+    warningMsg: '',
+    theme: 'light'
   },
   reducers: {
     setWarningMsg: (state, action) => {
       state.warningMsg = action.payload
     },
+    setTheme: (state, action) => {
+      state.theme = action.payload
+    },
   }
 })
 
-export const { setWarningMsg } = UISlice.actions
+export const { setWarningMsg, setTheme } = UISlice.actions
 export const UIReducer = UISlice.reducer
