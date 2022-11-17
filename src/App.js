@@ -9,10 +9,10 @@ import { useSelector } from 'react-redux'
 const Card = lazy(() => import('./components/card-panel/Card'))
 
 function App() {
-  const theme = useSelector((state) => state.UI.theme)
+  // const theme = useSelector((state) => state.UI.theme)
   //寫下所有路由設定
   return (
-    <div className="App" data-theme={theme}>
+    <div className="App">
       <Router>
 
           <Suspense fallback={<h1> Loading </h1>}>
