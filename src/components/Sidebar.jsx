@@ -6,8 +6,6 @@ import TransTypeController from './TransTypeController'
 import MarkerController from './MarkerController'
 
 export default function Sidebar () {
-
-
   return (
     <>
       <div className="sidebar">

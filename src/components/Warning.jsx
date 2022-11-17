@@ -21,8 +21,10 @@ export default function Warning () {
 
 
   useEffect(() => {
-    if (!warningMsg) return
+    // if (!warningMsg) return
     contentRef.current = warningMsg
+    if (!warningMsg) return setIsActive(false)
+    
     setIsActive(true)
   }, [warningMsg])
 

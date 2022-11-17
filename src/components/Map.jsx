@@ -14,7 +14,7 @@ import { mapContext } from '../store/UIDataProvider'
 import { darkStyle, lightStyle } from '../assets/styles/mapStyles'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow, setWarningMsg } from '../reducer/reducer'
+import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow, setWarningMsg, setCurrentPark } from '../reducer/reducer'
 
 export default function Map({setIsGoogleApiLoaded}) {
   const currentPark = useSelector((state) => state.park.currentPark)
@@ -154,6 +154,9 @@ export default function Map({setIsGoogleApiLoaded}) {
     <>
       {isLoaded && <div className="map">
         <GoogleMap
+          onClick={() => {
+            dispatch(setCurrentPark(''))
+          }}
           zoom={15}
           center={mapCenter}
           mapContainerClassName="map"

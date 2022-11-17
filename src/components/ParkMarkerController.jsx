@@ -3,7 +3,7 @@ import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import parkMarkerZero from '../assets/images/marker-parking-zero.svg'
 import { getParkingLots, getRemaining } from '../apis/places'
 
-import { coordinatesConvert, getStraightDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks } from '../utils/parkHelpers'
+import { coordinatesConvert, getPointsInDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks, serviceTimeFilter, availableCounts, payment } from '../utils/parkHelpers'
 import ParkingMark from './ParkingMark'
 import { useState, useEffect, useContext, useRef } from 'react'
 import { parkContext, mapContext } from '../store/UIDataProvider'
@@ -13,33 +13,15 @@ import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.sv
 import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentPark, setNearParks, setRemainings, setIsEmptyId, setWarningMsg } from '../reducer/reducer'
 
-//得到距離(這邊是經緯度)少於某數的所有停車場資料
-const getPointsInDistance = (datas, targetPoint, distance) => {
-  if(!datas) return
-  if (isNaN(distance)) return datas
 
-  return datas.filter(data => 
-    getStraightDistance(targetPoint, {lng: data.lng, lat: data.lat}) < distance)
-}
 
-//得到單一目標不同車種的剩餘車位資料
-export const availableCounts = (transOption, place) => {
-  if (transOption === 'car') return place.availablecar.toString()
-  
-  if (transOption === 'motor') return place.availablemotor.toString()
-}
-//得到單一目標不同車種的費率資料
-const payment = (transOption, place) => {
-  if (transOption === 'car') return place.pay.toString()
-  
-  if (transOption === 'motor') return place.pay.toString()
-}
 
 //初次合併完成的所有資料
 const combinedInitAllParksData = (parks, formattedParksData, coordinatesConvert, payexFilter) => {
     const formattedParks = formattedParksData(parks, coordinatesConvert)
     const formattedParksWithPay = payexFilter(formattedParks)
-    return formattedParksWithPay
+    const formattedParksWithService = serviceTimeFilter(formattedParksWithPay)
+    return formattedParksWithService
 }
 
 //每次更新身邊停車場時要跑的篩選
@@ -70,6 +52,7 @@ export default function ParkMarkerController () {
   const mapCenter = useSelector((state) => state.map.mapCenter)
   const target = useSelector((state) => state.map.target)
   const isShowZero = useSelector((state) => state.park.isShowZero)
+  const warningMsg = useSelector((state) => state.park.warningMsg)
   const dispatch = useDispatch()
 
   const { setDirections } = useContext(mapContext)
@@ -229,10 +212,11 @@ export default function ParkMarkerController () {
     }
   }, [mapCenter, remainings, location])
 
-  //提示訊息設定
+
+
+  //提示訊息設定   每次更新時前後id沒變 & 車位不足 才跳提醒
   useEffect(() => {
     if (!currentPark?.id) return
-    if (currentRemainingsRef.current > 0) {
       if (availableCounts(transOption, currentPark) < 1) {
         if (transOption === 'car') {
           dispatch(setWarningMsg('您的目標停車場沒有汽車停車格'))
@@ -241,21 +225,35 @@ export default function ParkMarkerController () {
           dispatch(setWarningMsg('您的目標停車場沒有機車停車格'))
         }
       }
-    }
-    currentRemainingsRef.current = availableCounts(transOption, currentPark)
+  
   }, [transOption])
   
   useEffect(() => {
+    console.log(warningMsg)
     if (!currentPark?.id) return
+    
     //如果是一開始就>0的，再進行車位數量追蹤（為了避免點開0的也跳視窗）
-    if (currentRemainingsRef.current > 0) {
+    if (currentRemainingsRef.current?.id === currentPark.id && availableCounts(transOption, currentRemainingsRef.current) > 0) {
       if (availableCounts(transOption, currentPark) < 1) {
         dispatch(setWarningMsg('您的目標停車場無剩餘車位'))
       }
     }
+    if (warningMsg) {
+      if (availableCounts(transOption, currentPark) > 0) {
+        dispatch(setWarningMsg(''))
+      }
+    }
     //每次都記錄車位數量
-    currentRemainingsRef.current = availableCounts(transOption, currentPark)
-  }, [currentPark, transOption])
+    // currentRemainingsRef.current = availableCounts(transOption, currentPark)
+    currentRemainingsRef.current = {
+      id: currentPark.id, 
+      availablecar: currentPark.availablecar, 
+      availablemotor: currentPark.availablemotor }
+
+    console.log(currentRemainingsRef.current)
+  }, [currentPark])
+
+
 
   //icon 的設定
   const icon = (transOption, place, isCurr) => {

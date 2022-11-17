@@ -21,6 +21,7 @@ import { } from '../reducer/reducer'
 export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
   const currentPark = useSelector((state) => state.park.currentPark)
 
+
   return (
     <>
       <div className="map__container">

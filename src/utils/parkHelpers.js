@@ -34,6 +34,15 @@ export function getStraightDistance ( a, b ) {
     return distance
 }
 
+//得到距離(這邊是經緯度)少於某數的所有停車場資料
+export const getPointsInDistance = (datas, targetPoint, distance) => {
+  if(!datas) return
+  if (isNaN(distance)) return datas
+
+  return datas.filter(data => 
+    getStraightDistance(targetPoint, {lng: data.lng, lat: data.lat}) < distance)
+}
+
 //初次取得資料時把需要的key都加進去
 export const formattedParksData = (parks, coordinatesConvert) => {
   if (!parks || !coordinatesConvert) return
@@ -94,6 +103,20 @@ export const parksTransFilter = (parkings, transOption) => {
   if (transOption === 'motor') {
     return parkings.filter(park => park.totalmotor !== 0)
   }
+}
+
+//得到單一目標不同車種的剩餘車位資料
+export const availableCounts = (transOption, place) => {
+  if (!transOption || !place) return
+  if (transOption === 'car') return place.availablecar.toString()
+  
+  if (transOption === 'motor') return place.availablemotor.toString()
+}
+//得到單一目標不同車種的費率資料
+export const payment = (transOption, place) => {
+  if (transOption === 'car') return place.pay.toString()
+  
+  if (transOption === 'motor') return place.pay.toString()
 }
 
 //把剩餘車位的資料合併進停車場資料(回傳陣列資料)
@@ -177,6 +200,35 @@ export const payexFilter = (allParks) => {
     return { ...park, pay: '-' }
   })
   return allParksWithPayex
+}
+
+
+export const serviceTimeFilter = (allParks) => {
+  if (!allParks) return
+  const allParksWithService = allParks.map(park => {
+    if (park.serviceTime.includes('臨停')) {
+      return { ...park, service: park.serviceTime }
+    }
+    else if (park.serviceTime.includes('平日')) {
+      return { ...park, service: park.serviceTime }
+    }
+    else if (park.serviceTime.includes('全日')) {
+      return { ...park, service: '24小時' }
+    }
+    else if (park.serviceTime.includes('00:00:00~23:59')) {
+      return { ...park, service: '24小時' }
+    }
+    else if (park.serviceTime.includes('24小時')) {
+      return { ...park, service: '24小時' }
+    }
+    else if (park.serviceTime.length === 17) {
+      const start = park.serviceTime.slice(0, 5)
+      const end = park.serviceTime.slice(8, -2)
+      return { ...park, service: `${start}${end}` }
+    }
+    return { ...park, service: park.serviceTime }
+  })
+  return allParksWithService
 }
 
 //得到query string 的土法煉鋼法
