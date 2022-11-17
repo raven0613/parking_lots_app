@@ -2,7 +2,7 @@
   "name": "parking_lots_app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://raven0613.github.io/parking_lots_app",
+  "homepage": ".",
   "dependencies": {
     "@reach/combobox": "^0.18.0",
     "@react-google-maps/api": "^2.13.1",
