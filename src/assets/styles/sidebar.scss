@@ -28,6 +28,10 @@
       display: flex;
       grid-row: 5/6;
     }
+    .theme {
+      display: flex;
+      grid-row: 6/7;
+    }
     &__logo {
       grid-row: 1/2;
       margin: auto;

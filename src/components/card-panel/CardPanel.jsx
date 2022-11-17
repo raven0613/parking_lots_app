@@ -5,6 +5,7 @@ import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
 
 import { useSelector } from 'react-redux'
+import { useCallback } from 'react';
 
 
 export default function CardPanel () {
@@ -61,8 +62,9 @@ export default function CardPanel () {
         onClick={(e) => e.stopPropagation()}>
         
         {/* 都沒有的話就顯示提示 */}
-        {!currentPark? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
+        {!currentPark?.id? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
 
+        {/* 當currentPark不在nearParks中時就放第一個 */}
         {!isCurrentCardOnly() && currentPark?.id && <Card 
         key={ currentPark.id } 
         park={ currentPark } 

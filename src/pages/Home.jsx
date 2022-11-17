@@ -11,7 +11,7 @@ import FilterPanel from '../components/FilterPanel'
 import Sidebar from '../components/Sidebar'
 import Footer from '../components/Footer'
 import Warning from '../components/Warning'
-import ParkDataManager from '../components/ParkMarkerController'
+import ThemeButton from '../components/ThemeButton'
 
 
 import { useSelector } from 'react-redux'
@@ -20,6 +20,7 @@ import { } from '../reducer/reducer'
 
 export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
   const currentPark = useSelector((state) => state.park.currentPark)
+
 
   return (
     <>
@@ -38,6 +39,7 @@ export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
             <MarkerController />
             <TransTypeController />
             <Locate />
+            <ThemeButton />
           </div>
           
           <CardPanel />

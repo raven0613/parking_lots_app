@@ -16,11 +16,10 @@ import { setCurrentPark } from '../../reducer/reducer'
 
 
 export default function Card (props) {
-  const { name, address, tel, serviceTime, payex, availablecar, availablemotor, id, Handicap_First, summary, ChargingStation, Pregnancy_First } = props.park
-  const { currentPark } = props
+  const { name, address, tel, service, payex, availablecar, availablemotor, id, Handicap_First, summary, ChargingStation, Pregnancy_First } = props.park
+  const { currentPark, isCurr } = props
 
   const dispatch = useDispatch()
-
 
   //路由相關
   const navigate = useNavigate()
@@ -36,7 +35,10 @@ export default function Card (props) {
     if (id === currentPark.id) return setCardClass('card current')
     if (id !== currentPark.id) return setCardClass('card')
   }, [currentPark])
-  
+
+  useEffect(() => {
+    if (isCurr) return setCardClass('card current')
+  }, [isCurr])
   
   return (
     <div 
@@ -48,7 +50,6 @@ export default function Card (props) {
       navigate(`/map/${id}${queryStr}`, {push: true})
 
       //點擊卡片設定為目前點選的停車場
-      // setCurrentPark(props.park)
       dispatch(setCurrentPark(props.park))
     }}
     className={cardClass}>
@@ -62,7 +63,7 @@ export default function Card (props) {
 
       <div className="card__info">
         <img src={serviceTimeImg} alt="serviceTime"></img>
-        <span>{ serviceTime }</span>
+        <span>{ service }</span>
       </div>
 
       <div className="card__info address">

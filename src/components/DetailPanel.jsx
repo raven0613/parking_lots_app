@@ -15,11 +15,12 @@ import { mapContext } from '../store/UIDataProvider'
 import { useRef } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setCurrentPark, setCanFetchDirection } from '../reducer/reducer'
+import { setCurrentPark, setCanFetchDirection, setWarningMsg } from '../reducer/reducer'
 
 
 export default function DetailPanel () {
   const currentPark = useSelector((state) => state.park.currentPark)
+  const isLocateDenied = useSelector((state) => state.map.isLocateDenied)
   const dispatch = useDispatch()
   
   const { directions, setDirections } = useContext(mapContext)
@@ -29,7 +30,6 @@ export default function DetailPanel () {
   const [device, setDevice] = useState('PC')
   const currentRef = useRef(currentPark)
   const [isDetailActive, setIsDetailActive] = useState(false)
-
 
 
   const handleRWD = () => {
@@ -42,26 +42,20 @@ export default function DetailPanel () {
       else
           setDevice("mobile");
   }
-
+  //根據畫面大小來設定機種
   useEffect(()=>{ 
       window.addEventListener('resize',handleRWD)
       handleRWD()
       return(()=>{
-          window.removeEventListener('resize',handleRWD)
+        window.removeEventListener('resize',handleRWD)
       })
-  },[]);
-
-  //網址變化時偵測網址來改變 isActive
-   useEffect(() => {
-
-   },[location]) 
+  },[])
 
   //currentRef用來記錄原值以免造成空版
   useEffect(()=>{ 
     if (!currentPark?.id) return
-    setIsDetailActive(true)
     currentRef.current = currentPark
-  },[currentPark]);
+  },[currentPark])
 
   //看有沒有 currentPark 來決定要顯示哪個
   const currentDisplay = currentPark?.id? currentPark : currentRef.current
@@ -71,9 +65,20 @@ export default function DetailPanel () {
   const isDisabled = currentDisplay.summary.includes('身心') || currentDisplay.Handicap_First > 0
   const isPregnancy = currentDisplay.Pregnancy_First > 0
   
+  //電腦版有路線時可顯示全部，電腦版以下有路線時container消失
+  const isContainerActive = () => {
+    if (device !== 'PC') {
+      if (directions) return false
+    }
+    return true
+  }
+
   if (currentDisplay) {
     return (
-        <div className="detail__panel">
+        <div className="detail__panel" 
+          onDragEnd={() => {
+
+          }}>
           <div className="detail__title">
             <img 
               className="detail__title--back" 
@@ -95,7 +100,11 @@ export default function DetailPanel () {
             {!directions && <button onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              
+
+              if (isLocateDenied) {
+                dispatch(setWarningMsg('您無法使用定位及路線功能，可於瀏覽器設定開啟權限。'))
+                return
+              }
               dispatch(setCanFetchDirection(true))
             }} className="detail__title--navi">
               <img src={navigateIcon} alt='navigate'></img>
@@ -133,7 +142,7 @@ export default function DetailPanel () {
 
 
 
-          <div className={containerClass}>
+          {isContainerActive() && <div className={containerClass}>
             <div className="detail__content">
               {/* 價格顯示方式 */}
               {device !== 'PC' && device !== 'tablet' && isDetailActive && payexContent (currentDisplay)}
@@ -145,7 +154,7 @@ export default function DetailPanel () {
             
             <div className="detail__content">
               <img className="detail__content--img" src={serviceTime} alt="serviceTime" />
-              <p className="detail__content--content">{currentDisplay.serviceTime}</p>
+              <p className="detail__content--content">{currentDisplay.service}</p>
             </div>
 
             <div className="detail__content">
@@ -157,14 +166,14 @@ export default function DetailPanel () {
               <img className="detail__content--img" src={tel} alt="tel" />
               <p className="detail__content--content">{currentDisplay.tel}</p>
             </div>
-
+            {/* 右下方車位種類標示 */}
             <div className="detail__container--img">
               {isPregnancy && <img className="detail__container--img-pregnancy" src={pregnancy} alt="pregnancy-parking" />}
 
               {isDisabled && <img className="detail__container--img-disabled" src={disabled} alt="disabled-parking" />}
             </div>
 
-
+            {/* 詳細資訊切換按鈕 */}
             <button className='detail__container--button' 
               onClick={(e) => {
                 e.preventDefault()
@@ -173,7 +182,7 @@ export default function DetailPanel () {
               }}>
               {isDetailActive? '收起' : '查看詳細'}
             </button>
-          </div>
+          </div>}
 
         </div>
     )

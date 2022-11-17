@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { parkReducer, mapReducer } from '../reducer/reducer'
+import { parkReducer, mapReducer, UIReducer } from '../reducer/reducer'
 
 export const store = configureStore({
   reducer: { 
     park: parkReducer,
-    map: mapReducer
+    map: mapReducer,
+    UI: UIReducer
    }
 })

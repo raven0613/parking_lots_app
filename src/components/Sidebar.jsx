@@ -1,13 +1,11 @@
 import logo from '../assets/images/logo.svg'
 import name from '../assets/images/name.svg'
 import Locate from './Locate'
+import ThemeButton from './ThemeButton'
 import TransTypeController from './TransTypeController'
 import MarkerController from './MarkerController'
 
-
 export default function Sidebar () {
-
-
   return (
     <>
       <div className="sidebar">
@@ -15,10 +13,7 @@ export default function Sidebar () {
         <MarkerController />
         <TransTypeController />
         <Locate />
-        {/* <button onClick={() => {
-          if (mapId === darkMap) return setMapId(lightMap)
-          if (mapId === lightMap) return setMapId(darkMap)
-        }}>按紐</button> */}
+        <ThemeButton />
       </div>
     </>
   )

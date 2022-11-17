@@ -17,6 +17,7 @@ export default function Place () {
   const targetAddressRef = useRef(null)
 
   const [ speech, setSpeech ] =  useState()
+  const [v, setV] = useState('')
 
   const {ready, value, setValue, suggestions: {status, data}, clearSuggestions} = usePlacesAutocomplete({
     requestOptions: {
@@ -78,19 +79,19 @@ export default function Place () {
       let isOnComposition = false;
       setIsOnComposition(isOnComposition)
       setValue(e.target.value)
-      setV(value)
+      
 
       if (!isOnComposition && e.target.value) {
-        // console.log("compositionend", e.target.value);
       }
     } else {
       setIsOnComposition(true);
     }
   }
 
-  //點選選項時
+  //render推薦清單
   const renderSuggestions = () =>
     data.map((suggestion) => {
+      console.log('suggestion', suggestion)
       const {
         place_id,
         structured_formatting: { main_text, secondary_text },
@@ -102,6 +103,7 @@ export default function Place () {
       );
     });
 
+  //點選選項時
   const handleSelect =
     ({ description }) =>
     () => {
@@ -131,9 +133,20 @@ export default function Place () {
     const ref = useOnclickOutside(() => {
       clearSuggestions()
     })
-    const [v, setV] = useState('')
-
     
+
+    useEffect(() => {
+      if (status === 'ZERO_RESULTS') {
+        console.log('status', status)
+      }
+    }, [status])
+
+    //value成功存起來後才放進input框
+    useEffect(() => {
+      if (value) {
+        setV(value)
+      }
+    }, [value])
 
   return (
     <>
@@ -150,6 +163,11 @@ export default function Place () {
           placeholder='請輸入地點'
           ></input>
           {status === "OK" && <div className='combobox-pop'>{renderSuggestions()}</div>}
+          {status === "ZERO_RESULTS" && <div className='combobox-pop'>      
+            <div className='combobox-option' onClick={clearSuggestions}>
+              <p>查無目的地資料</p>
+            </div>
+          </div>}
       </div>
       <button 
         className='combobox-clear'

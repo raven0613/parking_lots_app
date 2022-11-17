@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-//現在點選的停車場
+
 export const parkSlice = createSlice({
   name: 'park',
   initialState: { 
     transOption: 'car',
     markerOption: 'pay',
+    isShowZero: true,
     filterConditions: [], 
     currentPark: {},
     nearParks: [],
@@ -18,6 +19,9 @@ export const parkSlice = createSlice({
     },
     setMarkerOption: (state, action) => {
       state.markerOption = action.payload //pay, counts
+    },
+    setIsShowZero: (state, action) => {
+      state.isShowZero = action.payload
     },
     setFilterConditions: (state, action) => {
       state.filterConditions = [ ...action.payload ] //disabled, pregnancy, charging
@@ -38,14 +42,11 @@ export const parkSlice = createSlice({
   }
 })
 
-export const { setTransOption, setMarkerOption, setFilterConditions, setCurrentPark, setNearParks, setRemainings, setIsEmptyId } = parkSlice.actions
+export const { setTransOption, setMarkerOption, setIsShowZero, setFilterConditions, setCurrentPark, setNearParks, setRemainings, setIsEmptyId } = parkSlice.actions
 export const parkReducer = parkSlice.reducer
 
 
 
-
-
-//現在點選的停車場
 export const mapSlice = createSlice({
   name: 'map',
   initialState: { 
@@ -55,7 +56,8 @@ export const mapSlice = createSlice({
     mapCenter: { lng: 121.51763286051023, lat: 25.04194409222794 },
     target: { lat: '', lng: '' },
     canFetchDirection: false,
-    isFollow: true
+    isFollow: true,
+    mapStyleChange: 'light'
    },
   reducers: {
     setIsLocateDenied: (state, action) => {
@@ -81,8 +83,33 @@ export const mapSlice = createSlice({
     setIsFollow: (state, action) => {
       state.isFollow = action.payload
     },
+    //發出更換mapStyle的內容
+    setMapStyleChange: (state, action) => {
+      state.mapStyleChange = action.payload
+    },
   }
 })
 
-export const { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection, setIsFollow } = mapSlice.actions
+export const { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setTarget, setCanFetchDirection, setIsFollow, setMapStyleChange } = mapSlice.actions
 export const mapReducer = mapSlice.reducer
+
+
+
+export const UISlice = createSlice({
+  name: 'UI',
+  initialState: { 
+    warningMsg: '',
+    theme: 'light'
+  },
+  reducers: {
+    setWarningMsg: (state, action) => {
+      state.warningMsg = action.payload
+    },
+    setTheme: (state, action) => {
+      state.theme = action.payload
+    },
+  }
+})
+
+export const { setWarningMsg, setTheme } = UISlice.actions
+export const UIReducer = UISlice.reducer
