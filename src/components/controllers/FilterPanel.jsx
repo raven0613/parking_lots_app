@@ -1,9 +1,9 @@
-import disabled from '../../assets/images/disabled.svg'
-import charging from '../../assets/images/charging.svg'
-import pregnancy from '../../assets/images/pregnancy.svg'
-import filterClear from '../../assets/images/filter-clear.svg'
-import filter from '../../assets/images/filter.svg'
-import filterAll from '../../assets/images/filter-all.svg'
+import { ReactComponent as Disabled } from '../../assets/images/disabled.svg'
+import { ReactComponent as Charging } from '../../assets/images/charging.svg'
+import { ReactComponent as Pregnancy } from '../../assets/images/pregnancy.svg'
+import { ReactComponent as FilterClear } from '../../assets/images/filter-clear.svg'
+import { ReactComponent as Filter } from '../../assets/images/filter.svg'
+import { ReactComponent as FilterAll } from '../../assets/images/filter-all.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setIsShowZero } from '../../reducer/reducer'
@@ -22,7 +22,7 @@ export default function FilterPanel ({onFilterToggle, onPanelToggle, isDisabledA
         e.stopPropagation()
         onPanelToggle()
       }} className='filter__toggle'>
-        <img src={filter} alt="filter" />
+        <Filter className='icon' alt="filter" />
       </button>
 
 
@@ -33,7 +33,7 @@ export default function FilterPanel ({onFilterToggle, onPanelToggle, isDisabledA
             dispatch(setIsShowZero(!isShowZero))
           }} 
         className={`filter__btn zero ${isShowZero? 'active' : ''}`}>
-          <img className="filter__img" src={filterAll} alt="filterZero" />
+          <FilterAll className="filter__img" alt="filterZero" />
         </button>
 
 
@@ -45,7 +45,7 @@ export default function FilterPanel ({onFilterToggle, onPanelToggle, isDisabledA
             onFilterToggle('clear')
           }} 
         className='filter__btn clear'>
-          <img className="filter__img" src={filterClear} alt="filterClear" />
+          <FilterClear className="filter__img" alt="filterClear" />
         </button>
 
 
@@ -56,7 +56,7 @@ export default function FilterPanel ({onFilterToggle, onPanelToggle, isDisabledA
             onFilterToggle('disabled')
           }} 
         className={`filter__btn disabled ${isDisabledActive? 'active' : ''}`}>
-          <img className="filter__img" src={disabled} alt="disabled" />
+          <Disabled className="filter__img" alt="disabled" />
         </button>
 
 
@@ -67,7 +67,7 @@ export default function FilterPanel ({onFilterToggle, onPanelToggle, isDisabledA
             onFilterToggle('pregnancy')
           }} 
         className={`filter__btn pregnancy ${isPregnancyActive? 'active' : ''}`}>
-          <img className="filter__img" src={pregnancy} alt="pregnancy" />
+          <Pregnancy className="filter__img" alt="pregnancy" />
         </button>
 
 
@@ -79,7 +79,7 @@ export default function FilterPanel ({onFilterToggle, onPanelToggle, isDisabledA
           }} 
          className={`filter__btn charging ${isChargingActive? 'active' : ''}`}>
 
-        <img className="filter__img" src={charging} alt="charging" />
+        <Charging className="filter__img" alt="charging" />
 
         </button>
       </div>

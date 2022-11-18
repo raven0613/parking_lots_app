@@ -83,16 +83,18 @@
     &.tel {
       display: none;
     }
-
-    img {
+    .icon {
       width: auto;
       height: 1.2rem;
       padding: 0 0.5rem;
       margin-top: 0.3rem;
+      stroke: var(--main-text-color);
+      fill: var(--main-text-color);
     }
     span {
       line-height: 1.5rem;
       margin-top: 0.2rem;
+      flex: 1;
     }
     &--bottom {
       display: grid;
@@ -100,16 +102,13 @@
       margin-top: 0.5rem;
       align-items: flex-end;
     }
-    &--distance {
-      line-height: 2rem;
-      color: var(--shadow-color);
-    }
     &--avai {
       display: flex;
-      img {
+      .img {
         width: auto;
         height: 2rem;
         margin-left: 1rem;
+        fill: var(--main-text-color);
       }
       span {
         line-height: 2rem;
@@ -118,12 +117,15 @@
     }
     &--disabled {
       height: 1.5rem;
+      width: 2.5rem;
       margin-bottom: 0.25rem;
-      padding-right: 1rem;
+      fill: var(--main-text-color);
+      
     }
     &--charging {
       height: 2rem;
-      padding-right: 0.5rem;
+      width: 2.5rem;
+      stroke: var(--main-text-color);
     }
   }
 
@@ -154,10 +156,10 @@
     }
     &:hover {
       cursor: pointer;
-      box-shadow: 0 0 10px 1px var(--shadow-darker);
+      box-shadow: 0 0 10px 3px var(--shadow-darker);
       right: -23.2rem;
       &::before {
-        box-shadow: 0 0 12px 1px var(--shadow-darker);
+        box-shadow: 0 0 12px 3px var(--shadow-darker);
       }
     }
     &::before {

@@ -1,5 +1,34 @@
 //toggle在button那
 .filter {
+  &__toggle {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--main-color);
+    border-radius: 2rem;
+    padding: 0;
+    line-height: 2.5rem;
+    margin: auto;
+    position: absolute;
+    right: -1rem;
+    top: 4rem;
+    z-index: 1;
+    transition: 0.2s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: var(--main-light-color);
+    }
+
+    .icon {
+      width: 1.8rem;
+      margin: auto;
+      stroke: var(--main-text-color);
+    }
+
+    &.active {}
+  }
   &__panel {
     background-color: var(--white);
     height: 2.5rem;
@@ -43,6 +72,8 @@
     height: 1.4rem;
     padding: 0;
     margin: 0;
+    fill: var(--main-text-color);
+    stroke: var(--main-text-color);
   }
 
   &__btn {
@@ -62,12 +93,7 @@
     opacity: 0;
     transition: 0.2s ease-out;
 
-    img {
-      width: 1.4rem;
-      height: 1.4rem;
-      padding: 0;
-      margin: 0;
-    }
+
     
     &:hover {
       background-color: var(--main-color);
@@ -121,6 +147,18 @@
 
 @media screen and (min-width: 600px) {
   .filter {
+    &__toggle {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 2rem;
+      padding: 0;
+      right: 22rem;
+  
+      .icon {
+        width: 1.8rem;
+        margin: auto;
+      }
+    }
     &__panel {
       height: 3rem;
       width: 3rem;

@@ -1,4 +1,4 @@
-import speech from '../assets/images/speech.svg'
+import { ReactComponent as SpeechIcon } from '../assets/images/speech.svg'
 import { useState } from "react"
 
 
@@ -57,7 +57,7 @@ export default function Speech ({setSpeech}) {
       setIsProcessing(true)
       recognition.start()
     }}>
-      <img src={speech} alt="speech"></img>
+      <SpeechIcon className="icon" alt="speech"></SpeechIcon>
     </button>
   )
 }

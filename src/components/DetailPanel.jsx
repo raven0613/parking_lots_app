@@ -1,14 +1,15 @@
-import availableCar from '../assets/images/detail-car.svg'
-import navigateIcon from '../assets/images/navigate.svg'
-import pregnancy from '../assets/images/pregnancy.svg'
-import charging from '../assets/images/charging.svg'
-import availableMotor from '../assets/images/detail-motor.svg'
-import disabled from '../assets/images/disabled.svg'
-import address from '../assets/images/address.svg'
-import payex from '../assets/images/payex.svg'
-import serviceTime from '../assets/images/service-time.svg'
-import tel from '../assets/images/tel.svg'
-import back from '../assets/images/back.svg'
+import { ReactComponent as AvailableCar } from '../assets/images/detail-car.svg'
+import { ReactComponent as AvailableMotor } from '../assets/images/detail-motor.svg'
+import { ReactComponent as Navigate } from '../assets/images/navigate.svg'
+import { ReactComponent as Charging } from '../assets/images/charging.svg'
+import { ReactComponent as Disabled } from '../assets/images/disabled.svg'
+import { ReactComponent as Pregnancy } from '../assets/images/pregnancy.svg'
+import { ReactComponent as Address } from '../assets/images/address.svg'
+import { ReactComponent as Payex } from '../assets/images/payex.svg'
+import { ReactComponent as ServiceTime } from '../assets/images/service-time.svg'
+import { ReactComponent as Tel } from '../assets/images/tel.svg'
+import { ReactComponent as Back } from '../assets/images/back.svg'
+
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState, useContext } from 'react'
 import { mapContext } from '../store/UIDataProvider'
@@ -62,8 +63,8 @@ export default function DetailPanel () {
   const containerClass = isDetailActive ? 'detail__container active' : 'detail__container'
 
   if (!currentDisplay?.id) return <></>
-  const isDisabled = currentDisplay.summary.includes('身心') || currentDisplay.Handicap_First > 0
-  const isPregnancy = currentDisplay.Pregnancy_First > 0
+  const isDisabled = currentDisplay.summary.includes('身心') || currentDisplay.summary.includes('身障') || Number(currentDisplay.Handicap_First) > 0
+  const isPregnancy = Number(currentDisplay.Pregnancy_First) > 0
   
   //電腦版有路線時可顯示全部，電腦版以下有路線時container消失
   const isContainerActive = () => {
@@ -80,9 +81,9 @@ export default function DetailPanel () {
 
           }}>
           <div className="detail__title">
-            <img 
+            <Back 
               className="detail__title--back" 
-              src={back} alt="back" 
+              alt="back" 
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -106,7 +107,7 @@ export default function DetailPanel () {
               }
               dispatch(setCanFetchDirection(true))
             }} className="detail__title--navi">
-              <img src={navigateIcon} alt='navigate'></img>
+              <Navigate className="icon" alt='navigate'></Navigate>
               <p>路線</p>
             </button>}
             
@@ -115,7 +116,7 @@ export default function DetailPanel () {
               e.stopPropagation()
               setDirections(null)
             }} className="detail__title--navi">
-              <img src={navigateIcon} alt='navigate'></img>
+              <Navigate className="icon" alt='navigate'></Navigate>
               <p>關閉</p>
             </button>}
 
@@ -125,13 +126,13 @@ export default function DetailPanel () {
           <div className="detail__info">
             {/* 剩餘車位 */}
             <div className="detail__info--available">
-              <img className="detail__info--img" src={availableCar} alt="availableCar" />
+              <AvailableCar className="detail__info--img" alt="availableCar" />
               <p className="detail__info--counts number">{currentDisplay.availablecar}</p>
 
-              <img className="detail__info--img" src={availableMotor} alt="availableMotor" />
+              <AvailableMotor className="detail__info--img" alt="availableMotor" />
               <p className="detail__info--counts number">{currentDisplay.availablemotor}</p>
 
-              {currentDisplay.ChargingStation > 0 && <img className="detail__info--img" src={charging} alt="charging" />}
+              {currentDisplay.ChargingStation > 0 && <Charging className="detail__info--img" alt="charging" />}
             </div>
 
             {/* 預計到達時間 */}
@@ -152,24 +153,24 @@ export default function DetailPanel () {
             </div>
             
             <div className="detail__content">
-              <img className="detail__content--img" src={serviceTime} alt="serviceTime" />
+              <ServiceTime className="detail__content--img" alt="serviceTime" />
               <p className="detail__content--content">{currentDisplay.service}</p>
             </div>
 
             <div className="detail__content">
-              <img className="detail__content--img" src={address} alt="address" />
+              <Address className="detail__content--img" alt="address" />
               <p className="detail__content--content">{currentDisplay.address}</p>
             </div>
 
             <div className="detail__content">
-              <img className="detail__content--img" src={tel} alt="tel" />
+              <Tel className="detail__content--img" alt="tel" />
               <p className="detail__content--content">{currentDisplay.tel}</p>
             </div>
             {/* 右下方車位種類標示 */}
             <div className="detail__container--img">
-              {isPregnancy && <img className="detail__container--img-pregnancy" src={pregnancy} alt="pregnancy-parking" />}
+              {isPregnancy && <Pregnancy className="detail__container--img-pregnancy" alt="pregnancy-parking" />}
 
-              {isDisabled && <img className="detail__container--img-disabled" src={disabled} alt="disabled-parking" />}
+              {isDisabled && <Disabled className="detail__container--img-disabled" alt="disabled-parking" />}
             </div>
 
             {/* 詳細資訊切換按鈕 */}
@@ -192,7 +193,7 @@ export default function DetailPanel () {
 function payContent (currentDisplay) {
   return (
     <>
-      <img className="detail__content--img" src={payex} alt="payex" />
+      <Payex className="detail__content--img" alt="payex" />
       <p className="detail__content--content">{currentDisplay.pay}元</p>
     </>
   )
@@ -200,7 +201,7 @@ function payContent (currentDisplay) {
 function payexContent (currentDisplay) {
   return (
     <>
-      <img className="detail__content--img" src={payex} alt="payex" />
+      <Payex className="detail__content--img" alt="payex" />
       <p className="detail__content--content">{currentDisplay.payex}</p>
     </>
   )

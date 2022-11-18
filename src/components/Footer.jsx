@@ -1,8 +1,9 @@
+import { ReactComponent as MapSearch } from '../assets/images/map-search.svg'
+import { ReactComponent as SelfSearch } from '../assets/images/self-search.svg'
+import { ReactComponent as Nearby } from '../assets/images/nearby.svg'
+
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useContext, useEffect } from "react";
-import mapSearch from '../assets/images/map-search.svg'
-import selfSearch from '../assets/images/self-search.svg'
-import nearby from '../assets/images/nearby.svg'
 import { mapContext } from '../store/UIDataProvider'
 
 
@@ -44,7 +45,7 @@ export default function Footer () {
           setIsNearActive(false)
         }} 
         className={screenClass}>
-        <img src={mapSearch} alt="map-search"></img>
+        <MapSearch className='icon' alt="map-search" />
         <p>地圖</p>
       </div>
       <div         
@@ -66,7 +67,7 @@ export default function Footer () {
           dispatch(setMode("self"))
         }} 
       className={selfClass}>
-        <img src={selfSearch} alt="self-search"></img>
+        <SelfSearch className='icon' alt="self-search" />
         <p>定位</p>
       </div>
       <div 
@@ -78,7 +79,7 @@ export default function Footer () {
           setIsNearActive(true)
         }}
         className={nearclass}>
-        <img src={nearby} alt="nearby"></img>
+        <Nearby className='icon' alt="nearby" />
         <p>附近停車場</p>
       </div>
     </footer>

@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import { useNavigate, useLocation } from 'react-router-dom'
-import charging from '../../assets/images/charging.svg'
-import pregnancy from '../../assets/images/pregnancy.svg'
-import availableCarImg from '../../assets/images/detail-car.svg'
-import availableMotorImg from '../../assets/images/detail-motor.svg'
-import disabled from '../../assets/images/disabled.svg'
-import addressImg from '../../assets/images/address.svg'
-import payexImg from '../../assets/images/payex.svg'
-import serviceTimeImg from '../../assets/images/service-time.svg'
-import telImg from '../../assets/images/tel.svg'
+
+import { ReactComponent as AvailableCar } from '../../assets/images/detail-car.svg'
+import { ReactComponent as AvailableMotor } from '../../assets/images/detail-motor.svg'
+import { ReactComponent as Disabled } from '../../assets/images/disabled.svg'
+import { ReactComponent as Pregnancy } from '../../assets/images/pregnancy.svg'
+import { ReactComponent as Charging } from '../../assets/images/charging.svg'
+import { ReactComponent as Address } from '../../assets/images/address.svg'
+import { ReactComponent as Payex } from '../../assets/images/payex.svg'
+import { ReactComponent as ServiceTime } from '../../assets/images/service-time.svg'
+import { ReactComponent as Tel } from '../../assets/images/tel.svg'
 import { useState } from "react";
 
 
@@ -18,8 +18,8 @@ export default function Card (props) {
   const { currentPark, isCurr, onToggleCard } = props
 
   
-  const isDisabled = summary?.includes('身心') || Handicap_First > 0
-  const isPregnancy = Pregnancy_First > 0
+  const isDisabled = summary?.includes('身障') || summary?.includes('身心') || Number(Handicap_First) > 0
+  const isPregnancy = Number(Pregnancy_First) > 0
 
   const [cardClass, setCardClass] = useState('card')
 
@@ -47,22 +47,22 @@ export default function Card (props) {
       <h3 className="card__title">{ name }</h3>
       
       <div className="card__info">
-        <img src={payexImg} alt="payex"></img>
+        <Payex className="icon" alt="payex" />
         <span>{ payex }</span>
       </div>
 
       <div className="card__info">
-        <img src={serviceTimeImg} alt="serviceTime"></img>
+        <ServiceTime className="icon" alt="serviceTime" />
         <span>{ service }</span>
       </div>
 
       <div className="card__info address">
-        <img src={addressImg} alt="address"></img>
+        <Address className="icon" alt="address" />
         <span>{ address? address : '-' }</span>
       </div>
 
       <div className="card__info tel">
-        <img src={telImg} alt="tel"></img>
+        <Tel className="icon" alt="tel" />
         <span>{ tel }</span>
       </div>
 
@@ -72,18 +72,19 @@ export default function Card (props) {
         </p>
 
         
-        {isPregnancy && <img className="card__info--disabled" src={pregnancy} alt="pregnancy-parking" />}
+        {isPregnancy && <Pregnancy className="card__info--disabled" alt="pregnancy-parking" />}
 
-        {isDisabled && <img className="card__info--disabled" src={disabled} alt="disabled-parking" />}
 
-        {ChargingStation > 0 && <img className="card__info--charging" src={charging} alt="charging" />}
+        {isDisabled && <Disabled className="card__info--disabled" alt="disabled-parking" />}
+
+        {ChargingStation > 0 && <Charging className="card__info--charging" alt="charging" />}
 
         <div className="card__info--avai">
-          <img src={availableCarImg} alt="availableCar"></img>
+          <AvailableCar className="img" alt="availableCar"/>
           <span>{ availablecar }</span>
         </div>
         <div className="card__info--avai">
-          <img src={availableMotorImg} alt="availablemotor"></img>
+          <AvailableMotor className="img" alt="availablemotor"/>
           <span>{ availablemotor }</span>
         </div>
       </div>

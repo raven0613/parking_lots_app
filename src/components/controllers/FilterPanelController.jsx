@@ -22,9 +22,6 @@ export default function FilterPanelController () {
       dispatch(setFilterConditions(['all']))
       return
     }
-    //filterType 是 disabled / pregnancy / charging
-    // if (!filterConditions) return dispatch(setFilterConditions([filterType]))
-
     //先把all刪除，剩下原本有的
     let conditions = filterConditions.filter(con => con !== 'all')
 

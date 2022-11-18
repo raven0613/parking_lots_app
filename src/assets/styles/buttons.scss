@@ -26,7 +26,7 @@
     position: relative;
     
 
-    img {
+    .icon {
       z-index: 1;
       width: 1.4rem;
       margin: auto;
@@ -34,6 +34,7 @@
       top: 50%;
       right: 50%;
       transform: translate(50%, -50%);
+      fill: var(--main-text-color);
     }
     p {
       position: absolute;
@@ -59,7 +60,7 @@
       width: 2.1rem;
       height: 2.1rem;
       border-radius: 2.5rem;
-      background-color: var(--white);
+      background-color: var(--card-shadow-color);
       position: absolute;
       z-index: 0;
       top: -2.3rem;
@@ -78,31 +79,6 @@
         box-shadow: none;
       }
     }
-  }
-}
-
-.filter__toggle {
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: var(--main-color);
-  border-radius: 2rem;
-  padding: 0;
-  line-height: 2.5rem;
-  margin: auto;
-  position: absolute;
-  right: -1rem;
-  top: 4rem;
-  z-index: 1;
-  transition: 0.2s ease-out;
-  &:hover {
-    background-color: var(--main-light-color);
-  }
-
-  img {
-    width: 1.8rem;
-    margin: auto;
-  }
-  &.active {
   }
 }
 
@@ -163,11 +139,12 @@
   align-items: center;
   justify-content: center;
   
-  img {
+  .icon {
     width: 1.5rem;
     height: 1.5rem;
     padding: 0;
     margin: 0;
+    fill: var(--main-text-color);
   }
   transition: 0.2s ease-out;
 
@@ -202,9 +179,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  img {
+  .icon {
     width: 1.5rem;
     height: auto;
+    fill: var(--main-text-color);
   }
   transition: 0.2s ease-out;
 
@@ -223,7 +201,7 @@
 
     &__btn {
       height: 3.5rem;
-      img {
+      .icon {
         width: 1.8rem;
       }
     }
@@ -283,7 +261,7 @@
     position: static;
     width: 3.5rem;
     height: 3.5rem;
-    img {
+    .icon {
       width: 2rem;
       height: auto;
     }
@@ -292,7 +270,7 @@
     position: static;
     width: 3.5rem;
     height: 3.5rem;
-    img {
+    .icon {
       width: 2rem;
       height: auto;
     }
@@ -307,19 +285,6 @@
     }
     .theme {
       display: none;
-    }
-  }
-
-  .filter__toggle {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 2rem;
-    padding: 0;
-    right: 22rem;
-
-    img {
-      width: 1.8rem;
-      margin: auto;
     }
   }
 }
