@@ -1,4 +1,4 @@
-import cancel from '../assets/images/cancel.svg'
+import { ReactComponent as Cancel } from '../assets/images/cancel.svg'
 import { useFetcher, useLocation, useNavigate } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import useOnclickOutside from "react-cool-onclickoutside"
@@ -91,7 +91,6 @@ export default function Place () {
   //render推薦清單
   const renderSuggestions = () =>
     data.map((suggestion) => {
-      console.log('suggestion', suggestion)
       const {
         place_id,
         structured_formatting: { main_text, secondary_text },
@@ -133,13 +132,7 @@ export default function Place () {
     const ref = useOnclickOutside(() => {
       clearSuggestions()
     })
-    
 
-    useEffect(() => {
-      if (status === 'ZERO_RESULTS') {
-        console.log('status', status)
-      }
-    }, [status])
 
     //value成功存起來後才放進input框
     useEffect(() => {
@@ -181,7 +174,7 @@ export default function Place () {
 
           navigate(`${location.pathname}`, {push: true})
         }}>
-        <img src={cancel} alt='cancel'></img>
+        <Cancel className="icon" alt='cancel'></Cancel>
       </button>
       <Speech setSpeech={setSpeech}/>
     </>

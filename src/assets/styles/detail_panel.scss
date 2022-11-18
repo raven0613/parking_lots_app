@@ -36,6 +36,7 @@
     cursor: pointer;
     width: 1.5rem;
     margin: auto;
+    fill: var(--main-text-color);
   }
   
   &--title {
@@ -48,10 +49,12 @@
     padding: 0.1rem 0;
     position: relative;
 
-    img {
+    .icon {
       width: 1.3rem;
       height: 1.3rem;
       margin: auto;
+      fill: var(--main-text-color);
+      stroke: var(--main-text-color);
     }
     p {
       padding-left: 0.25rem;
@@ -107,6 +110,8 @@
   &--img {
     width: auto;
     height: 1.8rem;
+    fill: var(--main-text-color);
+    stroke: var(--main-text-color);
   }
 
   &--counts {
@@ -148,6 +153,8 @@
     width: auto;
     margin-bottom: 0.25rem;
     display: flex;
+    fill: var(--main-text-color);
+      // stroke: var(--main-text-color);
     &-pregnancy, &-disabled {
       height: 1.5rem;
       width: auto;
@@ -167,6 +174,8 @@
   &--img {
     width: 70%;
     height: auto;
+    fill: var(--main-text-color);
+    stroke: var(--main-text-color);
   }
   &--content {
     padding-top: 0.15rem;
@@ -180,7 +189,7 @@
     width: 30rem;
     height: auto;
     left: 22rem;
-    bottom: -18rem;
+    bottom: -20rem;
     transition: 0.25s ease-out;
 
     &.active {

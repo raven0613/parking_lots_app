@@ -1,9 +1,9 @@
-import locate from '../assets/images/locate.svg'
+import { ReactComponent as LocateIcon } from '../../assets/images/locate.svg'
 import { useContext } from 'react';
-import { mapContext } from '../store/UIDataProvider'
+import { mapContext } from '../../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMode, setIsFollow, setWarningMsg } from '../reducer/reducer'
+import { setMode, setIsFollow, setWarningMsg } from '../../reducer/reducer'
 
 export default function Locate () {
   const selfPos = useSelector((state) => state.map.selfPos)
@@ -37,7 +37,7 @@ export default function Locate () {
           //setCenter 或 panTo(較滑順)
         }} 
         className={`locate ${disabled}`}>
-        <img src={locate} alt="locate"></img>
+        <LocateIcon className='icon' alt="locate"></LocateIcon>
       </button>
     )
   }
@@ -52,7 +52,7 @@ export default function Locate () {
         dispatch(setMode('self'))
       }} 
       className={`locate ${disabled}`}>
-      <img src={locate} alt="locate"></img>
+      <LocateIcon className='icon' alt="locate"></LocateIcon>
     </button>
   )
 }

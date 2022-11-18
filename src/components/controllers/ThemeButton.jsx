@@ -1,8 +1,8 @@
-import sun from '../assets/images/sun.svg'
-import moon from '../assets/images/moon.svg'
+import { ReactComponent as Sun } from '../../assets/images/sun.svg'
+import { ReactComponent as Moon } from '../../assets/images/moon.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMapStyleChange, setTheme } from '../reducer/reducer'
+import { setMapStyleChange, setTheme } from '../../reducer/reducer'
 
 
 export default function ThemeButton () {
@@ -35,12 +35,12 @@ export default function ThemeButton () {
   const buttonIcon = () => {
     if (theme === 'light') {
       return (
-        <img src={moon} alt='light'></img>
+        <Moon className='icon' alt='light' />
       )
     }
     if (theme === 'dark') {
       return (
-        <img src={sun} alt='dark'></img>
+        <Sun className='icon' alt='dark' />
       )
     }
   }

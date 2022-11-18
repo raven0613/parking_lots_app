@@ -2,16 +2,16 @@ import React, { useContext, useRef, useState, useEffect } from "react"
 import Map from "../components/Map";
 import Place from "../components/Place";
 import CardPanel from '../components/card-panel/CardPanel'
-import TransTypeController from '../components/TransTypeController'
-import MarkerController from '../components/MarkerController'
+import TransTypeController from '../components/controllers/TransTypeController'
+import MarkerController from '../components/controllers/MarkerController'
 import DetailPanel from '../components/DetailPanel'
 import SecondsCounter from '../components/SecondsCounter'
-import Locate from '../components/Locate'
-import FilterPanel from '../components/FilterPanel'
+import Locate from '../components/controllers/Locate'
+import FilterPanelController from '../components/controllers/FilterPanelController'
 import Sidebar from '../components/Sidebar'
 import Footer from '../components/Footer'
 import Warning from '../components/Warning'
-import ThemeButton from '../components/ThemeButton'
+import ThemeButton from '../components/controllers/ThemeButton'
 
 
 import { useSelector } from 'react-redux'
@@ -35,7 +35,7 @@ export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
             
             {isGoogleApiLoaded && <Place />}
 
-            <FilterPanel />
+            <FilterPanelController />
             <MarkerController />
             <TransTypeController />
             <Locate />

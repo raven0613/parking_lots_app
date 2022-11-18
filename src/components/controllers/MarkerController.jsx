@@ -1,9 +1,8 @@
-import price from '../assets/images/price.svg'
-import parks from '../assets/images/parks.svg'
-
+import { ReactComponent as Parks } from '../../assets/images/parks.svg'
+import { ReactComponent as Price } from '../../assets/images/price.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMarkerOption } from '../reducer/reducer'
+import { setMarkerOption } from '../../reducer/reducer'
 
 export default function MarkerController () {
   const markerOption = useSelector((state) => state.park.markerOption)
@@ -25,13 +24,11 @@ export default function MarkerController () {
       }}
     >
       <button className={payClass} >
-        <img src={price} alt='price'>
-        </img>
+        <Price className='icon' alt='price' />
       </button>
 
       <button className={countsClass} >
-        <img src={parks} alt='parks'>
-        </img>
+        <Parks className='icon' alt='parks' />
       </button>
     </div>
   )

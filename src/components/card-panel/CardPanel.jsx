@@ -4,18 +4,16 @@ import { useState, useEffect } from "react";
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
 
-import { useSelector } from 'react-redux'
-import { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
+import { useCallback } from 'react'
+import { setCurrentPark } from '../../reducer/reducer'
 
 
 export default function CardPanel () {
   const currentPark = useSelector((state) => state.park.currentPark)
   const nearParks = useSelector((state) => state.park.nearParks)
   const mode = useSelector((state) => state.map.mode)
-
-  // const { setIsNearActive, isNearActive  } = useContext(allContext)
-  //點選中的停車場要放在最上方，傳入 isCurr=true 來給 Card 判斷
-  // const parksWithoutCurrentPark = nearParks?.filter(park => park.id !== currentPark?.id)
+  const dispatch = useDispatch()
   
   const [isNearActive, setIsNearActive] = useState(false)
 
@@ -25,7 +23,7 @@ export default function CardPanel () {
   const queryParams = new URLSearchParams(location.search)
 
   //網址變化時偵測網址來改變 isActive
-   useEffect(() => {
+  useEffect(() => {
     if (!queryParams.has('nearby')) {
       return setIsNearActive(false)
     }
@@ -36,13 +34,26 @@ export default function CardPanel () {
     if (queryParams.get('nearby') === 'true') {
       return setIsNearActive(true)
     } 
-   },[location]) 
+  },[location]) 
 
+  
   const isCurrentCardOnly = () => {
     if (!nearParks) return true
     if (!currentPark?.id) return false
     return nearParks.some(park => park.id === currentPark.id)
   }
+
+  //子層toggle，父層執行
+  const atToggleCard = (park) => {
+    //改變網址(先確定有沒有querystring)
+    const queryStr = location.search
+    navigate(`/map/${park.id}${queryStr}`, {push: true})
+
+    //設定為目前點選的停車場
+    dispatch(setCurrentPark(park))
+  }
+
+
 
   return (
     <div 
@@ -65,18 +76,22 @@ export default function CardPanel () {
         {!currentPark?.id? nearParks?.length? <></> : <div className='card__panel--container-empty'>目前附近沒有停車場</div> : <></>}
 
         {/* 當currentPark不在nearParks中時就放第一個 */}
-        {!isCurrentCardOnly() && currentPark?.id && <Card 
-        key={ currentPark.id } 
-        park={ currentPark } 
-        isCurr={true} 
+        {!isCurrentCardOnly() && currentPark?.id && 
+        <Card 
+          key={ currentPark.id } 
+          park={ currentPark } 
+          isCurr={true} 
         />}
+
         {nearParks && nearParks.map(park => {
           return (
             <Card 
-            key={ park.id } 
-            park={ park } 
-            currentPark={currentPark}
-            mode={mode} />
+              key={ park.id } 
+              park={ park } 
+              currentPark={currentPark}
+              mode={mode} 
+              onToggleCard={atToggleCard}
+            />
           )
         })}
 

@@ -1,9 +1,9 @@
 import logo from '../assets/images/logo.svg'
 import name from '../assets/images/name.svg'
-import Locate from './Locate'
-import ThemeButton from './ThemeButton'
-import TransTypeController from './TransTypeController'
-import MarkerController from './MarkerController'
+import Locate from './controllers/Locate'
+import ThemeButton from './controllers/ThemeButton'
+import TransTypeController from './controllers/TransTypeController'
+import MarkerController from './controllers/MarkerController'
 
 export default function Sidebar () {
   return (

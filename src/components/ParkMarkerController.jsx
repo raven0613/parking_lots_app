@@ -11,7 +11,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setCurrentPark, setNearParks, setRemainings, setIsEmptyId, setWarningMsg } from '../reducer/reducer'
+import { setCurrentPark, setNearParks, setRemainings, setWarningMsg } from '../reducer/reducer'
 
 
 
@@ -174,7 +174,7 @@ export default function ParkMarkerController () {
   // mapCenter的資料改變 / mode切換 / transOption切換 / remainings資料更新時 => 篩選要顯示的資料
   useEffect(() => {
     if (mode !== 'screen-center') return
-    //決定以誰為基準
+    //決定以誰為基準，userFilterParks為空的話就以 allParks來算
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
     const filteredParks = filteredNearParks(basedParks, remainings, mapCenter, transOption, getPointsInDistance, parksWithRemainings, parksTransFilter, availableCounts, isShowZero)
 
@@ -184,6 +184,7 @@ export default function ParkMarkerController () {
 
   // filter 條件切換
   useEffect(() => {
+    //條件是all的話，userFilterParks　會直接為空
     let filteredParkingLots = userFilterParks(filterConditions, allParks)
     setUserFilteredParks(filteredParkingLots)
   }, [filterConditions])

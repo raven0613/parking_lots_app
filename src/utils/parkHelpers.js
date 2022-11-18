@@ -58,37 +58,41 @@ export const formattedParksData = (parks, coordinatesConvert) => {
   })
   return formattedParks
 }
+
 //篩選條件
 export const userFilterParks = (conditions, parks) => {
   if (!parks || !conditions) return
   let filterContainer = []
-  conditions.forEach(condition => {
-    if (condition === 'disabled') {
-      if (filterContainer.length) {
-        filterContainer = filterContainer.filter(park => Number(park.Handicap_First) > 0 || park.summary.includes('身障'))
-        return
-      }
-      filterContainer = parks.filter(park => Number(park.Handicap_First) > 0 || park.summary.includes('身障'))
+
+  if (conditions.some(con => con === 'all')) {
+    return []
+  }
+
+  if (conditions.some(con => con === 'disabled')) {
+    if (filterContainer.length) {
+      filterContainer = filterContainer.filter(park => Number(park.Handicap_First) > 0 || park.summary.includes('身障') || park.summary.includes('身心障礙'))
+    } 
+    else {
+      filterContainer = parks.filter(park => Number(park.Handicap_First) > 0 || park.summary.includes('身障') || park.summary.includes('身心障礙'))
     }
-    if (condition === 'pregnancy') {
-      if (filterContainer.length) {
-        filterContainer = filterContainer.filter(park => Number(park.Pregnancy_First) > 0)
-        return
-      }
+  }
+
+  if (conditions.some(con => con === 'pregnancy')) {
+    if (filterContainer.length) {
+      filterContainer = filterContainer.filter(park => Number(park.Pregnancy_First) > 0)
+    }
+    else {
       filterContainer = parks.filter(park => Number(park.Pregnancy_First) > 0)
     }
-    if (condition === 'charging') {
-      if (filterContainer.length) {
-        filterContainer = filterContainer.filter(park => Number(park.ChargingStation) > 0)
-        return
-      }
+  }
+  if (conditions.some(con => con === 'charging')) {
+    if (filterContainer.length) {
+      filterContainer = filterContainer.filter(park => Number(park.ChargingStation) > 0)
+    }
+    else {
       filterContainer = parks.filter(park => Number(park.ChargingStation) > 0)
     }
-    if (condition === 'all') {
-      filterContainer = []
-    }
-  })
-  
+  }
   return filterContainer
 }
 
