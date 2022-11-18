@@ -1,8 +1,8 @@
-import sun from '../assets/images/sun.svg'
-import moon from '../assets/images/moon.svg'
+import sun from '../../assets/images/sun.svg'
+import moon from '../../assets/images/moon.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMapStyleChange, setTheme } from '../reducer/reducer'
+import { setMapStyleChange, setTheme } from '../../reducer/reducer'
 
 
 export default function ThemeButton () {

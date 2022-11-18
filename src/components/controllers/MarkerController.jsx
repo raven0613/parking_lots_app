@@ -1,9 +1,9 @@
-import price from '../assets/images/price.svg'
-import parks from '../assets/images/parks.svg'
+import price from '../../assets/images/price.svg'
+import parks from '../../assets/images/parks.svg'
 
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMarkerOption } from '../reducer/reducer'
+import { setMarkerOption } from '../../reducer/reducer'
 
 export default function MarkerController () {
   const markerOption = useSelector((state) => state.park.markerOption)

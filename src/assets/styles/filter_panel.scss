@@ -68,8 +68,48 @@
       padding: 0;
       margin: 0;
     }
+    
     &:hover {
       background-color: var(--main-color);
+      &::before {
+        color: var(--white);
+        width: 4rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+        position: absolute;
+        background-color: var(--main-text-color);
+        opacity: 0.6;
+        border-radius: 5px;
+        top: 3rem
+      }
+      &.zero {
+        &::before {
+          content: '顯示所有';
+        }
+      }
+      &.clear {
+        &::before {
+          content: '清除條件';
+        }
+      }
+
+      &.disabled {
+        &::before {
+          content: '身障車位';
+        }
+      }
+
+      &.pregnancy {
+        &::before {
+          content: '孕婦優先';
+        }
+      }
+
+      &.charging {
+        &::before {
+          content: '有充電站';
+        }
+      }
     }
     
     &.active {

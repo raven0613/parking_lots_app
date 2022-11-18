@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import car from '../assets/images/car-.svg'
-import motor from '../assets/images/motorbike.svg'
+import car from '../../assets/images/car-.svg'
+import motor from '../../assets/images/motorbike.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setTransOption } from '../reducer/reducer'
+import { setTransOption } from '../../reducer/reducer'
 
 export default function TransTypeController () {
   const transOption = useSelector((state) => state.park.transOption)

@@ -86,7 +86,6 @@ export default function DetailPanel () {
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                // setCurrentPark(null)
                 dispatch(setCurrentPark(null))
 
                 if (queryParams.has('target')) {

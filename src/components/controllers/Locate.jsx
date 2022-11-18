@@ -1,9 +1,9 @@
-import locate from '../assets/images/locate.svg'
+import locate from '../../assets/images/locate.svg'
 import { useContext } from 'react';
-import { mapContext } from '../store/UIDataProvider'
+import { mapContext } from '../../store/UIDataProvider'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setMode, setIsFollow, setWarningMsg } from '../reducer/reducer'
+import { setMode, setIsFollow, setWarningMsg } from '../../reducer/reducer'
 
 export default function Locate () {
   const selfPos = useSelector((state) => state.map.selfPos)

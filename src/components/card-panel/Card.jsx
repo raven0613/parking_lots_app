@@ -11,19 +11,13 @@ import serviceTimeImg from '../../assets/images/service-time.svg'
 import telImg from '../../assets/images/tel.svg'
 import { useState } from "react";
 
-import { useDispatch } from 'react-redux'
-import { setCurrentPark } from '../../reducer/reducer'
 
 
 export default function Card (props) {
   const { name, address, tel, service, payex, availablecar, availablemotor, id, Handicap_First, summary, ChargingStation, Pregnancy_First } = props.park
-  const { currentPark, isCurr } = props
+  const { currentPark, isCurr, onToggleCard } = props
 
-  const dispatch = useDispatch()
-
-  //路由相關
-  const navigate = useNavigate()
-  const location = useLocation()
+  
   const isDisabled = summary?.includes('身心') || Handicap_First > 0
   const isPregnancy = Pregnancy_First > 0
 
@@ -45,12 +39,8 @@ export default function Card (props) {
     onClick={(e) => {
       if (currentPark?.id && id === currentPark.id) return
       e.stopPropagation()
-      //改變網址(先確定有沒有querystring)
-      const queryStr = location.search
-      navigate(`/map/${id}${queryStr}`, {push: true})
-
-      //點擊卡片設定為目前點選的停車場
-      dispatch(setCurrentPark(props.park))
+      //執行父層傳來的函式
+      onToggleCard(props.park)
     }}
     className={cardClass}>
 

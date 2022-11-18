@@ -4,7 +4,7 @@ import targetMarker from '../assets/images/marker-target2.svg'
 
 import React, { useMemo, useCallback, useEffect, useContext, useState } from "react"
 import { GoogleMap, Marker, DirectionsRenderer, useLoadScript, useJsApiLoader } from "@react-google-maps/api"
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import ParkMarkerController from "./ParkMarkerController"
 import SelfMarker from "./SelfMarker"
@@ -32,6 +32,9 @@ export default function Map({setIsGoogleApiLoaded}) {
   const { mapInstance, setMapInstance, directions, setDirections } = useContext(mapContext)
   
   const location = useLocation()
+  const navigate = useNavigate()
+  const queryParams = new URLSearchParams(location.search)
+
   const [libraries] = useState(["places"])
   const [mapStyle, setMapStyle] = useState(lightStyle)
 
@@ -156,6 +159,11 @@ export default function Map({setIsGoogleApiLoaded}) {
         <GoogleMap
           onClick={() => {
             dispatch(setCurrentPark(''))
+            //網址也要變
+            if (queryParams.has('target')) {
+              return navigate(`/map?target=${queryParams.get('target')}`)
+            }
+            return navigate(`/map`)
           }}
           zoom={15}
           center={mapCenter}
