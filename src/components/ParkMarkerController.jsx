@@ -260,10 +260,10 @@ export default function ParkMarkerController () {
     if (!currentPark?.id) return
       if (availableCounts(transOption, currentPark) < 1) {
         if (transOption === 'car') {
-          dispatch(setWarningMsg('您的目標停車場沒有汽車停車格'))
+          dispatch(setWarningMsg('您的目標停車場無汽車停車格'))
         }
         else if (transOption === 'motor') {
-          dispatch(setWarningMsg('您的目標停車場沒有機車停車格'))
+          dispatch(setWarningMsg('您的目標停車場無機車停車格'))
         }
       }
   }, [transOption])

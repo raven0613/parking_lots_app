@@ -9,12 +9,29 @@ import { ReactComponent as Address } from '../../assets/images/address.svg'
 import { ReactComponent as Payex } from '../../assets/images/payex.svg'
 import { ReactComponent as ServiceTime } from '../../assets/images/service-time.svg'
 import { ReactComponent as Tel } from '../../assets/images/tel.svg'
+
+import { ReactComponent as Sunny } from '../../assets/images/weather-sunny.svg'
+import { ReactComponent as SunCloudy } from '../../assets/images/weather-sun_cloudy.svg'
+import { ReactComponent as Cloudy } from '../../assets/images/weather-cloudy.svg'
+import { ReactComponent as Fog } from '../../assets/images/weather-fog.svg'
+import { ReactComponent as Rain } from '../../assets/images/weather-rain.svg'
+import { ReactComponent as ThunderRain } from '../../assets/images/weather-thunder_rain.svg'
+
 import { useState } from "react";
 
-
+const weatherFilter = (weather) => {
+  if (weather.includes('雷')) return (<ThunderRain className="card__info--weather" alt="weather-thunder" />)
+  if (weather.includes('雨')) return (<Rain className="card__info--weather" alt="weather-rainy" />)
+  if (weather === '晴時多雲' || weather === '多雲時晴') return (<SunCloudy className="card__info--weather" alt="weather-sunny-cloudy" />)
+  if (weather.includes('霧')) return (<Fog className="card__info--weather" alt="weather-foggy" />)
+  if (weather.includes('雲')) return (<Cloudy className="card__info--weather" alt="weather-cloudy" />)
+  if (weather.includes('陰')) return (<Cloudy className="card__info--weather" alt="weather-cloudy" />)
+  if (weather.includes('晴')) return (<Sunny className="card__info--weather" alt="weather-sunny" />)
+  return '雲'
+}
 
 export default function Card (props) {
-  const { name, address, tel, service, payex, availablecar, availablemotor, id, Handicap_First, summary, ChargingStation, Pregnancy_First } = props.park
+  const { name, address, tel, service, payex, availablecar, availablemotor, id, Handicap_First, summary, ChargingStation, Pregnancy_First, weather } = props.park
   const { currentPark, isCurr, onToggleCard } = props
 
   
@@ -67,11 +84,8 @@ export default function Card (props) {
       </div>
 
       <div className="card__info--bottom">
-        <p className="card__info--distance">
-          
-        </p>
+        {weatherFilter(weather)}
 
-        
         {isPregnancy && <Pregnancy className="card__info--disabled" alt="pregnancy-parking" />}
 
 

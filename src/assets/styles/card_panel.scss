@@ -102,6 +102,12 @@
       margin-top: 0.5rem;
       align-items: flex-end;
     }
+    &--weather {
+      height: 1.5rem;
+      width: 2.5rem;
+      fill: var(--main-text-color);
+      margin: auto 0;
+    }
     &--avai {
       display: flex;
       .img {
