@@ -53,11 +53,31 @@ export const formattedParksData = (parks, coordinatesConvert) => {
     const { lng, lat } = coordinatesConvert(Number(tw97x), Number(tw97y))
     
     return {
-      id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-', ChargingStation: ChargingStation? ChargingStation : '0'
+      id, area, name, summary, address, tel, payex, serviceTime, lat, lng, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo, availablecar: 0, availablemotor: 0, travelTime: '- 分鐘', pay: '-', ChargingStation: ChargingStation? ChargingStation : '0', weather: '-'
     }
   })
   return formattedParks
 }
+
+//整理天氣格式
+export const weatherData = (allWeather) => {
+  if(!allWeather) return
+  //得到資料中最近一次是幾點鐘
+  const firstTime = Number(allWeather[0].weatherElement[0].time[0].startTime.slice(11, -6))
+  const dateItem = new Date().getHours()
+  //算出現在的時間在資料陣列裡是第幾個
+  const index = Math.floor((dateItem - firstTime) / 3) < 0 ? 0 : Math.floor((dateItem - firstTime) / 3)
+
+  const data = allWeather.map(weather => {
+    return {
+      area: weather.locationName, 
+      weather: weather.weatherElement[0].time[index].elementValue[0].value,
+      startTime: weather.weatherElement[0].time[index].startTime
+    }
+  })
+  return data
+}
+
 
 //篩選條件
 export const userFilterParks = (conditions, parks) => {
@@ -143,8 +163,21 @@ export const parksWithRemainings = (parkings, remainings) => {
     return park
   }) 
 }
-
-
+//把天氣的資料合併進停車場資料(回傳陣列資料)
+export const parksWithWeather = (parks, weathers) => {
+  if (!parks) return []
+  if (!weathers) return parks
+  const data = parks.map(park => {
+    const data = weathers.find(weatherData => weatherData.area === park.area)
+    if (data) {
+      return {
+        ...park, weather: data.weather
+      }
+    }
+    return park
+  })
+  return data
+}
 
 //目前問題: 中山堂  中山雅樂軒
 //土法煉鋼篩價格

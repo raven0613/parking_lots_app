@@ -90,11 +90,19 @@
   width: 100%;
   height: auto;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
 
+  &--weather {
+    width: auto;
+    height: 1.6rem;
+    grid-column: 3/4;
+    fill: var(--main-text-color);
+    padding-left: 0.5rem;
+  }
   &--time {
     line-height: 2.2rem;
-    color: var(--shadow-color);
+    color: var(--second-color);
     font-size: 0.875rem;
     text-align: end;
   }

@@ -88,7 +88,8 @@ http://localhost:3000/
 ## 素材來源
 
 [svgrepo](https://www.svgrepo.com/)
+[brandcolors](https://brandcolors.net/)
 
-## API
+## 外接資料
 
 [臺北市停車場資訊、剩餘停車位數](https://data.gov.tw/dataset/128435)
