@@ -1,15 +1,18 @@
 import { ReactComponent as SpeechIcon } from '../assets/images/speech.svg'
 import { useState } from "react"
 
-
+import { setWarningMsg } from '../reducer/reducer'
+import { useDispatch } from 'react-redux'
 
 export default function Speech ({setSpeech}) {
 
   const [isProcessing, setIsProcessing] = useState(false)
+  const dispatch = useDispatch()
 
   //先判斷瀏覽器是否有語音辨識物件
   if (!('webkitSpeechRecognition' in window)) {
-    return console.log('您的裝置不支援語音辨識')
+    dispatch(setWarningMsg('您的裝置不支援語音辨識'))
+    return
   } 
   
   const recognition = new window.webkitSpeechRecognition()
@@ -30,8 +33,13 @@ export default function Speech ({setSpeech}) {
   //如果出錯
   recognition.onerror = (event) => {
     console.log('錯誤: ', event)
+    if (event.error === 'network') {
+      dispatch(setWarningMsg('您的裝置不支援語音辨識'))
+    }
+    else if (event.error === 'no-speech') {
+      dispatch(setWarningMsg('未收到音，請確認瀏覽器是否開啟麥克風權限'))
+    }
     setIsProcessing(false)
-    //如果收不到音可以提醒是否有設定正確麥克風或是權限
   }
   //結束辨識
   recognition.onend = () => {

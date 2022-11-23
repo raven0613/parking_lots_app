@@ -9,17 +9,13 @@
     line-height: 2.5rem;
     margin: auto;
     position: absolute;
-    right: -1rem;
+    right: -1.25rem;
     top: 4rem;
     z-index: 1;
     transition: 0.2s ease-out;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    &:hover {
-      background-color: var(--main-light-color);
-    }
 
     .icon {
       width: 1.8rem;
@@ -31,11 +27,11 @@
   }
   &__panel {
     background-color: var(--white);
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 2.45rem;
+    width: 2.45rem;
     box-shadow: 1px 1px 5px 1px var(--shadow-color);
     position: absolute;
-    right: -1rem;
+    right: -1.25rem;
     top: 4rem;
     z-index: 0;
     border-radius: 2rem;
@@ -93,49 +89,6 @@
     opacity: 0;
     transition: 0.2s ease-out;
 
-    &:hover {
-      background-color: var(--main-color);
-      &::before {
-        color: var(--white);
-        width: 4rem;
-        height: 1.5rem;
-        line-height: 1.5rem;
-        position: absolute;
-        background-color: var(--main-text-color);
-        opacity: 0.6;
-        border-radius: 5px;
-        top: 3rem
-      }
-      &.zero {
-        &::before {
-          content: '顯示所有';
-        }
-      }
-      &.clear {
-        &::before {
-          content: '清除條件';
-        }
-      }
-
-      &.disabled {
-        &::before {
-          content: '身障車位';
-        }
-      }
-
-      &.pregnancy {
-        &::before {
-          content: '孕婦優先';
-        }
-      }
-
-      &.charging {
-        &::before {
-          content: '有充電站';
-        }
-      }
-    }
-    
     &.active {
       background-color: var(--main-color);
       opacity: 1;
@@ -150,7 +103,7 @@
       height: 3rem;
       border-radius: 2rem;
       padding: 0;
-      right: 22rem;
+      right: 25.5rem;
   
       .icon {
         width: 1.8rem;
@@ -158,9 +111,9 @@
       }
     }
     &__panel {
-      height: 3rem;
-      width: 3rem;
-      left: 0;
+      height: 2.95rem;
+      width: 2.95rem;
+      left: -3.5rem;
       &.active {
         width: 19.1rem;
     
@@ -202,4 +155,62 @@
     }
   }
 
+}
+
+//解決手機板的hover會黏住的問題
+@media (hover: hover) {
+  .filter {
+    &__toggle {
+      &:hover {
+        background-color: var(--main-light-color);
+      }
+    }
+    &__btn {
+      &:hover {
+        background-color: var(--main-color);
+    
+        &::before {
+          color: var(--white);
+          width: 4rem;
+          height: 1.5rem;
+          line-height: 1.5rem;
+          position: absolute;
+          background-color: var(--main-text-color);
+          opacity: 0.6;
+          border-radius: 5px;
+          top: 3rem
+        }
+    
+        &.zero {
+          &::before {
+            content: '顯示所有';
+          }
+        }
+    
+        &.clear {
+          &::before {
+            content: '清除條件';
+          }
+        }
+    
+        &.disabled {
+          &::before {
+            content: '身障車位';
+          }
+        }
+    
+        &.pregnancy {
+          &::before {
+            content: '孕婦優先';
+          }
+        }
+    
+        &.charging {
+          &::before {
+            content: '有充電站';
+          }
+        }
+      }
+    }
+  }
 }

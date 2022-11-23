@@ -40,14 +40,22 @@
     color: #f0f4f7;
     padding: 0 1rem;
     transition: 0.2s ease-out;
-    &:hover {
-      background-color: var(--main-color);
-    }
   }
   transition: 0.3s ease-in;
   &.active {
     top: 40%;
     opacity: 1;
     z-index: 999;
+  }
+}
+
+//解決手機板的hover會黏住的問題
+@media (hover: hover) {
+  .warning {
+    &__btn {
+      &:hover {
+        background-color: var(--main-color);
+      }
+    }
   }
 }

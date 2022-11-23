@@ -49,6 +49,7 @@
     position: relative;
 
     .icon {
+      z-index: 1;
       width: 1.3rem;
       height: 1.3rem;
       margin: auto;
@@ -56,32 +57,12 @@
       stroke: var(--main-text-color);
     }
     p {
+      z-index: 1;
       padding-left: 0.25rem;
       font-size: 1rem;
       line-height: 1rem;
       margin: auto;
       font-weight: 700;
-    }
-
-    &::before {
-      transition: 0.15s ease-out;
-      width: 4.8rem;
-      height: 2.6rem;
-      content: '';
-      opacity: 0;
-      background-color: var(--card-shadow-color);
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      border-radius: 1.5rem;
-    }
-
-    &:hover {
-      &::before {
-        opacity: 1;
-      }
     }
   }
 }
@@ -211,9 +192,6 @@
     &.active {
       bottom: 2.5rem;
     }
-    &:hover {
-      opacity: 1;
-    }
   }
   //這邊先把箭頭拿回來
   .detail__title {
@@ -250,4 +228,40 @@
       line-height: 1.4rem;
     }
   }
+}
+
+
+//解決手機板的hover會黏住的問題
+@media (hover: hover) {
+  .detail__title {
+    &--navi {
+      &::before {
+        transition: 0.15s ease-out;
+        width: 4.8rem;
+        height: 2.6rem;
+        content: '';
+        opacity: 0;
+        background-color: var(--card-shadow-color);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        border-radius: 1.5rem;
+      }
+      &:hover {
+        &::before {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 600px) {
+    .detail__panel {
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
 }

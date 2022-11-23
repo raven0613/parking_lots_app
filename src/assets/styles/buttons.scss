@@ -6,12 +6,9 @@
   top: 5rem;
   background-color: var(--main-color);
   border-radius: 2.5rem;
-  right: -1rem;
+  right: -1.25rem;
   transition: 0.2s ease-out;
-  &:hover {
-    background-color: var(--main-light-color);
-  }
-
+  
   &__marker {
     top: 13rem;
   }
@@ -132,7 +129,7 @@
   margin: auto;
 
   position: absolute;
-  right: -1rem;
+  right: -1.25rem;
   top: 18.75rem;
 
   display: flex;
@@ -148,14 +145,8 @@
   }
   transition: 0.2s ease-out;
 
-  &:hover {
-    background-color: var(--main-light-color);
-  }
   &.disabled {
     background-color: var(--card-border-color);
-    &:hover {
-      background-color: var(--card-border-color);
-    }
   }
 
 }
@@ -174,7 +165,7 @@
   margin: auto;
 
   position: absolute;
-  right: -1rem;
+  right: -1.25rem;
   top: 22rem;
   display: flex;
   align-items: center;
@@ -185,10 +176,6 @@
     fill: var(--main-text-color);
   }
   transition: 0.2s ease-out;
-
-  &:hover {
-    background-color: var(--main-light-color);
-  }
 }
 
 
@@ -292,4 +279,28 @@
   }
 }
 
+//解決手機板的hover會黏住的問題
+@media (hover: hover) {
+  .control-type {
+    &:hover {
+      background-color: var(--main-light-color);
+    }
+  }
 
+  .locate {
+    &:hover {
+      background-color: var(--main-light-color);
+    }
+    &.disabled {
+      &:hover {
+        background-color: var(--card-border-color);
+      }
+    }
+  }
+
+  .theme {
+    &:hover {
+      background-color: var(--main-light-color);
+    }
+  }
+}
