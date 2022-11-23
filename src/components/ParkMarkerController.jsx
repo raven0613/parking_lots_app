@@ -132,7 +132,6 @@ export default function ParkMarkerController () {
         const allWeather = response.data.records.locations[0].location
         const data = weatherData(allWeather)
         setWeather(data)
-        console.log('天氣資料', data)
         setIsFetchingWeather(false)
       }
       catch (error) {

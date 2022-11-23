@@ -21,7 +21,6 @@ export default function Speech ({setSpeech}) {
   recognition.lang="cmn-Hant-TW";
   //開始辨識
   recognition.onstart = () => {
-    console.log('開始辨識')
   }
   //辨識結果
   recognition.onresult = (event) => {
@@ -32,7 +31,6 @@ export default function Speech ({setSpeech}) {
   }
   //如果出錯
   recognition.onerror = (event) => {
-    console.log('錯誤: ', event)
     if (event.error === 'network') {
       dispatch(setWarningMsg('您的裝置不支援語音辨識'))
     }
@@ -43,7 +41,6 @@ export default function Speech ({setSpeech}) {
   }
   //結束辨識
   recognition.onend = () => {
-    console.log('結束辨識')
   }
 
   if (isProcessing) return (
