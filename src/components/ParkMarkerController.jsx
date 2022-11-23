@@ -193,6 +193,8 @@ export default function ParkMarkerController () {
     }
   }, [weather])
   
+
+
   //selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
   useEffect(() => {
     if (mode !== 'self') return

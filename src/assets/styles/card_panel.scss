@@ -160,14 +160,14 @@
         padding-top: 47vh;
       }
     }
-    &:hover {
-      cursor: pointer;
-      box-shadow: 0 0 10px 3px var(--shadow-darker);
-      right: -23.2rem;
-      &::before {
-        box-shadow: 0 0 12px 3px var(--shadow-darker);
-      }
-    }
+    // &:hover {
+    //   cursor: pointer;
+    //   box-shadow: 0 0 10px 3px var(--shadow-darker);
+    //   right: -23.2rem;
+    //   &::before {
+    //     box-shadow: 0 0 12px 3px var(--shadow-darker);
+    //   }
+    // }
     &::before {
       content: '';
       width: 1.5rem;
@@ -218,4 +218,29 @@
     pointer-events: auto;
     cursor: pointer;
   }
+}
+
+
+
+//解決手機板的hover會黏住的問題
+@media (hover: hover) {
+
+  @media screen and (min-width: 600px) {
+    .card__panel {
+      &:hover {
+        cursor: pointer;
+        box-shadow: 0 0 10px 2px var(--shadow-darker);
+        right: -23.2rem;
+  
+        &::before {
+          box-shadow: 0 0 10px 2px var(--shadow-darker);
+        }
+      }
+
+      &.active:hover{
+        right: 0;
+      }
+    }
+  }
+
 }

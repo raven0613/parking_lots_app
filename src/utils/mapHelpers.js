@@ -83,12 +83,14 @@ export const getUserPos = (dispatch, setSelfPos, mode, setMapCenter, setMode, se
           dispatch(setWarningMsg('您將無法使用定位及路線功能'))
           return
         }
-        console.log('無法取得您的位置', error)
       }
     );
   } else {
-    //目前如果沒有允許就跑不出地圖
-    alert("你的裝置不支援地理位置功能。");
+    dispatch(setIsLocateDenied(true))
+    dispatch(setMapCenter({lat: 25.0408065, lng: 121.5397976}))
+    dispatch(setMode('screen-center'))
+    dispatch(setWarningMsg('你的裝置不支援地理位置功能。'))
+    return
   }
 }
 
@@ -110,11 +112,13 @@ export const watchUserPos = (dispatch, setSelfPos, setMapCenter, setMode, setIsL
           dispatch(setWarningMsg('您無法使用定位及路線功能，可於瀏覽器設定開啟權限。'))
           return
         }
-        console.log('無法取得您的位置', error)
       }
     );
   } else {
-    //目前如果沒有允許就跑不出地圖
-    alert("你的裝置不支援地理位置功能。");
+    dispatch(setIsLocateDenied(true))
+    dispatch(setMapCenter({lat: 25.0408065, lng: 121.5397976}))
+    dispatch(setMode('screen-center'))
+    dispatch(setWarningMsg('你的裝置不支援地理位置功能。'))
+    return
   }
 }

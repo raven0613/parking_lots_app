@@ -70,6 +70,14 @@ export default function Map({setIsGoogleApiLoaded}) {
     //setMapCenter({lat: 25.0408065, lng: 121.5397976})   //北車的點
   }, [location]);
 
+  
+  //偵測網路狀況
+  useEffect(() => {
+    if (navigator.onLine) return
+    dispatch(setWarningMsg('無法取得資料，請確認您的網路狀況'))
+  }, [mapCenter])
+  
+
   //selfPos改變的話要讓地圖中心跟隨
   useEffect(() => {
     if (mode !== 'self') return

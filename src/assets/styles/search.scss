@@ -36,9 +36,6 @@
     fill: var(--main-text-color);
     stroke: var(--main-text-color);
   }
-  &:hover {
-    background-color: var(--card-shadow-color);
-  }
   &__isProcessing {
     display: none;
   }
@@ -127,7 +124,10 @@
 .combobox-pop {
   pointer-events: auto;
   height: auto;
-  width: 90%;
+  position: absolute;
+  top: 3rem;
+  left: 1.2rem;
+  right: 1.5rem;
   border-radius: 5px;
   border: 1px solid var(--border-color);
   background-color: var(--white);
@@ -142,10 +142,6 @@
   transition: 0.2s ease-out;
   border-radius: 5px;
   padding: 0.5rem 0.8rem;
-  
-  &:hover {
-    background-color: var(--card-shadow-color);
-  }
 }
 
 .combobox-clear {
@@ -161,11 +157,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  &:hover {
-    background-color: var(--card-shadow-color);
-    border-radius: 1rem;
-  }
   .icon {
     width: 1rem;
     height: auto;
@@ -203,5 +194,26 @@
   .combobox-clear {
     right: 0.6rem;
     width: 1.75rem;
+  }
+}
+
+
+//解決手機板的hover會黏住的問題
+@media (hover: hover) {
+  .speech {
+    &:hover {
+      background-color: var(--card-shadow-color);
+    }
+  }
+  .combobox-option {
+    &:hover {
+      background-color: var(--card-shadow-color);
+    }
+  }
+  .combobox-clear {
+    &:hover {
+      background-color: var(--card-shadow-color);
+      border-radius: 1rem;
+    }
   }
 }
