@@ -190,6 +190,7 @@ export default function Map({setIsGoogleApiLoaded}) {
             <DirectionsRenderer
               directions={directions}
               options={{
+                suppressMarkers: true,
                 polylineOptions: {
                   zIndex: 10,
                   strokeColor: "#33CC99",
