@@ -16,7 +16,9 @@ import { darkStyle, lightStyle } from '../assets/styles/mapStyles'
 import { useSelector, useDispatch } from 'react-redux'
 import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirection, setIsFollow, setWarningMsg, setCurrentPark } from '../reducer/reducer'
 
-export default function Map({setIsGoogleApiLoaded}) {
+
+
+export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
   const currentPark = useSelector((state) => state.park.currentPark)
   const selfPos = useSelector((state) => state.map.selfPos)
   const mode = useSelector((state) => state.map.mode)
@@ -112,7 +114,7 @@ export default function Map({setIsGoogleApiLoaded}) {
       return setMapInstance(map.map)
     }
     return setMapInstance(map)
-  }, [])
+  }, [setMapInstance])
 
   //當搜尋 mode 改變時
   useEffect(() => {
@@ -225,7 +227,7 @@ export default function Map({setIsGoogleApiLoaded}) {
               className: 'marker'
             }}
             />}
-          <ParkMarkerController />
+          <ParkMarkerController allParks={allParks} weather={weather}/>
         </GoogleMap>
       </div>}
     </>

@@ -9,14 +9,12 @@ import { ReactComponent as Payex } from '../assets/images/payex.svg'
 import { ReactComponent as ServiceTime } from '../assets/images/service-time.svg'
 import { ReactComponent as Tel } from '../assets/images/tel.svg'
 import { ReactComponent as Back } from '../assets/images/back.svg'
-
 import { ReactComponent as Sunny } from '../assets/images/weather-sunny.svg'
 import { ReactComponent as SunCloudy } from '../assets/images/weather-sun_cloudy.svg'
 import { ReactComponent as Cloudy } from '../assets/images/weather-cloudy.svg'
 import { ReactComponent as Fog } from '../assets/images/weather-fog.svg'
 import { ReactComponent as Rain } from '../assets/images/weather-rain.svg'
 import { ReactComponent as ThunderRain } from '../assets/images/weather-thunder_rain.svg'
-
 
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState, useContext } from 'react'
@@ -63,10 +61,10 @@ export default function DetailPanel () {
   }
   //根據畫面大小來設定機種
   useEffect(()=>{ 
-      window.addEventListener('resize',handleRWD)
+      window.addEventListener('resize', handleRWD)
       handleRWD()
       return(()=>{
-        window.removeEventListener('resize',handleRWD)
+        window.removeEventListener('resize', handleRWD)
       })
   },[])
 

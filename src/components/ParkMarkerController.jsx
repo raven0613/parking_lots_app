@@ -3,29 +3,19 @@ import parkMarkerSmall from '../assets/images/marker-parking-small.svg'
 import parkMarkerZero from '../assets/images/marker-parking-zero.svg'
 import { getParkingLots, getRemaining, getWeather } from '../apis/places'
 
-import { coordinatesConvert, getPointsInDistance, parksTransFilter, parksWithRemainings, getNearParksTime, payexFilter, formattedParksData, userFilterParks, serviceTimeFilter, availableCounts, payment, weatherData, parksWithWeather } from '../utils/parkHelpers'
+import { coordinatesConvert, getPointsInDistance, parksTransFilter, parksWithRemainings, payexFilter, formattedParksData, userFilterParks, serviceTimeFilter, availableCounts, payment, weatherData, parksWithWeather } from '../utils/parkHelpers'
 import ParkingMark from './ParkingMark'
-import { useState, useEffect, useContext, useRef } from 'react'
-import { parkContext, mapContext } from '../store/UIDataProvider'
+import { useState, useEffect, useContext, useRef, useCallback } from 'react'
+import { useFetchData } from './useFetchData'
+import { mapContext } from '../store/UIDataProvider'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
-import { ReactComponent as ParkMarker } from '../assets/images/marker-parking.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentPark, setNearParks, setRemainings, setWarningMsg } from '../reducer/reducer'
 
 
-
-
-//初次合併完成的所有資料
-const combinedInitAllParksData = (parks, formattedParksData, coordinatesConvert, payexFilter) => {
-    const formattedParks = formattedParksData(parks, coordinatesConvert)
-    const formattedParksWithPay = payexFilter(formattedParks)
-    const formattedParksWithService = serviceTimeFilter(formattedParksWithPay)
-    return formattedParksWithService
-}
-
 //每次更新身邊停車場時要跑的篩選
-const filteredNearParks = (basedParks, remainings, weather, center, transOption, getPointsInDistance, parksWithRemainings, parksWithWeather, parksTransFilter, availableCounts, isShowZero) => {
+const filteredNearParks = (basedParks, remainings, weather, center, transOption, isShowZero) => {
     //算出與自身位置一定距離內的點
     let filteredParkingLots = getPointsInDistance(basedParks, center, 0.01)
     //將停車場資料與 remainings 資料合併
@@ -40,7 +30,7 @@ const filteredNearParks = (basedParks, remainings, weather, center, transOption,
     return filteredParkingLots
 }
 
-export default function ParkMarkerController () {
+export default function ParkMarkerController ({ allParks, weather }) {
   const mode = useSelector((state) => state.map.mode)
   const selfPos = useSelector((state) => state.map.selfPos)
   const transOption = useSelector((state) => state.park.transOption)
@@ -57,95 +47,18 @@ export default function ParkMarkerController () {
   
 
   const { directions,  setDirections } = useContext(mapContext)
-  //fetching狀態
-  const [isFetchingRemaining, setIsFetchingRemaining] = useState(false)
-  const [isFetchingParks, setIsFetchingParks] = useState(false)
-  const [isFetchingWeather, setIsFetchingWeather] = useState(false)
-  //內部變數
-  const FETCH_INRERVAL_REMAININGS = 20000
-  const FETCH_INRERVAL_WEATHER = 600000
+
   //路由相關
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
   //parkId存在的話(已經在追蹤某停車場)就放入網址
   const parkId = params.parkId
-  const [allParks, setAllParks] = useState()
+  // const [allParks, setAllParks] = useState()
   const [userFilteredParks, setUserFilteredParks] = useState([])
-  const [weather, setWeather] = useState()
+  // const [weather, setWeather] = useState()
   const currentRemainingsRef = useRef()
 
-  //一載入就抓所有資料
-  useEffect(() => {
-    //先把資料抓下來
-    async function fetchParksData () {
-      try {
-        if (isFetchingParks) return
-        setIsFetchingParks(true)
-        const response = await getParkingLots()
-        const parks = response.data.data.park
-
-        if(!parks) return
-        const allParks = combinedInitAllParksData(parks, formattedParksData, coordinatesConvert, payexFilter)
-
-        setAllParks(allParks)
-        setIsFetchingParks(false)       
-      } 
-      catch (error) {
-        setIsFetchingParks(false)
-        console.log(error)
-      }
-    } 
-    async function fetchRemainingData () {
-      try {
-        if (isFetchingRemaining) return
-        setIsFetchingRemaining(true)
-        const response = await getRemaining()
-        const remainings = response.data.data.park
-        if(!remainings) return
-        dispatch(setRemainings(remainings))
-        setIsFetchingRemaining(false)       
-      } 
-      catch (error) {
-        setIsFetchingRemaining(false)
-        console.log(error)
-      }
-    } 
-    fetchParksData()
-    fetchRemainingData()
-    
-    //20秒抓一次剩餘車位資料
-    const interval = setInterval(() => {
-      fetchRemainingData()
-    }, FETCH_INRERVAL_REMAININGS)
-    return () => clearInterval(interval)
-    
-  }, [])
-
-  
-  useEffect(() => {
-    async function fetchWeatherData () {
-      try {
-        if (isFetchingWeather) return
-        setIsFetchingWeather(true)
-        const response = await getWeather()
-        const allWeather = response.data.records.locations[0].location
-        const data = weatherData(allWeather)
-        setWeather(data)
-        setIsFetchingWeather(false)
-      }
-      catch (error) {
-        setIsFetchingWeather(false)
-        console.log(error)
-      }
-    } 
-    fetchWeatherData()
-    //10分鐘抓一次剩餘車位資料
-    const interval = setInterval(() => {
-      fetchWeatherData()
-    }, FETCH_INRERVAL_WEATHER)
-    return () => clearInterval(interval)
-  }, [])
 
   //有所有停車場資料(initParkingLots)後 & 網址改變時
   useEffect(() => {
@@ -194,11 +107,11 @@ export default function ParkMarkerController () {
   
 
 
-  //selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
+  // selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
   useEffect(() => {
     if (mode !== 'self') return
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
-    const filteredParks = filteredNearParks(basedParks, remainings, weather, selfPos, transOption, getPointsInDistance, parksWithRemainings, parksWithWeather, parksTransFilter, availableCounts, isShowZero)
+    const filteredParks = filteredNearParks(basedParks, remainings, weather, selfPos, transOption, isShowZero)
 
     dispatch(setNearParks(filteredParks))
   }, [selfPos, mode, transOption, remainings, userFilteredParks, isShowZero, weather])
@@ -207,7 +120,7 @@ export default function ParkMarkerController () {
   useEffect(() => {
     if (mode !== 'target') return
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
-    const filteredParks = filteredNearParks(basedParks, remainings, weather, target, transOption, getPointsInDistance, parksWithRemainings, parksWithWeather, parksTransFilter, availableCounts, isShowZero)
+    const filteredParks = filteredNearParks(basedParks, remainings, weather, target, transOption, isShowZero)
 
     dispatch(setNearParks(filteredParks))
   }, [target, mode, transOption, remainings, userFilteredParks, isShowZero, weather])
@@ -217,7 +130,7 @@ export default function ParkMarkerController () {
     if (mode !== 'screen-center') return
     //決定以誰為基準，userFilterParks為空的話就以 allParks來算
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
-    const filteredParks = filteredNearParks(basedParks, remainings, weather, mapCenter, transOption, getPointsInDistance, parksWithRemainings, parksWithWeather, parksTransFilter, availableCounts, isShowZero)
+    const filteredParks = filteredNearParks(basedParks, remainings, weather, mapCenter, transOption, isShowZero)
 
     dispatch(setNearParks(filteredParks))
   }, [mapCenter, mode, transOption, remainings, userFilteredParks, isShowZero, weather])
@@ -229,31 +142,6 @@ export default function ParkMarkerController () {
     let filteredParkingLots = userFilterParks(filterConditions, allParks)
     setUserFilteredParks(filteredParkingLots)
   }, [filterConditions])
-
-
-
-  //url, mapCenter, remainings 改變時檢查如果沒抓到資料就再抓一次
-  useEffect(() => {
-    if (!allParks) {
-      async function fetchParksData () {
-        try {
-          if (isFetchingParks) return
-          setIsFetchingParks(true)
-          const response = await getParkingLots()
-          const parks = response.data.data.park
-          const allParks = combinedInitAllParksData(parks, formattedParksData, coordinatesConvert, payexFilter)
-          setAllParks(allParks)
-          setIsFetchingParks(false)       
-        } 
-        catch (error) {
-          setIsFetchingParks(false)
-          console.log(error)
-        }
-      } 
-      fetchParksData ()
-    }
-  }, [mapCenter, remainings, location])
-
 
 
   //提示訊息設定   每次更新時前後id沒變 & 車位不足 才跳提醒
