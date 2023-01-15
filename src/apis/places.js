@@ -9,5 +9,5 @@ export function getRemaining () {
 }
 
 export function getWeather () {
-  return axios.get('https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-061?Authorization=CWB-545FAA0B-4659-45E5-9F35-81250F359B49&format=JSON&elementName=Wx')
+  return axios.get('https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-061?Authorization=CWB-9B7FC138-F11C-4139-913B-6BA440C4591A&format=JSON&elementName=Wx')
 }

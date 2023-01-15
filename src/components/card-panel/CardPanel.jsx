@@ -1,11 +1,10 @@
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from "react";
 
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { useCallback } from 'react'
 import { setCurrentPark } from '../../reducer/reducer'
 
 

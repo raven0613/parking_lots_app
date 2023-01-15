@@ -48,7 +48,6 @@ export const handleFetchDirections = (origin, destination, state, setter) => {
     (result, status) => {
       if (status === "OK" && result) {
         setter(result)
-        console.log(result)
       }
     }
   )

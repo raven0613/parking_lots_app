@@ -11,7 +11,6 @@ export const parkSlice = createSlice({
     currentPark: {},
     nearParks: [],
     remainings: [],
-    isEmptyId: false
   },
   reducers: {
     setTransOption: (state, action) => {
@@ -35,14 +34,10 @@ export const parkSlice = createSlice({
     setRemainings: (state, action) => {
       state.remainings = [ ...action.payload ]
     },
-    //網址上的id是否為空
-    setIsEmptyId: (state, action) => {
-      state.isEmptyId = action.payload //pay, counts
-    },
   }
 })
 
-export const { setTransOption, setMarkerOption, setIsShowZero, setFilterConditions, setCurrentPark, setNearParks, setRemainings, setIsEmptyId } = parkSlice.actions
+export const { setTransOption, setMarkerOption, setIsShowZero, setFilterConditions, setCurrentPark, setNearParks, setRemainings } = parkSlice.actions
 export const parkReducer = parkSlice.reducer
 
 

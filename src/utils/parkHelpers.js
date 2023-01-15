@@ -46,7 +46,6 @@ export const getPointsInDistance = (datas, targetPoint, distance) => {
 //初次取得資料時把需要的key都加進去
 export const formattedParksData = (parks, coordinatesConvert) => {
   if (!parks || !coordinatesConvert) return
-
   const formattedParks = parks.map(park => {
     const {id, area, name, summary, address, tel, payex, serviceTime, tw97x, tw97y, totalcar, totalmotor, totalbike, Pregnancy_First, Handicap_First, FareInfo: {...FareInfo}, ChargingStation} = park
     //TWD97轉經緯度
@@ -60,7 +59,7 @@ export const formattedParksData = (parks, coordinatesConvert) => {
 }
 
 //整理天氣格式
-export const weatherData = (allWeather) => {
+export const weatherDataFomatter = (allWeather) => {
   if(!allWeather) return
   //得到資料中最近一次是幾點鐘
   const firstTime = Number(allWeather[0].weatherElement[0].time[0].startTime.slice(11, -6))
@@ -136,6 +135,7 @@ export const availableCounts = (transOption, place) => {
   
   if (transOption === 'motor') return place.availablemotor.toString()
 }
+
 //得到單一目標不同車種的費率資料
 export const payment = (transOption, place) => {
   if (transOption === 'car') return place.pay.toString()

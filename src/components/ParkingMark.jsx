@@ -1,7 +1,7 @@
 import { Marker } from '@react-google-maps/api';
 
 
-export default function ParkingMark ({ nearParksWithOutCurrent, label, icon, directions, currentPark, transOption, onMarkerToggled}) {
+export default function ParkingMark ({ nearParksWithOutCurrent, label, icon, directions, currentPark, transOption, markerOption, onMarkerToggled }) {
   
   return (
     <>
@@ -9,7 +9,7 @@ export default function ParkingMark ({ nearParksWithOutCurrent, label, icon, dir
         <Marker 
         position={{lng: currentPark.lng, lat: currentPark.lat}} 
         icon={icon(transOption, currentPark, true)}
-        label={label(transOption, currentPark, true)}
+        label={label(markerOption, transOption, currentPark, true)}
         zIndex={2}
         key={currentPark.id} 
       />
@@ -20,7 +20,7 @@ export default function ParkingMark ({ nearParksWithOutCurrent, label, icon, dir
         return (
           <Marker 
             icon={icon(transOption, park, false)}
-            label={label(transOption, park, false)}
+            label={label(markerOption, transOption, park, false)}
             zIndex={1}
             className="marker"
             position={positon} 
