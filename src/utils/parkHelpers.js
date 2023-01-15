@@ -135,6 +135,7 @@ export const availableCounts = (transOption, place) => {
   
   if (transOption === 'motor') return place.availablemotor.toString()
 }
+
 //得到單一目標不同車種的費率資料
 export const payment = (transOption, place) => {
   if (transOption === 'car') return place.pay.toString()

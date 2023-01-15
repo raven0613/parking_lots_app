@@ -20,6 +20,7 @@ import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirect
 
 export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
   const currentPark = useSelector((state) => state.park.currentPark)
+  const {id: currentParkId, lat: currentParkLat, lng: currentParkLng} = currentPark
   const selfPos = useSelector((state) => state.map.selfPos)
   const mode = useSelector((state) => state.map.mode)
   const mapCenter = useSelector((state) => state.map.mapCenter)
@@ -100,9 +101,7 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
     
     if (mapInstance.map) {
       dispatch(setMapCenter(mapInstance.map.center.toJSON()))
-      // mapInstance.map.panTo(mapInstance.map.center.toJSON())
     } else {
-      // mapInstance.panTo(mapInstance.center.toJSON())
       dispatch(setMapCenter(mapInstance.center.toJSON()))
     }
   }
@@ -119,7 +118,6 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
   //當搜尋 mode 改變時
   useEffect(() => {
     if (mode === 'self') {
-
       if (!isFollow) {
         //mode回到self後恢復跟隨
         dispatch(setIsFollow(true))
@@ -129,23 +127,17 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
       dispatch(setMapCenter(selfPos))
       return
     }
-    if (mode === 'target') {
-      return
-    }
-    if (mode === 'screen-center') {
-      return
-    }
   }, [mode])
 
-  //網址點進來 or 點選一個新目標(marker或卡片) or 點選重新讀取路線 = 才會觸發推薦路線
+  //觸發推薦路線
   useEffect(() => {
     if (!canFetchDirection) return
-    if (!currentPark?.id) return
-    const positon = {lng: currentPark.lng, lat: currentPark.lat}
+    if (!currentParkId) return
+    const positon = {lng: currentParkLng, lat: currentParkLat}
     handleFetchDirections(selfPos, positon , directions, setDirections)
     //推薦完路線就改回false
     dispatch(setCanFetchDirection(false))
-  }, [canFetchDirection])
+  }, [canFetchDirection, currentParkId, currentParkLng, currentParkLat, directions, dispatch, setDirections, selfPos])
 
   //map設定
   const options = useMemo(

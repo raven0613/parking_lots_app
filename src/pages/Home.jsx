@@ -29,7 +29,7 @@ const combinedInitAllParksData = (parks) => {
   return formattedParksWithService
 }
 
-const FETCH_INRERVAL_PARKS = 43200000
+const FETCH_INRERVAL_PARKS = 21600000
 const FETCH_INRERVAL_REMAININGS = 20000
 const FETCH_INRERVAL_WEATHER = 600000
 
