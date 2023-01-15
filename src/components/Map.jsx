@@ -93,7 +93,7 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
     }
     mapInstance.map.panTo(selfPos)
     
-  }, [selfPos, isFollow, mapInstance])
+  }, [selfPos, isFollow, mapInstance, mode])
 
   //如果移動地圖就改變 center 位置
   function handleCenterChanged() {
@@ -105,7 +105,6 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
       dispatch(setMapCenter(mapInstance.center.toJSON()))
     }
   }
-  
 
   //地圖載入後把 map 存進 mapRef ，useCallback: 不要每次重新渲染時都再次渲染
   const onLoad = useCallback((map) => {
@@ -127,7 +126,7 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
       dispatch(setMapCenter(selfPos))
       return
     }
-  }, [mode])
+  }, [mode, dispatch, isFollow, selfPos])
 
   //觸發推薦路線
   useEffect(() => {
