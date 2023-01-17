@@ -10,7 +10,6 @@ export const parkSlice = createSlice({
     filterConditions: [], 
     currentPark: {},
     nearParks: [],
-    remainings: [],
   },
   reducers: {
     setTransOption: (state, action) => {
@@ -30,14 +29,11 @@ export const parkSlice = createSlice({
     },
     setNearParks: (state, action) => {
       state.nearParks = [ ...action.payload ]
-    },
-    setRemainings: (state, action) => {
-      state.remainings = [ ...action.payload ]
-    },
+    }
   }
 })
 
-export const { setTransOption, setMarkerOption, setIsShowZero, setFilterConditions, setCurrentPark, setNearParks, setRemainings } = parkSlice.actions
+export const { setTransOption, setMarkerOption, setIsShowZero, setFilterConditions, setCurrentPark, setNearParks } = parkSlice.actions
 export const parkReducer = parkSlice.reducer
 
 

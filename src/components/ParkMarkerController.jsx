@@ -12,15 +12,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentPark, setNearParks, setWarningMsg } from '../reducer/reducer'
 
 
-export default function ParkMarkerController ({ allParks, weather }) {
+export default function ParkMarkerController ({ allParks, weather, remainings }) {
   const mode = useSelector((state) => state.map.mode)
   const selfPos = useSelector((state) => state.map.selfPos)
   const transOption = useSelector((state) => state.park.transOption)
   const markerOption = useSelector((state) => state.park.markerOption)
   const currentPark = useSelector((state) => state.park.currentPark)
-  const {id: currentParkId, } = currentPark
   const nearParks = useSelector((state) => state.park.nearParks)
-  const remainings = useSelector((state) => state.park.remainings)
   const filterConditions = useSelector((state) => state.park.filterConditions)
   const mapCenter = useSelector((state) => state.map.mapCenter)
   const target = useSelector((state) => state.map.target)
@@ -42,7 +40,6 @@ export default function ParkMarkerController ({ allParks, weather }) {
 
   //有所有停車場資料(initParkingLots)後 & 網址改變時
   useEffect(() => {
-    //偵測網址上有沒有parkId要導航
     if (!allParks) return
     if (!parkId) {
       setDirections(null)
@@ -62,9 +59,9 @@ export default function ParkMarkerController ({ allParks, weather }) {
     parkData = parksWithWeather([parkData], weather)[0]
     //確保拿到最新的資料
     dispatch(setCurrentPark(parkData))
-  }, [location, allParks])
+  }, [ allParks, dispatch, parkId, remainings, setDirections, weather ])
 
-
+  
 
   //剩餘車位資料成功抓進來後重新丟進 currentPark
   useEffect(() => {
@@ -84,7 +81,7 @@ export default function ParkMarkerController ({ allParks, weather }) {
   
 
 
-  // selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過（因為目前selfPos不會跟著亂動所以先這樣寫）
+  // selfPos 傳進來時先 fetch 停車場資料，並且用距離先篩過
   useEffect(() => {
     if (mode !== 'self') return
     const basedParks = userFilteredParks?.length? userFilteredParks : allParks
@@ -132,13 +129,13 @@ export default function ParkMarkerController ({ allParks, weather }) {
           dispatch(setWarningMsg('您的目標停車場無機車停車格'))
         }
       }
-  }, [transOption, dispatch])
+  }, [transOption, dispatch, currentPark])
   
-
+  // 依據情況設定 WarningMsg
   useEffect(() => {
     if (!currentPark?.id) return
     
-    //如果是一開始就>0的，再進行車位數量追蹤（為了避免點開0的也跳視窗）
+    // 如果是一開始就>0的，再進行車位數量追蹤（為了避免點開0的也跳視窗）
     if (currentRemainingsRef.current?.id === currentPark.id && availableCounts(transOption, currentRemainingsRef.current) > 0) {
       if (availableCounts(transOption, currentPark) < 1) {
         dispatch(setWarningMsg('您的目標停車場無剩餘車位'))
@@ -153,7 +150,7 @@ export default function ParkMarkerController ({ allParks, weather }) {
       id: currentPark.id, 
       availablecar: currentPark.availablecar, 
       availablemotor: currentPark.availablemotor }
-  }, [currentPark])
+  }, [currentPark, dispatch, transOption, warningMsg])
 
 
   //排除掉點擊中的

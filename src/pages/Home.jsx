@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import Map from "../components/Map";
 import Place from "../components/Place";
 import CardPanel from '../components/card-panel/CardPanel'
@@ -17,7 +17,6 @@ import { getParkingLots, getRemaining, getWeather } from '../apis/places'
 import { coordinatesConvert, payexFilter, formattedParksData, serviceTimeFilter, weatherDataFomatter } from '../utils/parkHelpers'
 import { useFetchData } from '../components/useFetchData'
 import { useSelector, useDispatch } from 'react-redux'
-import { setRemainings } from '../reducer/reducer'
 
 
 
@@ -39,6 +38,7 @@ export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
   const dispatch = useDispatch()
   const [allParks, setAllParks] = useState()
   const [weather, setWeather] = useState()
+  const [remainings, setRemainings] = useState()
 
   //抓取所有停車場資料
   const {data: parksRes, isFetching: parksIsFetching, error: parksError } = useFetchData(getParkingLots, FETCH_INRERVAL_PARKS) || null
@@ -62,7 +62,7 @@ export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
     if (remainingsIsFetching) return
     if (!remainingsData) return
     if (remainingsError) return
-    dispatch(setRemainings(remainingsData))
+    setRemainings(remainingsData)
   }, [remainingsIsFetching, remainingsData, remainingsError, dispatch])
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
     <>
       <div className="map__container">
         {!isGoogleApiLoaded && <div className="map__loading"></div>}
-        <Map setIsGoogleApiLoaded={setIsGoogleApiLoaded} allParks={allParks} weather={weather}/>
+        <Map setIsGoogleApiLoaded={setIsGoogleApiLoaded} allParks={allParks} weather={weather} remainings={remainings}/>
 
         <div className="map__ui">
           <Sidebar />
@@ -95,7 +95,7 @@ export default function Home({isGoogleApiLoaded, setIsGoogleApiLoaded}) {
           </div>
           
           <CardPanel />
-          <SecondsCounter />
+          <SecondsCounter remainingsData={remainingsData}/>
 
           <div className={currentPark?.id? 'detail__window active' : 'detail__window'}>
             <div className='detail__control'>

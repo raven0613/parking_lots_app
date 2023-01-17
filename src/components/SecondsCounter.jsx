@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 
-export default function SecondsCounter () {
-  const remainings = useSelector((state) => state.park.remainings)
+export default function SecondsCounter ({remainingsData}) {
 
   const [afterLastFetch, setAfterLastFetch] = useState(0)
   // 距離上次抓到資料隔多久
@@ -14,16 +12,12 @@ export default function SecondsCounter () {
     return () => window.clearInterval(interval)
   }, [])
 
-
   //剩餘車位資料成功抓進來後計時歸0
   useEffect(() => {
-    if (!remainings) return
-    if (afterLastFetch > 0) {
-      setAfterLastFetch(0)
-    }
-  }, [remainings])
+    if (!remainingsData) return 
+    setAfterLastFetch(0)
+  }, [remainingsData])
   
-
   return (
     <div className="counter">
       <span>距離上次資料更新：</span>

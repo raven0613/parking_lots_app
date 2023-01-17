@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import Card from './Card'
 import Arrow from '../../assets/images/card-panel-arrow.svg'
@@ -19,7 +19,7 @@ export default function CardPanel () {
   //路由相關
   const navigate = useNavigate()
   const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search])
 
   //網址變化時偵測網址來改變 isActive
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function CardPanel () {
     if (queryParams.get('nearby') === 'true') {
       return setIsNearActive(true)
     } 
-  },[location]) 
+  },[queryParams, navigate]) 
 
   
   const isCurrentCardOnly = () => {

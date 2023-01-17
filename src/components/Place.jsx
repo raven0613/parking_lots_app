@@ -1,9 +1,9 @@
 import { ReactComponent as Cancel } from '../assets/images/cancel.svg'
-import { useFetcher, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import useOnclickOutside from "react-cool-onclickoutside"
 import "@reach/combobox/styles.css"
-import { useEffect, useState, useRef, useContext } from 'react'
+import { useEffect, useState, useRef, useContext, useMemo } from 'react'
 import { mapContext } from '../store/UIDataProvider'
 
 import { useDispatch } from 'react-redux'
@@ -30,8 +30,10 @@ export default function Place () {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
+  const { search: locationSearch } = location
+  const queryParams = useMemo(() => new URLSearchParams(locationSearch), [locationSearch])
 
+  
   const [isOnComposition, setIsOnComposition] = useState(false)
 
 
@@ -39,7 +41,8 @@ export default function Place () {
     const text = speech? speech : ''
     setV(text)
     setValue(text)
-  }, [speech])
+  }, [speech, setValue])
+
 
   //網址改變時
   useEffect(() => {
@@ -47,8 +50,8 @@ export default function Place () {
     if (targetAddressRef.current === queryParams.get('target')) return
     dispatch(setMode('target'))
 
-      targetAddressRef.current = queryParams.get('target')
-  }, [location])
+    targetAddressRef.current = queryParams.get('target')
+  }, [queryParams, dispatch])
 
   // 網址上有地址進來的時候設定target，並且寫入inputValue
   useEffect(() => {
@@ -65,7 +68,7 @@ export default function Place () {
       mapInstance.panTo({ lat, lng })
     }
     handleSearch()
-  }, [targetAddressRef.current])
+  }, [dispatch, setValue, mapInstance])
 
 
   const onChange = (e) => {
@@ -112,7 +115,6 @@ export default function Place () {
       //把地址回傳給Home以更新網址
       targetAddressRef.current = description
       
-      // getPlaceResult(description)
       //關掉建議窗
       clearSuggestions();
       //把地址傳進 getGeocode 

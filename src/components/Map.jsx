@@ -3,7 +3,7 @@ import centerMarker from '../assets/images/map-center.svg'
 import targetMarker from '../assets/images/marker-target2.svg'
 
 import React, { useMemo, useCallback, useEffect, useContext, useState } from "react"
-import { GoogleMap, Marker, DirectionsRenderer, useLoadScript, useJsApiLoader } from "@react-google-maps/api"
+import { GoogleMap, Marker, DirectionsRenderer, useLoadScript } from "@react-google-maps/api"
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import ParkMarkerController from "./ParkMarkerController"
@@ -18,7 +18,7 @@ import { setIsLocateDenied, setMode, setSelfPos, setMapCenter, setCanFetchDirect
 
 
 
-export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
+export default function Map({ setIsGoogleApiLoaded, allParks, weather, remainings }) {
   const currentPark = useSelector((state) => state.park.currentPark)
   const {id: currentParkId, lat: currentParkLat, lng: currentParkLng} = currentPark
   const selfPos = useSelector((state) => state.map.selfPos)
@@ -35,6 +35,7 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
   const { mapInstance, setMapInstance, directions, setDirections } = useContext(mapContext)
   
   const location = useLocation()
+  const { search: locationSearch } = location
   const navigate = useNavigate()
   const queryParams = new URLSearchParams(location.search)
 
@@ -52,6 +53,7 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
     setIsGoogleApiLoaded(true)
   }, [isLoaded, setIsGoogleApiLoaded])
 
+
   useEffect(() => {
     if (mapStyleChange === 'light') {
       setMapStyle(lightStyle)
@@ -67,18 +69,18 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
     if (isLocateDenied) return
 
     watchUserPos(dispatch, setSelfPos, setMapCenter, setMode, setIsLocateDenied, setWarningMsg)
-    if (location.search) return
+
+    if (locationSearch) return
 
     getUserPos(dispatch, setSelfPos, mode, setMapCenter, setMode, setIsLocateDenied, setWarningMsg)
-    //setMapCenter({lat: 25.0408065, lng: 121.5397976})   //北車的點
-  }, [location]);
+  }, [locationSearch, dispatch, mode, isLocateDenied]);
 
   
   //偵測網路狀況
   useEffect(() => {
     if (navigator.onLine) return
     dispatch(setWarningMsg('無法取得資料，請確認您的網路狀況'))
-  }, [mapCenter])
+  }, [dispatch, mapCenter])
   
 
   //selfPos改變的話要讓地圖中心跟隨
@@ -218,7 +220,7 @@ export default function Map({setIsGoogleApiLoaded, allParks, weather}) {
               className: 'marker'
             }}
             />}
-          <ParkMarkerController allParks={allParks} weather={weather}/>
+          <ParkMarkerController allParks={allParks} weather={weather} remainings={remainings}/>
         </GoogleMap>
       </div>}
     </>
