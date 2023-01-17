@@ -1,6 +1,5 @@
 import selfMarker from '../assets/images/marker-self.svg'
 import { MarkerF } from '@react-google-maps/api';
-import { useEffect } from 'react';
 
 
 

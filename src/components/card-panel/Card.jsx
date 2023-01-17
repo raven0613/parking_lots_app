@@ -45,7 +45,7 @@ export default function Card (props) {
     if (!currentPark?.id) return
     if (id === currentPark.id) return setCardClass('card current')
     if (id !== currentPark.id) return setCardClass('card')
-  }, [currentPark])
+  }, [currentPark, id])
 
   useEffect(() => {
     if (isCurr) return setCardClass('card current')

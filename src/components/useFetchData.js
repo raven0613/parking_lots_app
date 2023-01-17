@@ -11,7 +11,7 @@ export function useFetchData (getData, time) {
                 if (!getData) return
                 setIsFetching(true)
                 const response = await getData()
-
+                
                 if (!response) return
                 setData(response)
             
@@ -19,7 +19,6 @@ export function useFetchData (getData, time) {
             } 
             catch (error) {
                 setIsFetching(false)
-                console.log(error)
                 setError(error)
             }
         }

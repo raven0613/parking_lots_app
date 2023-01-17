@@ -154,7 +154,6 @@ export const parksWithRemainings = (parkings, remainings) => {
     if (data) {
       return {
         ...park,
-        FareInfo: {...park.FareInfo},
         availablecar: data.availablecar > 0?  data.availablecar : 0,
         availablemotor: data.availablemotor > 0? data.availablemotor : 0
       }
@@ -163,6 +162,7 @@ export const parksWithRemainings = (parkings, remainings) => {
     return park
   }) 
 }
+
 //把天氣的資料合併進停車場資料(回傳陣列資料)
 export const parksWithWeather = (parks, weathers) => {
   if (!parks) return []
@@ -267,18 +267,3 @@ export const serviceTimeFilter = (allParks) => {
   })
   return allParksWithService
 }
-
-
-
-//得到query string 的土法煉鋼法
-// const targetQuery = queryParams.has('target') ? `target=${queryParams.get('target')}` : ''
-// const nearbyQuery = queryParams.has('nearby') ? `nearby=${queryParams.get('nearby')}` : ''
-// let and = ''
-// let question = ''
-// if(queryParams.has('target') || queryParams.has('nearby')) {
-// question = '?'
-// }
-// if(queryParams.has('target') && queryParams.has('nearby')) {
-// and = '&'
-// }
-// const queryString = `${question}${targetQuery}${and}${nearbyQuery}`
